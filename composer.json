@@ -1,0 +1,6 @@
+{
+    "name": "happyculture/kumquat",
+    "description": "Kumquat - Drupal project starter",
+    "type": "drupal-console-library",
+    "require": {}
+}
