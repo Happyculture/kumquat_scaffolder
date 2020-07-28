@@ -1,9 +1,10 @@
-[Insert logo here]
+![Logo Kumquat Scaffolder](kumquat_scaffolder.png)
 
 * **[Kumquat Scaffolder](#intro)**
 * **[Installation](#installation)**
 * **[Usage](#usage)**
 * **[Troubleshooting](#troubleshooting)**
+* **[Credits](#credits)**
 
 # <a name="intro"></a>Kumquat Scaffolder
 
@@ -31,3 +32,7 @@ If you encounter the following error:
 Add this line to the `composer.json` file to specify the package location in the `extra` > `installer-paths` section.
 
 `"vendor/{$vendor}/{$name}": ["type:drupal-console-library"]`
+
+# <a name="credits"></a>Credits
+
+The font used for the logo is [Smooth Butter from PutraCetol Studio](https://putracetol.com/product/smooth-butter/).
