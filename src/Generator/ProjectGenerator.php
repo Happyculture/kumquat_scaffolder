@@ -4,8 +4,8 @@ namespace Drupal\Console\KumquatScaffolder\Generator;
 
 use Drupal\Console\Core\Generator\Generator;
 use Drupal\Console\Core\Utils\TwigRenderer;
+use Drupal\Core\Serialization\Yaml;
 use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Yaml\Yaml;
 
 class ProjectGenerator extends Generator {
 
@@ -292,7 +292,7 @@ class ProjectGenerator extends Generator {
 
     $config['module'][$machine_name] = 1000;
     unset($config['module'][$current_profile]);
-    asort($config['module']);
+    $config['module'] = module_config_sort($config['module']);
 
     $config['theme'][$machine_name . '_theme'] = 0;
     $config['theme'][$machine_name . '_admin_theme'] = 0;
@@ -319,7 +319,7 @@ class ProjectGenerator extends Generator {
    * @return array
    */
   protected function readConfig($filename) {
-    return Yaml::parse(file_get_contents($filename));
+    return Yaml::decode(file_get_contents($filename));
   }
 
   /**
@@ -330,7 +330,7 @@ class ProjectGenerator extends Generator {
    */
   protected function writeConfig($filename, $data) {
     $current_lines = count(file($filename));
-    file_put_contents($filename, Yaml::dump($data));
+    file_put_contents($filename, Yaml::encode($data));
     $this->trackGeneratedFile($filename, $current_lines);
   }
 
