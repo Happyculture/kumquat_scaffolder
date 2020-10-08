@@ -3,12 +3,12 @@ type: theme
 description: '{{ theme }} theme'
 package: {{ profile }}
 core_version_requirement: ^8 || ^9
-base theme: adminimal_theme
+base theme: {{ base_admin_theme }}
 
 libraries:
   - {{ machine_name }}/global
 
-# Copied from adminimal_theme.info.yml as it's not inherited.
+# Regions.
 regions:
   header: 'Header'
   pre_content: 'Pre-content'

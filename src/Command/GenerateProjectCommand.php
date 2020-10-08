@@ -89,6 +89,12 @@ class GenerateProjectCommand extends Command {
         null,
         InputOption::VALUE_NONE,
         'Change the config to use the new profile and themes by default.'
+      )
+      ->addOption(
+        'base-admin-theme',
+        null,
+        InputOption::VALUE_REQUIRED,
+        'The base theme of the administration theme.'
       );
   }
 
@@ -101,6 +107,7 @@ class GenerateProjectCommand extends Command {
     $config_folder = $this->validatePath($input->getOption('config-folder'));
     $generate_config = (bool) $input->getOption('generate-config');
     $core_version = $this->extractCoreVersion($input->getOption('core'));
+    $base_admin_theme = $this->validateMachineName($input->getOption('base-admin-theme'));
     $theme_folder = 'themes/custom';
     $profiles_folder = 'profiles';
 
@@ -111,6 +118,7 @@ class GenerateProjectCommand extends Command {
       ['Core version', $core_version],
       ['Name', $name],
       ['Machine name', $machine_name],
+      ['Base admin theme', $base_admin_theme],
       ['Generate config', $recap_gen_config],
       ['Config folder', $config_folder],
       ['Profiles folder', $profiles_folder],
@@ -130,6 +138,7 @@ class GenerateProjectCommand extends Command {
       'core' => $core_version,
       'name' => $name,
       'machine_name' => $machine_name,
+      'base_admin_theme' => $base_admin_theme,
       'config_folder' => $config_folder,
       'generate_config' => $generate_config,
       'profiles_dir' => $profiles_folder,
@@ -219,6 +228,21 @@ class GenerateProjectCommand extends Command {
         }
       );
       $input->setOption('config-folder', $config_folder);
+    }
+
+    try {
+      $base_admin_theme = $input->getOption('base-admin-theme') ? $input->getOption('base-admin-theme') : null;
+      if (empty($base_admin_theme)) {
+        $base_admin_theme = $this->getIo()->choice(
+          'Which theme you want your administration theme based on? (if you want another one, use the --base-admin-theme option.',
+          ['adminimal_theme', 'gin'],
+          'adminimal_theme'
+        );
+        $input->setOption('base-admin-theme', $base_admin_theme);
+      }
+    } catch (\Exception $error) {
+      $this->getIo()->error($error->getMessage());
+      return 1;
     }
 
     try {

@@ -126,6 +126,7 @@ class ProjectGenerator extends Generator {
       'profile' => $parameters['name'],
       'theme' => $parameters['name'] . ' Admin',
       'machine_name' => $machine_name . '_admin_theme',
+      'base_admin_theme' => $parameters['base_admin_theme'],
     ];
 
     // Base files.
