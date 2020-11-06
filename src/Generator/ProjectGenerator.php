@@ -50,7 +50,7 @@ class ProjectGenerator extends Generator {
    * @param array $parameters
    */
   public function generate(array $parameters) {
-    $this->core_version = $parameters['core'];
+    $this->core_version = $parameters['core'] == 9 ? 8 : $parameters['core'];
 
     $this->generateProfile($parameters);
     $this->generateAdminTheme($parameters);

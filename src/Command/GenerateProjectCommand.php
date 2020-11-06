@@ -65,7 +65,7 @@ class GenerateProjectCommand extends Command {
         'core',
         null,
         InputOption::VALUE_REQUIRED,
-        'Drupal core version built (Drupal 7, Drupal 8).'
+        'Drupal core version built (7, 8, 9).'
       )->addOption(
         'name',
         null,
@@ -158,12 +158,12 @@ class GenerateProjectCommand extends Command {
       if (empty($core_version)) {
         $core_version = $this->getIo()->choice(
           'With which version of Drupal will you run this project?',
-          ['Drupal 7', 'Drupal 8'],
-          'Drupal 8'
+          ['Drupal 7', 'Drupal 8', 'Drupal 9],
+          'Drupal 9'
         );
         $input->setOption('core', $core_version);
       }
-      else if (!in_array($core_version, [7, 8])) {
+      else if (!in_array($core_version, [7, 8, 9])) {
         throw new \InvalidArgumentException(sprintf('Invalid version "%s" specified (only 7 or 8 are supported at the moment).', $core_version));
       }
     } catch (\Exception $error) {
