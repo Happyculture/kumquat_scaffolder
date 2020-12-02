@@ -158,7 +158,7 @@ class GenerateProjectCommand extends Command {
       if (empty($core_version)) {
         $core_version = $this->getIo()->choice(
           'With which version of Drupal will you run this project?',
-          ['Drupal 7', 'Drupal 8', 'Drupal 9],
+          ['Drupal 7', 'Drupal 8', 'Drupal 9'],
           'Drupal 9'
         );
         $input->setOption('core', $core_version);
