@@ -109,6 +109,7 @@ class GenerateProjectCommand extends Command {
     $core_version = $this->extractCoreVersion($input->getOption('core'));
     $base_admin_theme = $this->validateMachineName($input->getOption('base-admin-theme'));
     $theme_folder = 'themes/custom';
+    $module_folder = 'modules/custom';
     $profiles_folder = 'profiles';
 
     // Improve attributes readibility.
@@ -122,6 +123,7 @@ class GenerateProjectCommand extends Command {
       ['Generate config', $recap_gen_config],
       ['Config folder', $config_folder],
       ['Profiles folder', $profiles_folder],
+      ['Modules folder', $module_folder],
       ['Themes folder', $theme_folder],
     ];
 
@@ -142,6 +144,7 @@ class GenerateProjectCommand extends Command {
       'config_folder' => $config_folder,
       'generate_config' => $generate_config,
       'profiles_dir' => $profiles_folder,
+      'modules_dir' => $theme_folder,
       'themes_dir' => $theme_folder,
     ]);
   }

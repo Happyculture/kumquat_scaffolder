@@ -53,6 +53,7 @@ class ProjectGenerator extends Generator {
     $this->core_version = $parameters['core'] == 9 ? 8 : $parameters['core'];
 
     $this->generateProfile($parameters);
+    $this->generateCoreModule($parameters);
     $this->generateAdminTheme($parameters);
     $this->generateDefaultTheme($parameters);
     $this->generateConfig($parameters);
@@ -102,10 +103,41 @@ class ProjectGenerator extends Generator {
       $profilePath . '.breakpoints.yml',
       $profileParameters
     );
+  }
+
+  /**
+   * Generates an installation profile.
+   *
+   * @param $parameters
+   */
+  protected function generateCoreModule($parameters) {
+    $modules = $parameters['modules_dir'];
+    $machine_name = $parameters['machine_name'] . '_core';
+
+    $this->checkDir(($modules == '/' ? '' : $modules) . '/' . $machine_name);
+
+    $modulePath = ($modules == '/' ? '' : $modules) . '/' . $machine_name . '/' . $machine_name;
+    $profileParameters = [
+      'profile' => $parameters['name'],
+      'module' => $parameters['name'] . ' Core',
+      'machine_name' => $machine_name,
+    ];
 
     $this->renderFile(
-      'kumquat-profile/' . $this->core_version . '/src/Helpers/StaticBlockBase.php.twig',
-      dirname($profilePath) . '/src/Helpers/StaticBlockBase.php',
+      'kumquat-core-module/' . $this->core_version . '/info.yml.twig',
+      $modulePath . '.info.yml',
+      $profileParameters
+    );
+
+    $this->renderFile(
+      'kumquat-core-module/' . $this->core_version . '/module.twig',
+      $modulePath . '.profile',
+      $profileParameters
+    );
+
+    $this->renderFile(
+      'kumquat-core-module/' . $this->core_version . '/src/Helpers/StaticBlockBase.php.twig',
+      dirname($modulePath) . '/src/Helpers/StaticBlockBase.php',
       $profileParameters
     );
   }
@@ -290,6 +322,7 @@ class ProjectGenerator extends Generator {
     $config = $this->readConfig($filename);
     $current_profile = $config['profile'];
 
+    $config['module'][$machine_name . '_core'] = 0;
     $config['module'][$machine_name] = 1000;
     unset($config['module'][$current_profile]);
     $config['module'] = module_config_sort($config['module']);
