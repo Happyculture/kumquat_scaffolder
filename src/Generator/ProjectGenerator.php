@@ -94,15 +94,6 @@ class ProjectGenerator extends Generator {
       $profilePath . '.install',
       $profileParameters
     );
-
-    // TODO This should be in the default theme but it is not possible due to a
-    // Core bug. Consider moving it when https://www.drupal.org/node/2904550
-    // is commited.
-    $this->renderFile(
-      'kumquat-profile/' . $this->core_version . '/breakpoints.yml.twig',
-      $profilePath . '.breakpoints.yml',
-      $profileParameters
-    );
   }
 
   /**
@@ -260,6 +251,12 @@ class ProjectGenerator extends Generator {
     $this->renderFile(
       'kumquat-theme/' . $this->core_version . '/readme.twig',
       $defaultThemePath . '/README.md',
+      $defaultThemeParameters
+    );
+
+    $this->renderFile(
+      'kumquat-theme/' . $this->core_version . '/breakpoints.yml.twig',
+      $defaultThemePath . '.breakpoints.yml',
       $defaultThemeParameters
     );
 
