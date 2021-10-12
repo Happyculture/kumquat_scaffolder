@@ -144,7 +144,7 @@ class GenerateProjectCommand extends Command {
       'config_folder' => $config_folder,
       'generate_config' => $generate_config,
       'profiles_dir' => $profiles_folder,
-      'modules_dir' => $theme_folder,
+      'modules_dir' => $module_folder,
       'themes_dir' => $theme_folder,
     ]);
   }
