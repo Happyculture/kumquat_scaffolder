@@ -256,7 +256,7 @@ class ProjectGenerator extends Generator {
 
     $this->renderFile(
       'kumquat-theme/' . $this->core_version . '/breakpoints.yml.twig',
-      $defaultThemePath . '.breakpoints.yml',
+      $defaultThemePath . '/' . $defaultThemeParameters['machine_name'] . '.breakpoints.yml',
       $defaultThemeParameters
     );
 

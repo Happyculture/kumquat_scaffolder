@@ -64,7 +64,8 @@ function {{ machine_name }}_page_attachments_alter(array &$attachments) {
   ];
 
   // Add various favicons to the head.
-/*
+  /*
+// @codingStandardsIgnoreStart
   $favicons_path = '/' . $theme_path . '/YOUR/PATH/HERE';
 
   // Apple touch icon.
@@ -152,5 +153,6 @@ function {{ machine_name }}_page_attachments_alter(array &$attachments) {
     ],
     'theme-color'
   ];
-*/
+// @codingStandardsIgnoreEnd
+   */
 }
