@@ -9,9 +9,13 @@
 
   li::before {
     content: "•";
-    color: currentColor;
     display: inline;
     margin-right: .5em;
+  }
+
+  // Offset nested lists.
+  ul {
+    padding-left: 1rem;
   }
 }
 

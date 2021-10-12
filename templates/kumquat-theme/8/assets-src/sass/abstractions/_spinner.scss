@@ -1,0 +1,23 @@
+
+%spinner {
+  width: 40px;
+  min-width: 40px;
+  min-height: 40px;
+  max-width: 40px;
+  height: 40px;
+  background-color: $honey-dark;
+
+  border-radius: 100%;
+  -webkit-animation: sk-scaleout 1.0s infinite ease-in-out;
+  animation: sk-scaleout 1.0s infinite ease-in-out;
+}
+
+@keyframes sk-scaleout {
+  0% {
+    transform: scale(0);
+  }
+  100% {
+    transform: scale(1.0);
+    opacity: 0;
+  }
+}

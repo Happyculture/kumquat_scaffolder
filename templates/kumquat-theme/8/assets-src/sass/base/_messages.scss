@@ -1,0 +1,28 @@
+@import "../abstractions/message_box";
+
+.messages {
+  @extend %message-box;
+  &--status { @extend %message-box--status; }
+  &--info { @extend %message-box--info; }
+  &--warning { @extend %message-box--warning; }
+  &--error { @extend %message-box--error; }
+
+  // Messages lists.
+
+  & + .messages {
+    margin-top: 1.538em;
+  }
+
+  &__list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  &__item {
+    & + & {
+      margin-top: 0.769em;
+    }
+  }
+
+}

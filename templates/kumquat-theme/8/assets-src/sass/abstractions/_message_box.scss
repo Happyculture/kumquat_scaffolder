@@ -1,0 +1,50 @@
+@import "box_shadow";
+
+%message-box {
+  @extend %base-box-shadow;
+  --base-color: $carbon;
+  background: no-repeat left 1.5rem top 1.25rem;
+  background-size: 1.5rem;
+  border-color: var(--base-color) transparent transparent transparent;
+  border-radius: 5px;
+  border-style: solid;
+  border-width: 8px 0 0 0;
+  padding: 1rem 1.5rem 1rem 4.5rem;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+
+  &--status {
+    --base-color: #{$green};
+    background-image: url($images-path + "/icons/message-valid.svg");
+  }
+
+  &--info {
+    --base-color: #{$blue};
+    background-image: url($images-path + "/icons/message-info.svg");
+  }
+
+  &--warning {
+    --base-color: #{$orange};
+    background-image: url($images-path + "/icons/message-caution.svg");
+  }
+
+  &--error {
+    --base-color: #{$red};
+    background-image: url($images-path + "/icons/message-alert.svg");
+  }
+
+  // RTL support.
+
+  [dir="rtl"] & {
+    background-position: right 1.5rem top 1.25rem;
+    padding: 1rem 4.5rem 1rem 1.5rem;
+    text-align: right;
+  }
+
+  // Content.
+
+  h2, h3, h4, h5, h6, label, a {
+    color: var(--base-color);
+    font-family: $sans-serif;
+  }
+}

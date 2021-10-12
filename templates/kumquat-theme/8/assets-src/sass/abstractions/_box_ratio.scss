@@ -1,0 +1,12 @@
+
+@mixin box-ratio($width, $ratio: .5, $max-width: none) {
+  height: calc(#{$width} * #{$ratio});
+  width: $width;
+  @if $max-width != none {
+    max-height: calc(#{$max-width} * #{$ratio});
+    max-width: $max-width;
+  } @else {
+    max-height: none;
+    max-width: none;
+  }
+}

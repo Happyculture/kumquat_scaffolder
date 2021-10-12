@@ -1,5 +1,3 @@
-@import "colors";
-
 // Path to fonts directories.
 
 // @root is replaced by gulp during compilation to manage common stylesheets
@@ -62,12 +60,3 @@ $font-sizes: (
 
 $link-underline-size: .125rem; // 2px
 $link-padding-size: .125em; // 2px if font-size is 1em
-
-%title-commons {
-  color: $carbon-dark;
-  font-family: $serif;
-  font-weight: normal;
-  margin-bottom: .5em;
-
-  &:first-child { margin-top: 0; }
-}

@@ -1,0 +1,29 @@
+// This is adapted from https://www.sarasoueidan.com/blog/nested-links/ and
+// https://css-tricks.com/a-complete-guide-to-links-and-buttons/ to layer links.
+@mixin clickable-element($title_selector) {
+  position: relative;
+
+  a {
+    position: relative;
+    z-index: 1;
+  }
+
+  #{$title_selector} a {
+    position: static;
+    text-decoration: none;
+
+    // Use ::after because a lot of links use ::before for decoration.
+    &::after {
+      content: "";
+      position: absolute;
+      z-index: 0;
+      top: 0;
+      left: 0;
+      right:  0;
+      bottom: 0;
+      overflow: hidden;
+      text-indent: 100%;
+      white-space: nowrap;
+    }
+  }
+}

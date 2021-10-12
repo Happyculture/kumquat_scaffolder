@@ -1,4 +1,3 @@
-@import "../variables/fonts";
 
 // Gets the font size for the given text type and device.
 @function get-font-size($type: text, $device: mobile) {

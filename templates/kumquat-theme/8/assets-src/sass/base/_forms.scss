@@ -22,6 +22,7 @@
   width: 100%;
 }
 
+%base-field,
 input[type="date"],
 input[type="datetime-local"],
 input[type="email"],
@@ -44,10 +45,17 @@ select {
   outline-color: $carbon-light;
   padding: 0.7rem 0.9rem 0.6rem;
   transition: border-left-width 50ms linear, border-color 50ms linear;
+
   &:disabled {
     background-color: $paper-dark;
     color: $carbon;
   }
+
+  &.error {
+    border-color: $red;
+    border-left-width: 4px;
+  }
+
   &:focus,
   &:active {
     border-color: $purple;
@@ -55,8 +63,12 @@ select {
     outline-color: $purple;
     color: $carbon;
   }
+
   &:hover:not(:focus) {
     border-color: $grey-dark;
+  }
+
+  &:hover:not(:focus):not(:active):not(.error) {
     border-left-width: 1px;
   }
 }
@@ -71,12 +83,15 @@ input[type="submit"] {
 input[type="checkbox"] {
   &:not(:checked),
   &:checked {
-    position: absolute;
-    left: -9999px;
+    $size: 1.25em; // ~20px
+
+    // Hide the checkbox but keep it in the flow so browser validation shows at
+    // the appropriate location if needed.
+    @extend %visually-hidden;
+    // Move the location a bit so the validation popup is well positioned.
+    margin: $size 0 0 ($size / 2);
 
     + label {
-      $size: 1.25em; // ~20px
-
       color: $carbon;
       cursor: pointer;
       padding-left: 2em; // ~32px
@@ -107,6 +122,45 @@ input[type="checkbox"] {
         border: 1px solid $grey;
         color: $white;
         content: '✔';
+      }
+
+      &.form-required {
+        &::after {
+          background-image: none;
+          margin: 0;
+        }
+
+        span.hidden {
+          // Copy from .form-required:after.
+          background-image: url(/core/misc/icons/ee0000/required.svg);
+          background-repeat: no-repeat;
+          background-size: 6px 6px;
+          content: "";
+          display: inline-block;
+          height: 6px;
+          margin: 0 .3em;
+          width: 6px;
+
+          // Hide the text.
+          text-indent: -999vw;
+        }
+      }
+    }
+
+    &:focus,
+    &:active {
+      & + label {
+        &::after {
+          border-color: $purple;
+        }
+      }
+    }
+
+    &:hover:not(:focus) {
+      & + label {
+        &::after {
+          border-color: $grey-dark;
+        }
       }
     }
 
@@ -188,5 +242,23 @@ option {
 
   @include breakpoint(desktop) {
     justify-content: flex-start;
+  }
+}
+
+.form-item {
+  &--error-message {
+    color: $red;
+
+    &::before {
+      background-image: url($images-path + "/icons/message-alert.svg");
+      vertical-align: initial;
+    }
+
+    strong { font-weight: normal; }
+  }
+
+  // Avoid some Classy styles to override ours.
+  textarea {
+    @extend %base-field;
   }
 }

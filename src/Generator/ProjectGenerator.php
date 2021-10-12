@@ -247,7 +247,6 @@ class ProjectGenerator extends Generator {
 
     // Gitkeeps.
     $this->renderFile('kumquat-theme/' . $this->core_version . '/gitkeep.twig', $defaultThemePath . '/assets-src/fonts/.gitkeep');
-    $this->renderFile('kumquat-theme/' . $this->core_version . '/gitkeep.twig', $defaultThemePath . '/assets-src/images/.gitkeep');
 
     $this->renderFile('kumquat-theme/' . $this->core_version . '/gitkeep.twig', $defaultThemePath . '/dist/css/.gitkeep');
     $this->renderFile('kumquat-theme/' . $this->core_version . '/gitkeep.twig', $defaultThemePath . '/dist/fonts/.gitkeep');
