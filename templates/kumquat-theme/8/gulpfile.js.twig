@@ -7,7 +7,7 @@ var plumber = require('gulp-plumber');
 var postcss = require('gulp-postcss');
 var rename = require("gulp-rename");
 var replace = require('gulp-replace');
-var sass = require('gulp-sass');
+var sass = require('gulp-sass')(require('node-sass'));
 var sassGlob = require('gulp-sass-glob');
 var sourcemaps = require('gulp-sourcemaps');
 
@@ -15,13 +15,11 @@ var sourcemaps = require('gulp-sourcemaps');
 var autoprefixer = require('autoprefixer');
 var clean = require('postcss-clean');
 var discardUnused = require('postcss-discard-unused');
-var flexibility = require('postcss-flexibility');
 var mqpacker = require('css-mqpacker');
 var processors = [
   discardUnused(),
   autoprefixer(),
-  mqpacker({sort: true}),
-  flexibility()
+  mqpacker({sort: true})
 ];
 if (!argv.development) {
   processors.push(clean());
@@ -121,7 +119,7 @@ gulp.task('default', gulp.task('build'));
 
 // Watcher.
 gulp.task('do-watch', function(){
-  gulp.watch(['**/*.js', '!**/*.min.js', '!gulpfile.js'], gulp.task('scripts'));
+  gulp.watch(['templates/**/*.js', '!templates/**/*.min.js', 'assets-src/js/**/*.js', '!assets-src/js/**/*.min.js', '!gulpfile.js'], gulp.task('scripts'));
   gulp.watch(['templates/**/*.scss', 'assets-src/sass/variables/*.scss', 'assets-src/sass/abstractions/*.scss'], gulp.task('styles:patterns'));
   return gulp.watch('assets-src/sass/**/*.scss', gulp.task('styles:global'));
 });
