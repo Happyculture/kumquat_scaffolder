@@ -14,7 +14,7 @@ It's compatible with Drupal 8 and 7 and is meant to be used by developers at the
 
 ## <a name="installation"></a>Installation
 
-- `composer require happyculture/kumquat_scaffolder:@beta --dev`
+- `composer require happyculture/kumquat_scaffolder --dev`
 
 ## <a name="usage"></a>Usage
 
