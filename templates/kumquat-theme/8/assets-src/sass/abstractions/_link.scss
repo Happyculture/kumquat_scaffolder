@@ -4,10 +4,14 @@
 %link {
   @include transition(color);
   color: $link-color;
-  text-decoration: underline;
 
   &:hover,
   &:focus {
     color: $link-hover-color;
   }
+}
+
+%underlined-link {
+  @extend %link;
+  text-decoration: underline;
 }
