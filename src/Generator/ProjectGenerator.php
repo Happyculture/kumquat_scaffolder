@@ -122,7 +122,7 @@ class ProjectGenerator extends Generator {
 
     $this->renderFile(
       'kumquat-core-module/' . $this->core_version . '/module.twig',
-      $modulePath . '.profile',
+      $modulePath . '.module',
       $profileParameters
     );
 
