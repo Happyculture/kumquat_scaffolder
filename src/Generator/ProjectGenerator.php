@@ -94,6 +94,15 @@ class ProjectGenerator extends Generator {
       $profilePath . '.install',
       $profileParameters
     );
+
+    // Set the profile name in the lando file so each project is different.
+    $rootDir = $this->drupalFinder->getComposerRoot();
+    $landoPath = $rootDir . '/.lando.yml';
+    if (is_file($landoPath)) {
+      $data = $this->readConfig($landoPath);
+      $data['name'] = $machine_name;
+      $this->writeConfig($landoPath, $data);
+    }
   }
 
   /**
