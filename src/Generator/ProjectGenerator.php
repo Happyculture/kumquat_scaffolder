@@ -300,6 +300,17 @@ class ProjectGenerator extends Generator {
         $defaultThemeParameters
       );
     }
+
+    // Add the theme path in the composer.json file.
+    $prevDir = getcwd();
+    chdir($this->drupalFinder->getComposerRoot());
+    $prefix = substr($this->drupalFinder->getDrupalRoot(), strlen($this->drupalFinder->getComposerRoot()));
+    $prefix = trim($prefix, '/');
+    exec('/usr/bin/env composer config extra.kumquat-themes.0 ' . $prefix . '/' . $defaultThemePath);
+    exec('/usr/bin/env composer update --lock');
+    chdir($prevDir);
+    $this->fileQueue->addFile('../composer.json');
+    $this->countCodeLines->addCountCodeLines(1);
   }
 
   /**
