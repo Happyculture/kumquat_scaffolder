@@ -131,11 +131,8 @@ class ProjectGenerator extends Generator {
       $profileParameters
     );
 
-    $this->renderFile(
-      'kumquat-core-module/layouts/nolayout/layout--nolayout.html.twig',
-      dirname($modulePath) . '/layouts/nolayout/layout--nolayout.html.twig',
-      $profileParameters
-    );
+    $this->getFs()->mirror(self::TPL_DIR . '/kumquat-core-module/layouts', dirname($modulePath) . '/layouts');
+    $this->trackGeneratedDirectory(dirname($modulePath) . '/layouts');
   }
 
   /**
