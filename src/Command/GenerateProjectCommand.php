@@ -4,11 +4,8 @@ namespace Drupal\Console\KumquatScaffolder\Command;
 
 use Drupal\Console\Command\Shared\ConfirmationTrait;
 use Drupal\Console\Core\Command\Command;
-use Drupal\Console\Core\Style\DrupalStyle;
 use Drupal\Console\Core\Utils\StringConverter;
 use Drupal\Console\KumquatScaffolder\Generator\ProjectGenerator;
-use Drupal\Console\Extension\Manager;
-use Drupal\Console\Utils\Validator;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -60,7 +57,7 @@ class GenerateProjectCommand extends Command {
     $this
       ->setName('kumquat:generate-project')
       ->setAliases(['kgp'])
-      ->setDescription('Generate an install profile, a default theme and an admin theme.')
+      ->setDescription('Generate an install profile, a core module, a default theme and/or an admin theme.')
       ->addOption(
         'name',
         null,

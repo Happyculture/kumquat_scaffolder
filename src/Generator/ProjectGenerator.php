@@ -19,8 +19,7 @@ class ProjectGenerator extends Generator {
   /**
    * {@inheritdoc}
    */
-  public function setRenderer(TwigRenderer $renderer)
-  {
+  public function setRenderer(TwigRenderer $renderer) {
     $this->renderer = $renderer;
     $this->renderer->addSkeletonDir(self::TPL_DIR);
   }
@@ -38,23 +37,6 @@ class ProjectGenerator extends Generator {
   }
 
   /**
-   * Generates all the stuff.
-   *
-   * Method called by the kumquat:generate-project command.
-   *
-   * @param array $parameters
-   */
-  public function generateAll(array $parameters) {
-    $this->generateProfile($parameters);
-    $this->generateCoreModule($parameters);
-    $this->generateAdminTheme($parameters);
-    $this->generateDefaultTheme($parameters);
-    if (!empty($parameters['generate_config'])) {
-      $this->generateConfig($parameters);
-    }
-  }
-
-  /**
    * Generates an installation profile.
    *
    * @param $parameters
@@ -63,7 +45,7 @@ class ProjectGenerator extends Generator {
     $profiles_dir = $parameters['profiles_dir'];
     $machine_name = $parameters['machine_name'];
 
-    $this->checkDir(($profiles_dir == '/' ? '' : $profiles_dir) . '/' . $machine_name);
+    $this->checkDir(($profiles_dir == '/' ? '' : $profiles_dir) . '/' . $machine_name, 'profile');
 
     $profilePath = ($profiles_dir == '/' ? '' : $profiles_dir) . '/' . $machine_name . '/' . $machine_name;
     $profileParameters = [
@@ -100,7 +82,7 @@ class ProjectGenerator extends Generator {
     $modules = $parameters['modules_dir'];
     $machine_name = $parameters['machine_name'] . '_core';
 
-    $this->checkDir(($modules == '/' ? '' : $modules) . '/' . $machine_name);
+    $this->checkDir(($modules == '/' ? '' : $modules) . '/' . $machine_name, 'core module');
 
     $modulePath = ($modules == '/' ? '' : $modules) . '/' . $machine_name . '/' . $machine_name;
     $profileParameters = [
@@ -147,7 +129,7 @@ class ProjectGenerator extends Generator {
     $machine_name = $parameters['machine_name'];
     $config_folder = $parameters['config_folder'];
 
-    $this->checkDir(($themes_dir == '/' ? '' : $themes_dir) . '/' . $machine_name . '_admin_theme');
+    $this->checkDir(($themes_dir == '/' ? '' : $themes_dir) . '/' . $machine_name . '_admin_theme', 'admin theme');
 
     $adminThemePath = ($themes_dir == '/' ? '' : $themes_dir) . '/' . $machine_name . '_admin_theme' . '/' . $machine_name . '_admin_theme';
     $adminThemeParameters = [
@@ -215,7 +197,7 @@ class ProjectGenerator extends Generator {
     $themes_dir = $parameters['themes_dir'];
     $machine_name = $parameters['machine_name'];
 
-    $this->checkDir(($themes_dir == '/' ? '' : $themes_dir) . '/' . $machine_name . '_theme');
+    $this->checkDir(($themes_dir == '/' ? '' : $themes_dir) . '/' . $machine_name . '_theme', 'theme');
 
     $defaultThemePath = ($themes_dir == '/' ? '' : $themes_dir) . '/' . $machine_name . '_theme';
     $defaultThemeParameters = [
@@ -413,12 +395,13 @@ class ProjectGenerator extends Generator {
    * @param $dir
    * @throws \RuntimeException
    */
-  protected function checkDir($dir) {
+  protected function checkDir($dir, $type) {
     if (file_exists($dir)) {
       if (!is_dir($dir)) {
         throw new \RuntimeException(
           sprintf(
-            'Unable to generate the profile as the target directory "%s" exists but is a file.',
+            'Unable to generate the %s as the target directory "%s" exists but is a file.',
+            $type,
             realpath($dir)
           )
         );
@@ -427,7 +410,8 @@ class ProjectGenerator extends Generator {
       if ($files != ['.', '..']) {
         throw new \RuntimeException(
           sprintf(
-            'Unable to generate the profile as the target directory "%s" is not empty.',
+            'Unable to generate the %s as the target directory "%s" is not empty.',
+            $type,
             realpath($dir)
           )
         );
@@ -435,7 +419,8 @@ class ProjectGenerator extends Generator {
       if (!is_writable($dir)) {
         throw new \RuntimeException(
           sprintf(
-            'Unable to generate the profile as the target directory "%s" is not writable.',
+            'Unable to generate the %s as the target directory "%s" is not writable.',
+            $type,
             realpath($dir)
           )
         );
