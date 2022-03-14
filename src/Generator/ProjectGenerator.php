@@ -131,6 +131,18 @@ class ProjectGenerator extends Generator {
       dirname($modulePath) . '/src/Helpers/StaticBlockBase.php',
       $profileParameters
     );
+
+    $this->renderFile(
+      'kumquat-core-module/' . $this->core_version . '/layouts.yml.twig',
+      $modulePath . '.layouts.yml',
+      $profileParameters
+    );
+
+    $this->renderFile(
+      'kumquat-core-module/' . $this->core_version . '/layouts/nolayout/layout--nolayout.html.twig',
+      dirname($modulePath) . '/layouts/nolayout/layout--nolayout.html.twig',
+      $profileParameters
+    );
   }
 
   /**
