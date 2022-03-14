@@ -8,3 +8,8 @@ services:
     arguments: ['@kumquat.generator.project', '@console.string_converter', '@app.root']
     tags:
       - { name: drupal.command, bootstrap: uninstall }
+  kumquat.clean_project:
+    class: \Drupal\Console\KumquatScaffolder\Command\CleanProjectCommand
+    arguments: ['@console.string_converter', '@app.root']
+    tags:
+      - { name: drupal.command, bootstrap: uninstall }
