@@ -10,6 +10,9 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
+/**
+ * Drupal console command to generate project parts.
+ */
 class GenerateProjectCommand extends Command {
 
   use ConfirmationTrait;
@@ -17,26 +20,28 @@ class GenerateProjectCommand extends Command {
   const REGEX_MACHINE_NAME = '/^[a-z0-9_]+$/';
 
   /**
-   * @var ProjectGenerator
+   * The generator.
+   *
+   * @var \Drupal\Console\KumquatScaffolder\Generator\ProjectGenerator
    */
   protected $generator;
 
   /**
-   * @var StringConverter
+   * The string converter service.
+   *
+   * @var \Drupal\Console\Core\Utils\StringConverter
    */
   protected $stringConverter;
 
   /**
-   * @var string The document root absolute path.
+   * The document root absolute path.
+   *
+   * @var string
    */
   protected $appRoot;
 
   /**
-   * ProfileCommand constructor.
-   *
-   * @param ProjectGenerator $generator
-   * @param StringConverter  $stringConverter
-   * @param string           $app_root
+   * Class constructor.
    */
   public function __construct(
     ProjectGenerator $generator,
@@ -52,69 +57,68 @@ class GenerateProjectCommand extends Command {
   /**
    * {@inheritdoc}
    */
-  protected function configure()
-  {
+  protected function configure() {
     $this
       ->setName('kumquat:generate-project')
       ->setAliases(['kgp'])
       ->setDescription('Generate an install profile, a core module, a default theme and/or an admin theme.')
       ->addOption(
         'name',
-        null,
+        NULL,
         InputOption::VALUE_REQUIRED,
         'The project readable name (ex: Happyculture).'
       )
       ->addOption(
         'machine-name',
-        null,
+        NULL,
         InputOption::VALUE_REQUIRED,
         'The project (short) machine name (ex: hc).'
       )
       ->addOption(
         'config-folder',
-        null,
+        NULL,
         InputOption::VALUE_REQUIRED,
         'The configuration storage folder, relative to the document root.'
       )
       ->addOption(
         'generate-all',
-        null,
+        NULL,
         InputOption::VALUE_NONE,
         'Generate a new install profile, a core module, an admin theme, a front theme and the associated configuration.'
       )
       ->addOption(
         'generate-profile',
-        null,
+        NULL,
         InputOption::VALUE_NONE,
         'Generate a new install profile.'
       )
       ->addOption(
         'generate-core-module',
-        null,
+        NULL,
         InputOption::VALUE_NONE,
         'Generate a new core module.'
       )
       ->addOption(
         'generate-theme',
-        null,
+        NULL,
         InputOption::VALUE_NONE,
         'Generate a front theme.'
       )
       ->addOption(
         'generate-admin-theme',
-        null,
+        NULL,
         InputOption::VALUE_NONE,
         'Generate an administration theme.'
       )
       ->addOption(
         'generate-config',
-        null,
+        NULL,
         InputOption::VALUE_NONE,
         'Change the config to use the new profile and themes by default.'
       )
       ->addOption(
         'base-admin-theme',
-        null,
+        NULL,
         InputOption::VALUE_REQUIRED,
         'The base theme of the administration theme.'
       );
@@ -222,7 +226,14 @@ class GenerateProjectCommand extends Command {
    */
   protected function interact(InputInterface $input, OutputInterface $output) {
     try {
-      $generator_parts = ['all', 'profile', 'core-module', 'theme', 'admin-theme', 'config'];
+      $generator_parts = [
+        'all',
+        'profile',
+        'core-module',
+        'theme',
+        'admin-theme',
+        'config',
+      ];
 
       $enabled_parts = [];
       foreach ($generator_parts as $part) {
@@ -235,7 +246,7 @@ class GenerateProjectCommand extends Command {
         $enabled_parts = $this->getIo()->choice(
           'What do you want to generate? Use comma separated values for multiple selection.',
           $generator_parts,
-          implode(',', array_keys($enabled)),
+          implode(',', array_keys($enabled_parts)),
           TRUE
         );
 
@@ -247,7 +258,8 @@ class GenerateProjectCommand extends Command {
           $input->setOption('generate-' . $part, in_array($part, $enabled_parts));
         }
       }
-    } catch (\Exception $error) {
+    }
+    catch (\Exception $error) {
       $this->getIo()->error($error->getMessage());
       return 1;
     }
@@ -255,7 +267,7 @@ class GenerateProjectCommand extends Command {
     try {
       // A profile is technically also a module, so we can use the same
       // validator to check the name.
-      $name = $input->getOption('name') ? $this->validateName($input->getOption('name')) : null;
+      $name = $input->getOption('name') ? $this->validateName($input->getOption('name')) : NULL;
 
       if (!$name) {
         $name = $this->getIo()->ask(
@@ -267,13 +279,14 @@ class GenerateProjectCommand extends Command {
         );
         $input->setOption('name', $name);
       }
-    } catch (\Exception $error) {
+    }
+    catch (\Exception $error) {
       $this->getIo()->error($error->getMessage());
       return 1;
     }
 
     try {
-      $machine_name = $input->getOption('machine-name') ? $this->validateMachineName($input->getOption('machine-name')) : null;
+      $machine_name = $input->getOption('machine-name') ? $this->validateMachineName($input->getOption('machine-name')) : NULL;
       if (!$machine_name) {
         $machine_name = $this->getIo()->ask(
           'What is the machine name of the project?',
@@ -284,14 +297,15 @@ class GenerateProjectCommand extends Command {
         );
         $input->setOption('machine-name', $machine_name);
       }
-    } catch (\Exception $error) {
+    }
+    catch (\Exception $error) {
       $this->getIo()->error($error->getMessage());
       return 1;
     }
 
     if (in_array('config', $enabled_parts) || in_array('all', $enabled_parts)) {
       try {
-        $config_folder = $input->getOption('config-folder') ? $this->validatePath($input->getOption('config-folder')) : null;
+        $config_folder = $input->getOption('config-folder') ? $this->validatePath($input->getOption('config-folder')) : NULL;
         if (!$config_folder) {
           $config_folder = $this->getIo()->ask(
             'Where are the configuration files stored (relative to the document root)?',
@@ -302,7 +316,8 @@ class GenerateProjectCommand extends Command {
           );
           $input->setOption('config-folder', $config_folder);
         }
-      } catch (\Exception $error) {
+      }
+      catch (\Exception $error) {
         $this->getIo()->error($error->getMessage());
         return 1;
       }
@@ -310,7 +325,7 @@ class GenerateProjectCommand extends Command {
 
     if (in_array('admin-theme', $enabled_parts) || in_array('all', $enabled_parts)) {
       try {
-        $base_admin_theme = $input->getOption('base-admin-theme') ? $input->getOption('base-admin-theme') : null;
+        $base_admin_theme = $input->getOption('base-admin-theme') ? $input->getOption('base-admin-theme') : NULL;
         if (empty($base_admin_theme)) {
           $base_admin_theme = $this->getIo()->choice(
             'Which theme you want your administration theme based on? (if you want another one, use the --base-admin-theme option.',
@@ -319,7 +334,8 @@ class GenerateProjectCommand extends Command {
           );
           $input->setOption('base-admin-theme', $base_admin_theme);
         }
-      } catch (\Exception $error) {
+      }
+      catch (\Exception $error) {
         $this->getIo()->error($error->getMessage());
         return 1;
       }
@@ -332,8 +348,10 @@ class GenerateProjectCommand extends Command {
    *
    * @param string $module
    *   The module name.
+   *
    * @return string
    *   The module name.
+   *
    * @throws \InvalidArgumentException
    */
   protected function validateName($module) {
@@ -350,8 +368,10 @@ class GenerateProjectCommand extends Command {
    *
    * @param string $machine_name
    *   The machine name.
+   *
    * @return string
    *   The machine name.
+   *
    * @throws \InvalidArgumentException
    */
   protected function validateMachineName($machine_name) {
@@ -373,6 +393,7 @@ class GenerateProjectCommand extends Command {
    *
    * @param string $path
    *   The path to validate.
+   *
    * @return string
    *   The path.
    */

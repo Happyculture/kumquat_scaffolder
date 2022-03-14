@@ -6,8 +6,10 @@ use Drupal\Console\Core\Generator\Generator;
 use Drupal\Console\Core\Utils\TwigRenderer;
 use Drupal\Console\KumquatScaffolder\ConfigManipulationTrait;
 use Drupal\Console\KumquatScaffolder\FileManipulationTrait;
-use Drupal\Core\Serialization\Yaml;
 
+/**
+ * Generate project parts for some templates.
+ */
 class ProjectGenerator extends Generator {
 
   use ConfigManipulationTrait;
@@ -26,9 +28,10 @@ class ProjectGenerator extends Generator {
   /**
    * Generates an installation profile.
    *
-   * @param $parameters
+   * @param array $parameters
+   *   The generation parameters.
    */
-  public function generateProfile($parameters) {
+  public function generateProfile(array $parameters) {
     $profiles_dir = $parameters['profiles_dir'];
     $machine_name = $parameters['machine_name'];
 
@@ -38,7 +41,7 @@ class ProjectGenerator extends Generator {
     $profileParameters = [
       'profile' => $parameters['name'],
       'machine_name' => $machine_name,
-      'themes' => [ $machine_name . '_theme', $machine_name . '_admin_theme' ],
+      'themes' => [$machine_name . '_theme', $machine_name . '_admin_theme'],
     ];
 
     $this->renderFile(
@@ -63,9 +66,10 @@ class ProjectGenerator extends Generator {
   /**
    * Generates an installation profile.
    *
-   * @param $parameters
+   * @param array $parameters
+   *   The generation parameters.
    */
-  public function generateCoreModule($parameters) {
+  public function generateCoreModule(array $parameters) {
     $modules = $parameters['modules_dir'];
     $machine_name = $parameters['machine_name'] . '_core';
 
@@ -107,11 +111,12 @@ class ProjectGenerator extends Generator {
   }
 
   /**
-   * Generates an administration theme based on Adminimal.
+   * Generates an administration theme based on Adminimal or Gin.
    *
-   * @param $parameters
+   * @param array $parameters
+   *   The generation parameters.
    */
-  public function generateAdminTheme($parameters) {
+  public function generateAdminTheme(array $parameters) {
     $themes_dir = $parameters['themes_dir'];
     $machine_name = $parameters['machine_name'];
     $config_folder = $parameters['config_folder'];
@@ -178,9 +183,10 @@ class ProjectGenerator extends Generator {
   /**
    * Generates a theme based on Classy.
    *
-   * @param $parameters
+   * @param array $parameters
+   *   The generation parameters.
    */
-  public function generateDefaultTheme($parameters) {
+  public function generateDefaultTheme(array $parameters) {
     $themes_dir = $parameters['themes_dir'];
     $machine_name = $parameters['machine_name'];
 
@@ -297,9 +303,10 @@ class ProjectGenerator extends Generator {
   /**
    * Generates the configuration to enable the profile and themes by default.
    *
-   * @param $parameters
+   * @param array $parameters
+   *   The generation parameters.
    */
-  public function generateConfig($parameters) {
+  public function generateConfig(array $parameters) {
     $machine_name = $parameters['machine_name'];
     $config_folder = $parameters['config_folder'];
 
@@ -335,7 +342,9 @@ class ProjectGenerator extends Generator {
    * Track files generated without using a template.
    *
    * @param string $filename
+   *   The generated file name.
    * @param int $current_lines
+   *   The previous number of lines of the file.
    */
   protected function trackGeneratedFile($filename, $current_lines = 0) {
     $this->fileQueue->addFile($filename);
@@ -346,6 +355,7 @@ class ProjectGenerator extends Generator {
    * Track directories generated without using templates.
    *
    * @param string $dirname
+   *   The directory in which files has to be tracked.
    */
   protected function trackGeneratedDirectory($dirname) {
     $iterator = new \RecursiveDirectoryIterator($dirname);
@@ -357,7 +367,11 @@ class ProjectGenerator extends Generator {
   /**
    * Checks if a directory can be created or is writable.
    *
-   * @param $dir
+   * @param string $dir
+   *   The directory to check.
+   * @param string $type
+   *   The type of directory checked (used for the message).
+   *
    * @throws \RuntimeException
    */
   protected function checkDir($dir, $type) {
