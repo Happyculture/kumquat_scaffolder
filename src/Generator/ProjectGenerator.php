@@ -44,12 +44,14 @@ class ProjectGenerator extends Generator {
    *
    * @param array $parameters
    */
-  public function generate(array $parameters) {
+  public function generateAll(array $parameters) {
     $this->generateProfile($parameters);
     $this->generateCoreModule($parameters);
     $this->generateAdminTheme($parameters);
     $this->generateDefaultTheme($parameters);
-    $this->generateConfig($parameters);
+    if (!empty($parameters['generate_config'])) {
+      $this->generateConfig($parameters);
+    }
   }
 
   /**
@@ -57,7 +59,7 @@ class ProjectGenerator extends Generator {
    *
    * @param $parameters
    */
-  protected function generateProfile($parameters) {
+  public function generateProfile($parameters) {
     $profiles_dir = $parameters['profiles_dir'];
     $machine_name = $parameters['machine_name'];
 
@@ -94,7 +96,7 @@ class ProjectGenerator extends Generator {
    *
    * @param $parameters
    */
-  protected function generateCoreModule($parameters) {
+  public function generateCoreModule($parameters) {
     $modules = $parameters['modules_dir'];
     $machine_name = $parameters['machine_name'] . '_core';
 
@@ -140,7 +142,7 @@ class ProjectGenerator extends Generator {
    *
    * @param $parameters
    */
-  protected function generateAdminTheme($parameters) {
+  public function generateAdminTheme($parameters) {
     $themes_dir = $parameters['themes_dir'];
     $machine_name = $parameters['machine_name'];
     $config_folder = $parameters['config_folder'];
@@ -209,7 +211,7 @@ class ProjectGenerator extends Generator {
    *
    * @param $parameters
    */
-  protected function generateDefaultTheme($parameters) {
+  public function generateDefaultTheme($parameters) {
     $themes_dir = $parameters['themes_dir'];
     $machine_name = $parameters['machine_name'];
 
@@ -328,10 +330,7 @@ class ProjectGenerator extends Generator {
    *
    * @param $parameters
    */
-  protected function generateConfig($parameters) {
-    if (empty($parameters['generate_config'])) {
-      return;
-    }
+  public function generateConfig($parameters) {
     $machine_name = $parameters['machine_name'];
     $config_folder = $parameters['config_folder'];
 

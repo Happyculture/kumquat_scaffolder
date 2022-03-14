@@ -80,6 +80,36 @@ class GenerateProjectCommand extends Command {
         'The configuration storage folder, relative to the document root.'
       )
       ->addOption(
+        'generate-all',
+        null,
+        InputOption::VALUE_NONE,
+        'Generate a new install profile, a core module, an admin theme, a front theme and the associated configuration.'
+      )
+      ->addOption(
+        'generate-profile',
+        null,
+        InputOption::VALUE_NONE,
+        'Generate a new install profile.'
+      )
+      ->addOption(
+        'generate-core-module',
+        null,
+        InputOption::VALUE_NONE,
+        'Generate a new core module.'
+      )
+      ->addOption(
+        'generate-theme',
+        null,
+        InputOption::VALUE_NONE,
+        'Generate a front theme.'
+      )
+      ->addOption(
+        'generate-admin-theme',
+        null,
+        InputOption::VALUE_NONE,
+        'Generate an administration theme.'
+      )
+      ->addOption(
         'generate-config',
         null,
         InputOption::VALUE_NONE,
@@ -100,6 +130,11 @@ class GenerateProjectCommand extends Command {
     $name = $this->validateName($input->getOption('name'));
     $machine_name = $this->validateMachineName($input->getOption('machine-name'));
     $config_folder = $this->validatePath($input->getOption('config-folder'));
+    $generate_all = (bool) $input->getOption('generate-all');
+    $generate_profile = (bool) $input->getOption('generate-profile');
+    $generate_core_module = (bool) $input->getOption('generate-core-module');
+    $generate_theme = (bool) $input->getOption('generate-theme');
+    $generate_admin_theme = (bool) $input->getOption('generate-admin-theme');
     $generate_config = (bool) $input->getOption('generate-config');
     $base_admin_theme = $this->validateMachineName($input->getOption('base-admin-theme'));
     $theme_folder = 'themes/custom';
@@ -107,18 +142,36 @@ class GenerateProjectCommand extends Command {
     $profiles_folder = 'profiles';
 
     // Improve attributes readibility.
-    $recap_gen_config = $generate_config ? 'Yes' : 'No';
+    $recap_gen_profile = $generate_profile || $generate_all ? 'Yes' : 'No';
+    $recap_gen_core_module = $generate_core_module || $generate_all ? 'Yes' : 'No';
+    $recap_gen_theme = $generate_theme || $generate_all ? 'Yes' : 'No';
+    $recap_gen_admin_theme = $generate_admin_theme || $generate_all ? 'Yes' : 'No';
+    $recap_gen_config = $generate_config || $generate_all ? 'Yes' : 'No';
 
     $recap_params = [
       ['Name', $name],
       ['Machine name', $machine_name],
-      ['Base admin theme', $base_admin_theme],
-      ['Generate config', $recap_gen_config],
-      ['Config folder', $config_folder],
-      ['Profiles folder', $profiles_folder],
-      ['Modules folder', $module_folder],
-      ['Themes folder', $theme_folder],
     ];
+    $recap_params[] = ['Generate profile', $recap_gen_profile];
+    if ($generate_profile || $generate_all) {
+      $recap_params[] = ['Profiles folder', $profiles_folder];
+    }
+    $recap_params[] = ['Generate core module', $recap_gen_core_module];
+    if ($generate_core_module || $generate_all) {
+      $recap_params[] = ['Modules folder', $module_folder];
+    }
+    $recap_params[] = ['Generate front theme', $recap_gen_theme];
+    $recap_params[] = ['Generate admin theme', $recap_gen_admin_theme];
+    if ($generate_admin_theme || $generate_all) {
+      $recap_params[] = ['Base admin theme', $base_admin_theme];
+    }
+    if ($generate_admin_theme || $generate_theme || $generate_all) {
+      $recap_params[] = ['Themes folder', $theme_folder];
+    }
+    $recap_params[] = ['Generate config', $recap_gen_config];
+    if ($generate_config || $generate_all) {
+      $recap_params[] = ['Config folder', $config_folder];
+    }
 
     $this->getIo()->newLine(1);
     $this->getIo()->commentBlock('Settings recap');
@@ -129,16 +182,42 @@ class GenerateProjectCommand extends Command {
       return 1;
     }
 
-    $this->generator->generate([
-      'name' => $name,
-      'machine_name' => $machine_name,
-      'base_admin_theme' => $base_admin_theme,
-      'config_folder' => $config_folder,
-      'generate_config' => $generate_config,
-      'profiles_dir' => $profiles_folder,
-      'modules_dir' => $module_folder,
-      'themes_dir' => $theme_folder,
-    ]);
+    if ($generate_profile || $generate_all) {
+      $this->generator->generateProfile([
+        'name' => $name,
+        'machine_name' => $machine_name,
+        'profiles_dir' => $profiles_folder,
+      ]);
+    }
+    if ($generate_core_module || $generate_all) {
+      $this->generator->generateCoreModule([
+        'name' => $name,
+        'machine_name' => $machine_name,
+        'modules_dir' => $module_folder,
+      ]);
+    }
+    if ($generate_theme || $generate_all) {
+      $this->generator->generateDefaultTheme([
+        'name' => $name,
+        'machine_name' => $machine_name,
+        'themes_dir' => $theme_folder,
+      ]);
+    }
+    if ($generate_admin_theme || $generate_all) {
+      $this->generator->generateAdminTheme([
+        'name' => $name,
+        'machine_name' => $machine_name,
+        'themes_dir' => $theme_folder,
+        'base_admin_theme' => $base_admin_theme,
+      ]);
+    }
+    if ($generate_config || $generate_all) {
+      $this->generator->generateConfig([
+        'name' => $name,
+        'machine_name' => $machine_name,
+        'config_folder' => $config_folder,
+      ]);
+    }
   }
 
   /**
@@ -146,73 +225,30 @@ class GenerateProjectCommand extends Command {
    */
   protected function interact(InputInterface $input, OutputInterface $output) {
     try {
-      // A profile is technically also a module, so we can use the same
-      // validator to check the name.
-      $name = $input->getOption('name') ? $this->validateName($input->getOption('name')) : null;
-    } catch (\Exception $error) {
-      $this->getIo()->error($error->getMessage());
+      $generator_parts = ['all', 'profile', 'core-module', 'theme', 'admin-theme', 'config'];
 
-      return 1;
-    }
+      $enabled_parts = [];
+      foreach ($generator_parts as $part) {
+        $enabled_parts[$part] = !empty($input->getOption('generate-' . $part));
+      }
+      $enabled_parts = array_filter($enabled_parts);
 
-    if (!$name) {
-      $name = $this->getIo()->ask(
-        'What is the human readable name of the project?',
-        'Happy Rocket',
-        function ($name) {
-          return $this->validateName($name);
-        }
-      );
-      $input->setOption('name', $name);
-    }
-
-    try {
-      $machine_name = $input->getOption('machine-name') ? $this->validateMachineName($input->getOption('machine-name')) : null;
-    } catch (\Exception $error) {
-      $this->getIo()->error($error->getMessage());
-
-      return 1;
-    }
-
-    if (!$machine_name) {
-      $machine_name = $this->getIo()->ask(
-        'What is the machine name of the project?',
-        $this->stringConverter->createMachineName($name),
-        function ($machine_name) {
-          return $this->validateMachineName($machine_name);
-        }
-      );
-      $input->setOption('machine-name', $machine_name);
-    }
-
-    try {
-      $config_folder = $input->getOption('config-folder') ? $this->validatePath($input->getOption('config-folder')) : null;
-    } catch (\Exception $error) {
-      $this->getIo()->error($error->getMessage());
-
-      return 1;
-    }
-
-    if (!$config_folder) {
-      $config_folder = $this->getIo()->ask(
-        'Where are the configuration files stored (relative to the document root)?',
-        '../config/sync',
-        function ($config_folder) {
-          return $this->validatePath($config_folder);
-        }
-      );
-      $input->setOption('config-folder', $config_folder);
-    }
-
-    try {
-      $base_admin_theme = $input->getOption('base-admin-theme') ? $input->getOption('base-admin-theme') : null;
-      if (empty($base_admin_theme)) {
-        $base_admin_theme = $this->getIo()->choice(
-          'Which theme you want your administration theme based on? (if you want another one, use the --base-admin-theme option.',
-          ['adminimal_theme', 'gin'],
-          'gin'
+      if (empty($enabled_parts)) {
+        /** @var array $enabled_parts */
+        $enabled_parts = $this->getIo()->choice(
+          'What do you want to generate? Use comma separated values for multiple selection.',
+          $generator_parts,
+          implode(',', array_keys($enabled)),
+          TRUE
         );
-        $input->setOption('base-admin-theme', $base_admin_theme);
+
+        if (empty($enabled_parts)) {
+          throw new \Exception('You must at least choose one thing to generate.');
+        }
+
+        foreach ($generator_parts as $part) {
+          $input->setOption('generate-' . $part, in_array($part, $enabled_parts));
+        }
       }
     } catch (\Exception $error) {
       $this->getIo()->error($error->getMessage());
@@ -220,20 +256,78 @@ class GenerateProjectCommand extends Command {
     }
 
     try {
-      $generate_config = $input->getOption('generate-config') ? (bool) $input->getOption('generate-config') : null;
+      // A profile is technically also a module, so we can use the same
+      // validator to check the name.
+      $name = $input->getOption('name') ? $this->validateName($input->getOption('name')) : null;
+
+      if (!$name) {
+        $name = $this->getIo()->ask(
+          'What is the human readable name of the project?',
+          'Happy Rocket',
+          function ($name) {
+            return $this->validateName($name);
+          }
+        );
+        $input->setOption('name', $name);
+      }
     } catch (\Exception $error) {
       $this->getIo()->error($error->getMessage());
-
       return 1;
     }
 
-    if (!$generate_config) {
-      $generate_config = $this->getIo()->confirm(
-        'Do you want the config to be changed so the new profile and themes are used by default?',
-        TRUE
-      );
-      $input->setOption('generate-config', $generate_config);
+    try {
+      $machine_name = $input->getOption('machine-name') ? $this->validateMachineName($input->getOption('machine-name')) : null;
+      if (!$machine_name) {
+        $machine_name = $this->getIo()->ask(
+          'What is the machine name of the project?',
+          $this->stringConverter->createMachineName($name),
+          function ($machine_name) {
+            return empty($machine_name) ? '' : $this->validateMachineName($machine_name);
+          }
+        );
+        $input->setOption('machine-name', $machine_name);
+      }
+    } catch (\Exception $error) {
+      $this->getIo()->error($error->getMessage());
+      return 1;
     }
+
+    if (in_array('config', $enabled_parts) || in_array('all', $enabled_parts)) {
+      try {
+        $config_folder = $input->getOption('config-folder') ? $this->validatePath($input->getOption('config-folder')) : null;
+        if (!$config_folder) {
+          $config_folder = $this->getIo()->ask(
+            'Where are the configuration files stored (relative to the document root)?',
+            '../config/sync',
+            function ($config_folder) {
+              return $this->validatePath($config_folder);
+            }
+          );
+          $input->setOption('config-folder', $config_folder);
+        }
+      } catch (\Exception $error) {
+        $this->getIo()->error($error->getMessage());
+        return 1;
+      }
+    }
+
+    if (in_array('admin-theme', $enabled_parts) || in_array('all', $enabled_parts)) {
+      try {
+        $base_admin_theme = $input->getOption('base-admin-theme') ? $input->getOption('base-admin-theme') : null;
+        if (empty($base_admin_theme)) {
+          $base_admin_theme = $this->getIo()->choice(
+            'Which theme you want your administration theme based on? (if you want another one, use the --base-admin-theme option.',
+            ['adminimal_theme', 'gin'],
+            'gin'
+          );
+          $input->setOption('base-admin-theme', $base_admin_theme);
+        }
+      } catch (\Exception $error) {
+        $this->getIo()->error($error->getMessage());
+        return 1;
+      }
+    }
+
   }
 
   /**
