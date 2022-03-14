@@ -17,11 +17,6 @@ class ProjectGenerator extends Generator {
   protected $fs;
 
   /**
-   * @var int
-   */
-  protected $core_version;
-
-  /**
    * {@inheritdoc}
    */
   public function setRenderer(TwigRenderer $renderer)
@@ -50,8 +45,6 @@ class ProjectGenerator extends Generator {
    * @param array $parameters
    */
   public function generate(array $parameters) {
-    $this->core_version = $parameters['core'] == 9 ? 8 : $parameters['core'];
-
     $this->generateProfile($parameters);
     $this->generateCoreModule($parameters);
     $this->generateAdminTheme($parameters);
@@ -78,19 +71,19 @@ class ProjectGenerator extends Generator {
     ];
 
     $this->renderFile(
-      'kumquat-profile/' . $this->core_version . '/info.yml.twig',
+      'kumquat-profile/info.yml.twig',
       $profilePath . '.info.yml',
       $profileParameters
     );
 
     $this->renderFile(
-      'kumquat-profile/' . $this->core_version . '/profile.twig',
+      'kumquat-profile/profile.twig',
       $profilePath . '.profile',
       $profileParameters
     );
 
     $this->renderFile(
-      'kumquat-profile/' . $this->core_version . '/install.twig',
+      'kumquat-profile/install.twig',
       $profilePath . '.install',
       $profileParameters
     );
@@ -115,31 +108,31 @@ class ProjectGenerator extends Generator {
     ];
 
     $this->renderFile(
-      'kumquat-core-module/' . $this->core_version . '/info.yml.twig',
+      'kumquat-core-module/info.yml.twig',
       $modulePath . '.info.yml',
       $profileParameters
     );
 
     $this->renderFile(
-      'kumquat-core-module/' . $this->core_version . '/module.twig',
+      'kumquat-core-module/module.twig',
       $modulePath . '.module',
       $profileParameters
     );
 
     $this->renderFile(
-      'kumquat-core-module/' . $this->core_version . '/src/Helpers/StaticBlockBase.php.twig',
+      'kumquat-core-module/src/Helpers/StaticBlockBase.php.twig',
       dirname($modulePath) . '/src/Helpers/StaticBlockBase.php',
       $profileParameters
     );
 
     $this->renderFile(
-      'kumquat-core-module/' . $this->core_version . '/layouts.yml.twig',
+      'kumquat-core-module/layouts.yml.twig',
       $modulePath . '.layouts.yml',
       $profileParameters
     );
 
     $this->renderFile(
-      'kumquat-core-module/' . $this->core_version . '/layouts/nolayout/layout--nolayout.html.twig',
+      'kumquat-core-module/layouts/nolayout/layout--nolayout.html.twig',
       dirname($modulePath) . '/layouts/nolayout/layout--nolayout.html.twig',
       $profileParameters
     );
@@ -167,39 +160,39 @@ class ProjectGenerator extends Generator {
 
     // Base files.
     $this->renderFile(
-      'kumquat-admin-theme/' . $this->core_version . '/info.yml.twig',
+      'kumquat-admin-theme/info.yml.twig',
       $adminThemePath . '.info.yml',
       $adminThemeParameters
     );
 
     $this->renderFile(
-      'kumquat-admin-theme/' . $this->core_version . '/theme.twig',
+      'kumquat-admin-theme/theme.twig',
       $adminThemePath . '.theme',
       $adminThemeParameters
     );
 
     $this->renderFile(
-      'kumquat-admin-theme/' . $this->core_version . '/libraries.yml.twig',
+      'kumquat-admin-theme/libraries.yml.twig',
       $adminThemePath . '.libraries.yml',
       $adminThemeParameters
     );
 
     $this->renderFile(
-      'kumquat-admin-theme/' . $this->core_version . '/base.css.twig',
+      'kumquat-admin-theme/base.css.twig',
       dirname($adminThemePath) . '/css/' . $adminThemeParameters['machine_name'] . '.css',
       $adminThemeParameters
     );
 
     if ($parameters['base_admin_theme'] === 'gin') {
       $this->renderFile(
-        'kumquat-admin-theme/' . $this->core_version . '/admin_theme.settings.yml.twig',
+        'kumquat-admin-theme/admin_theme.settings.yml.twig',
         $config_folder . '/' . $machine_name . '_admin_theme.settings.yml',
         $adminThemeParameters
       );
     }
 
     // Blocks configuration.
-    $dir = opendir(self::TPL_DIR . '/kumquat-admin-theme/' . $this->core_version . '/config/blocks');
+    $dir = opendir(self::TPL_DIR . '/kumquat-admin-theme/config/blocks');
     while ($file = readdir($dir)) {
       if ($file[0] === '.') {
         continue;
@@ -207,7 +200,7 @@ class ProjectGenerator extends Generator {
 
       $block_id = substr($file, 0, -1 * strlen('.yml.twig'));
       $this->renderFile(
-        'kumquat-admin-theme/' . $this->core_version . '/config/blocks/' . $file,
+        'kumquat-admin-theme/config/blocks/' . $file,
         $config_folder . '/block.block.' . $machine_name . '_admin_theme_' . $block_id . '.yml',
         $adminThemeParameters
       );
@@ -233,81 +226,81 @@ class ProjectGenerator extends Generator {
     ];
 
     $this->renderFile(
-      'kumquat-theme/' . $this->core_version . '/gitignore.twig',
+      'kumquat-theme/gitignore.twig',
       $defaultThemePath . '/.gitignore',
       $defaultThemeParameters
     );
 
     $this->renderFile(
-      'kumquat-theme/' . $this->core_version . '/gulpfile.js.twig',
+      'kumquat-theme/gulpfile.js.twig',
       $defaultThemePath . '/gulpfile.js',
       $defaultThemeParameters
     );
 
     $this->renderFile(
-      'kumquat-theme/' . $this->core_version . '/info.yml.twig',
+      'kumquat-theme/info.yml.twig',
       $defaultThemePath . '/' . $defaultThemeParameters['machine_name'] . '.info.yml',
       $defaultThemeParameters
     );
 
     $this->renderFile(
-      'kumquat-theme/' . $this->core_version . '/libraries.yml.twig',
+      'kumquat-theme/libraries.yml.twig',
       $defaultThemePath . '/' . $defaultThemeParameters['machine_name'] . '.libraries.yml',
       $defaultThemeParameters
     );
 
     $this->renderFile(
-      'kumquat-theme/' . $this->core_version . '/theme.twig',
+      'kumquat-theme/theme.twig',
       $defaultThemePath . '/' . $defaultThemeParameters['machine_name'] . '.theme',
       $defaultThemeParameters
     );
 
     $this->renderFile(
-      'kumquat-theme/' . $this->core_version . '/package.json.twig',
+      'kumquat-theme/package.json.twig',
       $defaultThemePath . '/package.json',
       $defaultThemeParameters
     );
 
     $this->renderFile(
-      'kumquat-theme/' . $this->core_version . '/readme.twig',
+      'kumquat-theme/readme.twig',
       $defaultThemePath . '/README.md',
       $defaultThemeParameters
     );
 
     $this->renderFile(
-      'kumquat-theme/' . $this->core_version . '/breakpoints.yml.twig',
+      'kumquat-theme/breakpoints.yml.twig',
       $defaultThemePath . '/' . $defaultThemeParameters['machine_name'] . '.breakpoints.yml',
       $defaultThemeParameters
     );
 
     // Copy the entire assets-src directory as we don't need any variable
     // replacement.
-    $this->getFs()->mirror(self::TPL_DIR . '/kumquat-theme/' . $this->core_version . '/assets-src', $defaultThemePath . '/assets-src');
+    $this->getFs()->mirror(self::TPL_DIR . '/kumquat-theme/assets-src', $defaultThemePath . '/assets-src');
     $this->trackGeneratedDirectory($defaultThemePath . '/assets-src');
 
     // Copy the entire templates directory as we don't need any variable
     // replacement.
-    $this->getFs()->mirror(self::TPL_DIR . '/kumquat-theme/' . $this->core_version . '/templates', $defaultThemePath . '/templates');
+    $this->getFs()->mirror(self::TPL_DIR . '/kumquat-theme/templates', $defaultThemePath . '/templates');
     $this->trackGeneratedDirectory($defaultThemePath . '/templates');
 
     // Copy the logo.
-    $this->getFs()->copy(self::TPL_DIR . '/kumquat-theme/' . $this->core_version . '/logo.svg', $defaultThemePath . '/logo.svg');
+    $this->getFs()->copy(self::TPL_DIR . '/kumquat-theme/logo.svg', $defaultThemePath . '/logo.svg');
     $this->trackGeneratedFile($defaultThemePath . '/logo.svg');
 
     // Gitkeeps.
-    $this->renderFile('kumquat-theme/' . $this->core_version . '/gitkeep.twig', $defaultThemePath . '/assets-src/fonts/.gitkeep');
+    $this->renderFile('kumquat-theme/gitkeep.twig', $defaultThemePath . '/assets-src/fonts/.gitkeep');
 
-    $this->renderFile('kumquat-theme/' . $this->core_version . '/gitkeep.twig', $defaultThemePath . '/dist/css/.gitkeep');
-    $this->renderFile('kumquat-theme/' . $this->core_version . '/gitkeep.twig', $defaultThemePath . '/dist/fonts/.gitkeep');
-    $this->renderFile('kumquat-theme/' . $this->core_version . '/gitkeep.twig', $defaultThemePath . '/dist/images/.gitkeep');
-    $this->renderFile('kumquat-theme/' . $this->core_version . '/gitkeep.twig', $defaultThemePath . '/dist/js/.gitkeep');
+    $this->renderFile('kumquat-theme/gitkeep.twig', $defaultThemePath . '/dist/css/.gitkeep');
+    $this->renderFile('kumquat-theme/gitkeep.twig', $defaultThemePath . '/dist/fonts/.gitkeep');
+    $this->renderFile('kumquat-theme/gitkeep.twig', $defaultThemePath . '/dist/images/.gitkeep');
+    $this->renderFile('kumquat-theme/gitkeep.twig', $defaultThemePath . '/dist/js/.gitkeep');
 
     // Safety.
-    $this->renderFile('kumquat-theme/' . $this->core_version . '/htaccess.deny.twig', $defaultThemePath . '/assets-src/.htaccess');
+    $this->renderFile('kumquat-theme/htaccess.deny.twig', $defaultThemePath . '/assets-src/.htaccess');
 
     // Blocks configuration.
     $config_folder = $parameters['config_folder'];
-    $dir = opendir(self::TPL_DIR . '/kumquat-theme/' . $this->core_version . '/config/blocks');
+    $dir = opendir(self::TPL_DIR . '/kumquat-theme/config/blocks');
     while ($file = readdir($dir)) {
       if ($file[0] === '.') {
         continue;
@@ -315,7 +308,7 @@ class ProjectGenerator extends Generator {
 
       $block_id = substr($file, 0, -1 * strlen('.yml.twig'));
       $this->renderFile(
-        'kumquat-theme/' . $this->core_version . '/config/blocks/' . $file,
+        'kumquat-theme/config/blocks/' . $file,
         $config_folder . '/block.block.' . $defaultThemeParameters['machine_name'] . '_' . $block_id . '.yml',
         $defaultThemeParameters
       );
