@@ -141,6 +141,7 @@ class ProjectGenerator extends Generator {
   protected function generateAdminTheme($parameters) {
     $themes_dir = $parameters['themes_dir'];
     $machine_name = $parameters['machine_name'];
+    $config_folder = $parameters['config_folder'];
 
     $this->checkDir(($themes_dir == '/' ? '' : $themes_dir) . '/' . $machine_name . '_admin_theme');
 
@@ -177,8 +178,15 @@ class ProjectGenerator extends Generator {
       $adminThemeParameters
     );
 
+    if ($parameters['base_admin_theme'] === 'gin') {
+      $this->renderFile(
+        'kumquat-admin-theme/' . $this->core_version . '/admin_theme.settings.yml.twig',
+        $config_folder . '/' . $machine_name . '_admin_theme.settings.yml',
+        $adminThemeParameters
+      );
+    }
+
     // Blocks configuration.
-    $config_folder = $parameters['config_folder'];
     $dir = opendir(self::TPL_DIR . '/kumquat-admin-theme/' . $this->core_version . '/config/blocks');
     while ($file = readdir($dir)) {
       if ($file[0] === '.') {
