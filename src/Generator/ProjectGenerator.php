@@ -4,17 +4,16 @@ namespace Drupal\Console\KumquatScaffolder\Generator;
 
 use Drupal\Console\Core\Generator\Generator;
 use Drupal\Console\Core\Utils\TwigRenderer;
+use Drupal\Console\KumquatScaffolder\ConfigManipulationTrait;
+use Drupal\Console\KumquatScaffolder\FileManipulationTrait;
 use Drupal\Core\Serialization\Yaml;
-use Symfony\Component\Filesystem\Filesystem;
 
 class ProjectGenerator extends Generator {
 
-  const TPL_DIR = __DIR__ . '/../../templates';
+  use ConfigManipulationTrait;
+  use FileManipulationTrait;
 
-  /**
-   * @var \Symfony\Component\Filesystem\Filesystem;
-   */
-  protected $fs;
+  const TPL_DIR = __DIR__ . '/../../templates';
 
   /**
    * {@inheritdoc}
@@ -22,18 +21,6 @@ class ProjectGenerator extends Generator {
   public function setRenderer(TwigRenderer $renderer) {
     $this->renderer = $renderer;
     $this->renderer->addSkeletonDir(self::TPL_DIR);
-  }
-
-  /**
-   * Gets an helper to manipulate files.
-   *
-   * @return \Symfony\Component\Filesystem\Filesystem
-   */
-  public function getFs() {
-    if (NULL === $this->fs) {
-      $this->fs = new Filesystem();
-    }
-    return $this->fs;
   }
 
   /**
@@ -342,28 +329,6 @@ class ProjectGenerator extends Generator {
     $config['default'] = $machine_name . '_theme';
 
     $this->writeConfig($filename, $config);
-  }
-
-  /**
-   * Extracts a Yaml config file content.
-   *
-   * @param $filename
-   * @return array
-   */
-  protected function readConfig($filename) {
-    return Yaml::decode(file_get_contents($filename));
-  }
-
-  /**
-   * Encodes an array of data and write it in a Yaml file.
-   *
-   * @param $filename
-   * @param $data
-   */
-  protected function writeConfig($filename, $data) {
-    $current_lines = count(file($filename));
-    file_put_contents($filename, Yaml::encode($data));
-    $this->trackGeneratedFile($filename, $current_lines);
   }
 
   /**
