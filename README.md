@@ -8,9 +8,9 @@
 
 # <a name="intro"></a>Kumquat Scaffolder
 
-Kumquat scaffolder is a package that helps you start your Drupal projects faster by scaffolding an install profile, a front theme and a back theme for you.
+Kumquat scaffolder is a package that helps you start your Drupal projects faster by scaffolding an install profile, a core module, a front theme and an admin theme for you.
 
-It's compatible with Drupal 8 and 7 and is meant to be used by developers at the very beginning of a new project.
+It's compatible with Drupal 8 and 9 and is meant to be used by developers at the very beginning of a new project.
 
 ## <a name="installation"></a>Installation
 
@@ -19,8 +19,9 @@ It's compatible with Drupal 8 and 7 and is meant to be used by developers at the
 ## <a name="usage"></a>Usage
 
 - Use `drupal kumquat:generate-project` to initiate your project files.
+- Use `drupal kumquat:clean-project` to remove wrongly created project files.
 
-## <a name="troubleshooting"></a>Troubleshooting
+## <a name="troubleshooting"></a>Troubleshooting
 
 If you encounter the following error:
 
