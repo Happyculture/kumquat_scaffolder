@@ -153,8 +153,6 @@ class GenerateProjectCommand extends Command {
    * {@inheritdoc}
    */
   protected function interact(InputInterface $input, OutputInterface $output) {
-    $envVars = getenv();
-
     // Identify the Drupal version built.
     try {
       $core_version = $input->getOption('core') ? $input->getOption('core') : null;
@@ -187,7 +185,7 @@ class GenerateProjectCommand extends Command {
     if (!$name) {
       $name = $this->getIo()->ask(
         'What is the human readable name of the project?',
-        array_key_exists('COMBAWA_PROJECT_NAME', $envVars) ? $envVars['COMBAWA_PROJECT_NAME'] : 'Happy Rocket',
+        'Happy Rocket',
         function ($name) {
           return $this->validateName($name);
         }
@@ -206,7 +204,7 @@ class GenerateProjectCommand extends Command {
     if (!$machine_name) {
       $machine_name = $this->getIo()->ask(
         'What is the machine name of the project?',
-        array_key_exists('COMBAWA_PROJECT_MACHINE_NAME', $envVars) ? $envVars['COMBAWA_PROJECT_MACHINE_NAME'] : $this->stringConverter->createMachineName($name),
+        $this->stringConverter->createMachineName($name),
         function ($machine_name) {
           return $this->validateMachineName($machine_name);
         }
