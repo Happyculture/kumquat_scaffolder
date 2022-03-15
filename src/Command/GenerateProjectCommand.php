@@ -292,7 +292,7 @@ class GenerateProjectCommand extends Command {
           'What is the machine name of the project?',
           $this->stringConverter->createMachineName($name),
           function ($machine_name) {
-            return empty($machine_name) ? '' : $this->validateMachineName($machine_name);
+            return $this->validateMachineName($machine_name);
           }
         );
         $input->setOption('machine-name', $machine_name);
@@ -375,7 +375,7 @@ class GenerateProjectCommand extends Command {
    * @throws \InvalidArgumentException
    */
   protected function validateMachineName($machine_name) {
-    if (preg_match(self::REGEX_MACHINE_NAME, $machine_name)) {
+    if (empty($machine_name) || preg_match(self::REGEX_MACHINE_NAME, $machine_name)) {
       return $machine_name;
     }
     else {
