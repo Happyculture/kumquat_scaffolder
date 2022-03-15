@@ -176,6 +176,24 @@ class CleanProjectCommand extends Command {
       $dir = $theme_folder . '/' . $machine_name . '_theme';
       if ($this->getFs()->exists($dir)) {
         $this->getFs()->remove($dir);
+
+        // Remove the theme path in the composer.json file.
+        $prevDir = getcwd();
+        chdir($this->drupalFinder->getComposerRoot());
+        $enabledThemes = json_decode(exec('/usr/bin/env composer config extra.kumquat-themes'));
+
+        $prefix = substr($this->drupalFinder->getDrupalRoot(), strlen($this->drupalFinder->getComposerRoot()));
+        $prefix = trim($prefix, '/');
+        $key = array_search($prefix . '/' . $dir, $enabledThemes);
+        if ($key !== FALSE) {
+          unset($enabledThemes[$key]);
+        }
+
+        exec('/usr/bin/env composer config extra.kumquat-themes --json \'' . json_encode(array_unique($enabledThemes)) . '\'');
+        exec('/usr/bin/env composer update --lock');
+
+        chdir($prevDir);
+
         $this->getIo()->success(sprintf('%s front theme successfully cleaned.', $machine_name . '_theme'));
       }
       else {

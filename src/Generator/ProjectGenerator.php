@@ -291,10 +291,15 @@ class ProjectGenerator extends Generator {
     // Add the theme path in the composer.json file.
     $prevDir = getcwd();
     chdir($this->drupalFinder->getComposerRoot());
+    $enabledThemes = json_decode(exec('/usr/bin/env composer config extra.kumquat-themes'));
+
     $prefix = substr($this->drupalFinder->getDrupalRoot(), strlen($this->drupalFinder->getComposerRoot()));
     $prefix = trim($prefix, '/');
-    exec('/usr/bin/env composer config extra.kumquat-themes.0 ' . $prefix . '/' . $defaultThemePath);
+    $enabledThemes[] = $prefix . '/' . $defaultThemePath;
+
+    exec('/usr/bin/env composer config extra.kumquat-themes --json \'' . json_encode(array_unique($enabledThemes)) . '\'');
     exec('/usr/bin/env composer update --lock');
+
     chdir($prevDir);
     $this->fileQueue->addFile('../composer.json');
     $this->countCodeLines->addCountCodeLines(1);
