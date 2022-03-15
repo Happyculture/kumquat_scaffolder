@@ -262,6 +262,7 @@ class CleanProjectCommand extends Command {
         foreach ($cleaner_parts as $part) {
           $input->setOption('clean-' . $part, in_array($part, $enabled_parts));
         }
+        $enabled_parts = array_fill_keys(array_values($enabled_parts), TRUE);
       }
     }
     catch (\Exception $error) {
@@ -287,7 +288,7 @@ class CleanProjectCommand extends Command {
       return 1;
     }
 
-    if (in_array('config', $enabled_parts) || in_array('all', $enabled_parts)) {
+    if ($enabled_parts['config'] || $enabled_parts['all']) {
       try {
         $config_folder = $input->getOption('config-folder') ? $this->validatePath($input->getOption('config-folder')) : NULL;
         if (!$config_folder) {

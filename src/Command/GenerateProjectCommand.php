@@ -257,6 +257,7 @@ class GenerateProjectCommand extends Command {
         foreach ($generator_parts as $part) {
           $input->setOption('generate-' . $part, in_array($part, $enabled_parts));
         }
+        $enabled_parts = array_fill_keys(array_values($enabled_parts), TRUE);
       }
     }
     catch (\Exception $error) {
@@ -303,7 +304,7 @@ class GenerateProjectCommand extends Command {
       return 1;
     }
 
-    if (in_array('config', $enabled_parts) || in_array('all', $enabled_parts)) {
+    if ($enabled_parts['config'] || $enabled_parts['all']) {
       try {
         $config_folder = $input->getOption('config-folder') ? $this->validatePath($input->getOption('config-folder')) : NULL;
         if (!$config_folder) {
@@ -323,7 +324,7 @@ class GenerateProjectCommand extends Command {
       }
     }
 
-    if (in_array('admin-theme', $enabled_parts) || in_array('all', $enabled_parts)) {
+    if ($enabled_parts['admin-theme'] || $enabled_parts['all']) {
       try {
         $base_admin_theme = $input->getOption('base-admin-theme') ? $input->getOption('base-admin-theme') : NULL;
         if (empty($base_admin_theme)) {
