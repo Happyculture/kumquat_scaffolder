@@ -271,9 +271,11 @@ class GenerateProjectCommand extends Command {
       $name = $input->getOption('name') ? $this->validateName($input->getOption('name')) : NULL;
 
       if (!$name) {
+        $composer_data = json_decode(file_get_contents($this->drupalFinder->getComposerRoot() . '/composer.json'));
+        [,$default_name] = explode('/', $composer_data->name);
         $name = $this->getIo()->ask(
           'What is the human readable name of the project?',
-          'Happy Rocket',
+          ucwords($default_name),
           function ($name) {
             return $this->validateName($name);
           }

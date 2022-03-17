@@ -291,9 +291,11 @@ class CleanProjectCommand extends Command {
     try {
       $machine_name = $input->getOption('machine-name') ? $this->validateMachineName($input->getOption('machine-name')) : NULL;
       if (!$machine_name) {
+        $composer_data = json_decode(file_get_contents($this->drupalFinder->getComposerRoot() . '/composer.json'))->name;
+        [,$default_name] = explode('/', $composer_data);
         $machine_name = $this->getIo()->ask(
           'What is the machine name of the project?',
-          '',
+          $default_name,
           function ($machine_name) {
             return empty($machine_name) ? '' : $this->validateMachineName($machine_name);
           }
