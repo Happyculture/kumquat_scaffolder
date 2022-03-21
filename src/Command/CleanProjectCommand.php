@@ -159,7 +159,7 @@ class CleanProjectCommand extends Command {
     }
 
     if ($clean_theme || $clean_all) {
-      $this->cleanTheme($theme_folder, $machine_name);
+      $this->cleanTheme($theme_folder, $config_folder, $machine_name);
     }
 
     if ($clean_admin_theme || $clean_all) {
@@ -353,15 +353,25 @@ class CleanProjectCommand extends Command {
    *
    * @param string $theme_folder
    *   The theme storage folder.
+   * @param string $config_folder
+   *   The configuration strorage folder.
    * @param string $machine_name
    *   The project machine name.
    *
    * @return void
    */
-  protected function cleanTheme(string $theme_folder, string $machine_name): void {
+  protected function cleanTheme(string $theme_folder, string $config_folder, string $machine_name): void {
     $dir = $theme_folder . '/' . $machine_name . '_theme';
     if ($this->getFs()->exists($dir)) {
       $this->getFs()->remove($dir);
+
+      // Remove theme configuration.
+      $this->getFs()->remove($config_folder . '/' . $machine_name . '_theme.settings.yml');
+
+      // Remove block configuration in the config dir.
+      $files = $this->getFinder()->in($config_folder)
+        ->files()->name('block.block.' . $machine_name . '_theme_*.yml');
+      $this->getFs()->remove($files);
 
       // Remove the theme path in the composer.json file.
       $prevDir = getcwd();
