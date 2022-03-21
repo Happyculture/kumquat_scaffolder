@@ -320,16 +320,23 @@ class ProjectGenerator extends Generator {
     $config = $this->readConfig($filename);
     $current_profile = $config['profile'];
 
-    $config['module'][$machine_name . '_core'] = 0;
-    $config['module'][$machine_name] = 1000;
-    unset($config['module'][$current_profile]);
+    if ($parameters['generate_core_module']) {
+      $config['module'][$machine_name . '_core'] = 0;
+    }
+    if ($parameters['generate_profile']) {
+      $config['module'][$machine_name] = 1000;
+      unset($config['module'][$current_profile]);
+      $config['profile'] = $machine_name;
+    }
     $config['module'] = module_config_sort($config['module']);
 
-    $config['theme'][$machine_name . '_theme'] = 0;
-    $config['theme'][$machine_name . '_admin_theme'] = 0;
-    unset($config['theme']['bartik']);
-
-    $config['profile'] = $machine_name;
+    if ($parameters['generate_theme']) {
+      $config['theme'][$machine_name . '_theme'] = 0;
+      unset($config['theme']['bartik']);
+    }
+    if ($parameters['generate_admin_theme']) {
+      $config['theme'][$machine_name . '_admin_theme'] = 0;
+    }
 
     $this->writeConfig($filename, $config);
 
@@ -337,24 +344,30 @@ class ProjectGenerator extends Generator {
     $filename = $config_folder . '/system.theme.yml';
     $config = $this->readConfig($filename);
 
-    $config['admin'] = $machine_name . '_admin_theme';
-    $config['default'] = $machine_name . '_theme';
+    if ($parameters['generate_admin_theme']) {
+      $config['admin'] = $machine_name . '_admin_theme';
+    }
+    if ($parameters['generate_theme']) {
+      $config['default'] = $machine_name . '_theme';
+    }
 
     $this->writeConfig($filename, $config);
 
     // Set the generated profile name in combawa if it's used on the project.
-    $prevDir = getcwd();
-    chdir($this->drupalFinder->getComposerRoot());
-    $combawaConfig = json_decode(exec('/usr/bin/env composer config extra.combawa'));
-    if (!empty($combawaConfig)) {
-      $combawaConfig->profile_name = $machine_name;
-      exec('/usr/bin/env composer config extra.combawa --json \'' . json_encode($combawaConfig) . '\'');
-      exec('/usr/bin/env composer update --lock');
+    if ($parameters['generate_profile']) {
+      $prevDir = getcwd();
+      chdir($this->drupalFinder->getComposerRoot());
+      $combawaConfig = json_decode(exec('/usr/bin/env composer config extra.combawa'));
+      if (!empty($combawaConfig)) {
+        $combawaConfig->profile_name = $machine_name;
+        exec('/usr/bin/env composer config extra.combawa --json \'' . json_encode($combawaConfig) . '\'');
+        exec('/usr/bin/env composer update --lock');
 
-      $this->fileQueue->addFile('../composer.json');
-      $this->countCodeLines->addCountCodeLines(1);
+        $this->fileQueue->addFile('../composer.json');
+        $this->countCodeLines->addCountCodeLines(1);
+      }
+      chdir($prevDir);
     }
-    chdir($prevDir);
   }
 
   /**

@@ -219,6 +219,10 @@ class GenerateProjectCommand extends Command {
         'name' => $name,
         'machine_name' => $machine_name,
         'config_folder' => $config_folder,
+        'generate_profile' => $generate_profile,
+        'generate_core_module' => $generate_core_module,
+        'generate_theme' => $generate_theme,
+        'generate_admin_theme' => $generate_admin_theme,
       ]);
     }
   }
