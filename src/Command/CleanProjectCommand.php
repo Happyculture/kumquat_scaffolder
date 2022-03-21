@@ -219,7 +219,7 @@ class CleanProjectCommand extends Command {
       $machine_name = $input->getOption('machine-name') ? $this->validateMachineName($input->getOption('machine-name')) : NULL;
       if (!$machine_name) {
         $composer_data = json_decode(file_get_contents($this->drupalFinder->getComposerRoot() . '/composer.json'))->name;
-        [,$default_name] = explode('/', $composer_data);
+        [, $default_name] = explode('/', $composer_data);
         $machine_name = $this->getIo()->ask(
           'What is the machine name of the project?',
           $default_name,
@@ -313,8 +313,6 @@ class CleanProjectCommand extends Command {
    *   The profiles storage folder.
    * @param string $machine_name
    *   The project machine name.
-   *
-   * @return void
    */
   protected function cleanProfile(string $profiles_folder, string $machine_name): void {
     $dir = $profiles_folder . '/' . $machine_name;
@@ -334,8 +332,6 @@ class CleanProjectCommand extends Command {
    *   The module storage folder.
    * @param string $machine_name
    *   The project machine name.
-   *
-   * @return void
    */
   protected function cleanCoreModule(string $module_folder, string $machine_name): void {
     $dir = $module_folder . '/' . $machine_name . '_core';
@@ -357,8 +353,6 @@ class CleanProjectCommand extends Command {
    *   The configuration strorage folder.
    * @param string $machine_name
    *   The project machine name.
-   *
-   * @return void
    */
   protected function cleanTheme(string $theme_folder, string $config_folder, string $machine_name): void {
     $dir = $theme_folder . '/' . $machine_name . '_theme';
@@ -406,8 +400,6 @@ class CleanProjectCommand extends Command {
    *   The configuration strorage folder.
    * @param string $machine_name
    *   The project machine name.
-   *
-   * @return void
    */
   protected function cleanAdminTheme(string $theme_folder, string $config_folder, string $machine_name): void {
     $dir = $theme_folder . '/' . $machine_name . '_admin_theme';
@@ -432,8 +424,6 @@ class CleanProjectCommand extends Command {
    *   The configuration strorage folder.
    * @param string $machine_name
    *   The project machine name.
-   *
-   * @return void
    */
   protected function cleanConfig(string $config_folder, string $machine_name): void {
     // Set themes in the system.theme.yml file.

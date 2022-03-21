@@ -274,7 +274,7 @@ class GenerateProjectCommand extends Command {
 
       if (!$name) {
         $composer_data = json_decode(file_get_contents($this->drupalFinder->getComposerRoot() . '/composer.json'));
-        [,$default_name] = explode('/', $composer_data->name);
+        [, $default_name] = explode('/', $composer_data->name);
         $name = $this->getIo()->ask(
           'What is the human readable name of the project?',
           ucwords($default_name),
