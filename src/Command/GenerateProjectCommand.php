@@ -202,6 +202,7 @@ class GenerateProjectCommand extends Command {
         'name' => $name,
         'machine_name' => $machine_name,
         'themes_dir' => $theme_folder,
+        'config_folder' => $config_folder,
       ]);
     }
     if ($generate_admin_theme || $generate_all) {
@@ -210,6 +211,7 @@ class GenerateProjectCommand extends Command {
         'machine_name' => $machine_name,
         'themes_dir' => $theme_folder,
         'base_admin_theme' => $base_admin_theme,
+        'config_folder' => $config_folder,
       ]);
     }
     if ($generate_config || $generate_all) {
@@ -306,7 +308,7 @@ class GenerateProjectCommand extends Command {
       return 1;
     }
 
-    if ($enabled_parts['config'] || $enabled_parts['all']) {
+    if ($enabled_parts['config'] || $enabled_parts['admin-theme'] || $enabled_parts['theme'] || $enabled_parts['all']) {
       try {
         $config_folder = $input->getOption('config-folder') ? $this->validatePath($input->getOption('config-folder')) : NULL;
         if (!$config_folder) {
