@@ -419,30 +419,42 @@ class CleanProjectCommand extends Command {
    * @return void
    */
   protected function cleanConfig(string $config_folder, string $machine_name): void {
-    // Enable profile and themes in the core.extension.yml file.
-    $filename = $config_folder . '/core.extension.yml';
-    $config = $this->readConfig($filename);
-    $current_profile = $config['profile'];
-
-    $config['module']['minimal'] = 1000;
-    unset($config['module'][$current_profile]);
-    unset($config['module'][$machine_name . '_core']);
-    $config['module'] = module_config_sort($config['module']);
-
-    $config['theme']['bartik'] = 0;
-    unset($config['theme'][$machine_name . '_theme']);
-    unset($config['theme'][$machine_name . '_admin_theme']);
-
-    $config['profile'] = 'minimal';
-
-    $this->writeConfig($filename, $config);
-
     // Set themes in the system.theme.yml file.
     $filename = $config_folder . '/system.theme.yml';
     $config = $this->readConfig($filename);
 
-    $config['admin'] = 'seven';
-    $config['default'] = 'bartik';
+    if ($config['admin'] === $machine_name . '_admin_theme') {
+      $config['admin'] = 'seven';
+      $resetAdminTheme = TRUE;
+    }
+    if ($config['default'] === $machine_name . '_theme') {
+      $config['default'] = 'bartik';
+      $resetFrontTheme = TRUE;
+    }
+
+    $this->writeConfig($filename, $config);
+
+    // Update profile and themes in the core.extension.yml file.
+    $filename = $config_folder . '/core.extension.yml';
+    $config = $this->readConfig($filename);
+    $current_profile = $config['profile'];
+
+    if ($current_profile === $machine_name) {
+      $config['module']['minimal'] = 1000;
+      $config['profile'] = 'minimal';
+    }
+    unset($config['module'][$machine_name]);
+    unset($config['module'][$machine_name . '_core']);
+    $config['module'] = module_config_sort($config['module']);
+
+    if (isset($resetFrontTheme)) {
+      $config['theme']['bartik'] = 0;
+    }
+    unset($config['theme'][$machine_name . '_theme']);
+    if (isset($resetAdminTheme)) {
+      $config['theme']['seven'] = 0;
+    }
+    unset($config['theme'][$machine_name . '_admin_theme']);
 
     $this->writeConfig($filename, $config);
 
