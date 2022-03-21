@@ -151,96 +151,23 @@ class CleanProjectCommand extends Command {
     }
 
     if ($clean_profile || $clean_all) {
-      $dir = $profiles_folder . '/' . $machine_name;
-      if ($this->getFs()->exists($dir)) {
-        $this->getFs()->remove($dir);
-        $this->getIo()->success(sprintf('%s profile successfully cleaned.', $machine_name));
-      }
-      else {
-        $this->getIo()->info(sprintf('No %s profile to clean.', $machine_name));
-      }
+      $this->cleanProfile($profiles_folder, $machine_name);
     }
 
     if ($clean_core_module || $clean_all) {
-      $dir = $module_folder . '/' . $machine_name . '_core';
-      if ($this->getFs()->exists($dir)) {
-        $this->getFs()->remove($dir);
-        $this->getIo()->success(sprintf('%s core module successfully cleaned.', $machine_name . '_core'));
-      }
-      else {
-        $this->getIo()->info(sprintf('No %s core module to clean.', $machine_name . '_core'));
-      }
+      $this->cleanCoreModule($module_folder, $machine_name);
     }
 
     if ($clean_theme || $clean_all) {
-      $dir = $theme_folder . '/' . $machine_name . '_theme';
-      if ($this->getFs()->exists($dir)) {
-        $this->getFs()->remove($dir);
-
-        // Remove the theme path in the composer.json file.
-        $prevDir = getcwd();
-        chdir($this->drupalFinder->getComposerRoot());
-        $enabledThemes = json_decode(exec('/usr/bin/env composer config extra.kumquat-themes'));
-
-        $prefix = substr($this->drupalFinder->getDrupalRoot(), strlen($this->drupalFinder->getComposerRoot()));
-        $prefix = trim($prefix, '/');
-        $key = array_search($prefix . '/' . $dir, $enabledThemes);
-        if ($key !== FALSE) {
-          unset($enabledThemes[$key]);
-        }
-
-        exec('/usr/bin/env composer config extra.kumquat-themes --json \'' . json_encode(array_unique($enabledThemes)) . '\'');
-        exec('/usr/bin/env composer update --lock');
-
-        chdir($prevDir);
-
-        $this->getIo()->success(sprintf('%s front theme successfully cleaned.', $machine_name . '_theme'));
-      }
-      else {
-        $this->getIo()->info(sprintf('No %s front theme to clean.', $machine_name . '_theme'));
-      }
+      $this->cleanTheme($theme_folder, $machine_name);
     }
 
     if ($clean_admin_theme || $clean_all) {
-      $dir = $theme_folder . '/' . $machine_name . '_admin_theme';
-      if ($this->getFs()->exists($dir)) {
-        $this->getFs()->remove($dir);
-        $this->getIo()->success(sprintf('%s admin theme successfully cleaned.', $machine_name . '_admin_theme'));
-      }
-      else {
-        $this->getIo()->info(sprintf('No %s admin theme to clean.', $machine_name . '_admin_theme'));
-      }
+      $this->cleanAdminTheme($theme_folder, $machine_name);
     }
 
     if ($clean_config || $clean_all) {
-      // Enable profile and themes in the core.extension.yml file.
-      $filename = $config_folder . '/core.extension.yml';
-      $config = $this->readConfig($filename);
-      $current_profile = $config['profile'];
-
-      $config['module']['minimal'] = 1000;
-      unset($config['module'][$current_profile]);
-      unset($config['module'][$machine_name . '_core']);
-      $config['module'] = module_config_sort($config['module']);
-
-      $config['theme']['bartik'] = 0;
-      unset($config['theme'][$machine_name . '_theme']);
-      unset($config['theme'][$machine_name . '_admin_theme']);
-
-      $config['profile'] = 'minimal';
-
-      $this->writeConfig($filename, $config);
-
-      // Set themes in the system.theme.yml file.
-      $filename = $config_folder . '/system.theme.yml';
-      $config = $this->readConfig($filename);
-
-      $config['admin'] = 'seven';
-      $config['default'] = 'bartik';
-
-      $this->writeConfig($filename, $config);
-
-      $this->getIo()->success('Configuration successfully cleaned.');
+      $this->cleanConfig($config_folder, $machine_name);
     }
   }
 
@@ -308,7 +235,7 @@ class CleanProjectCommand extends Command {
       return 1;
     }
 
-    if ($enabled_parts['config'] || $enabled_parts['all']) {
+    if ($enabled_parts['config'] || $enabled_parts['admin-theme'] || $enabled_parts['theme'] || $enabled_parts['all']) {
       try {
         $config_folder = $input->getOption('config-folder') ? $this->validatePath($input->getOption('config-folder')) : NULL;
         if (!$config_folder) {
@@ -377,6 +304,149 @@ class CleanProjectCommand extends Command {
         )
       );
     }
+  }
+
+  /**
+   * Clean install profile.
+   *
+   * @param string $profiles_folder
+   *   The profiles storage folder.
+   * @param string $machine_name
+   *   The project machine name.
+   *
+   * @return void
+   */
+  protected function cleanProfile(string $profiles_folder, string $machine_name): void {
+    $dir = $profiles_folder . '/' . $machine_name;
+    if ($this->getFs()->exists($dir)) {
+      $this->getFs()->remove($dir);
+      $this->getIo()->success(sprintf('%s profile successfully cleaned.', $machine_name));
+    }
+    else {
+      $this->getIo()->info(sprintf('No %s profile to clean.', $machine_name));
+    }
+  }
+
+  /**
+   * Clean core module.
+   *
+   * @param string $module_folder
+   *   The module storage folder.
+   * @param string $machine_name
+   *   The project machine name.
+   *
+   * @return void
+   */
+  protected function cleanCoreModule(string $module_folder, string $machine_name): void {
+    $dir = $module_folder . '/' . $machine_name . '_core';
+    if ($this->getFs()->exists($dir)) {
+      $this->getFs()->remove($dir);
+      $this->getIo()->success(sprintf('%s core module successfully cleaned.', $machine_name . '_core'));
+    }
+    else {
+      $this->getIo()->info(sprintf('No %s core module to clean.', $machine_name . '_core'));
+    }
+  }
+
+  /**
+   * Clean front theme.
+   *
+   * @param string $theme_folder
+   *   The theme storage folder.
+   * @param string $machine_name
+   *   The project machine name.
+   *
+   * @return void
+   */
+  protected function cleanTheme(string $theme_folder, string $machine_name): void {
+    $dir = $theme_folder . '/' . $machine_name . '_theme';
+    if ($this->getFs()->exists($dir)) {
+      $this->getFs()->remove($dir);
+
+      // Remove the theme path in the composer.json file.
+      $prevDir = getcwd();
+      chdir($this->drupalFinder->getComposerRoot());
+      $enabledThemes = json_decode(exec('/usr/bin/env composer config extra.kumquat-themes'));
+
+      $prefix = substr($this->drupalFinder->getDrupalRoot(), strlen($this->drupalFinder->getComposerRoot()));
+      $prefix = trim($prefix, '/');
+      $key = array_search($prefix . '/' . $dir, $enabledThemes);
+      if ($key !== FALSE) {
+        unset($enabledThemes[$key]);
+      }
+
+      exec('/usr/bin/env composer config extra.kumquat-themes --json \'' . json_encode(array_unique($enabledThemes)) . '\'');
+      exec('/usr/bin/env composer update --lock');
+
+      chdir($prevDir);
+
+      $this->getIo()->success(sprintf('%s front theme successfully cleaned.', $machine_name . '_theme'));
+    }
+    else {
+      $this->getIo()->info(sprintf('No %s front theme to clean.', $machine_name . '_theme'));
+    }
+  }
+
+  /**
+   * Clean administration theme.
+   *
+   * @param string $theme_folder
+   *   The theme storage folder.
+   * @param string $machine_name
+   *   The project machine name.
+   *
+   * @return void
+   */
+  protected function cleanAdminTheme(string $theme_folder, string $machine_name): void {
+    $dir = $theme_folder . '/' . $machine_name . '_admin_theme';
+    if ($this->getFs()->exists($dir)) {
+      $this->getFs()->remove($dir);
+      $this->getIo()->success(sprintf('%s admin theme successfully cleaned.', $machine_name . '_admin_theme'));
+    }
+    else {
+      $this->getIo()->info(sprintf('No %s admin theme to clean.', $machine_name . '_admin_theme'));
+    }
+  }
+
+  /**
+   * Clean configuration.
+   *
+   * @param string $config_folder
+   *   The configuration strorage folder.
+   * @param string $machine_name
+   *   The project machine name.
+   *
+   * @return void
+   */
+  protected function cleanConfig(string $config_folder, string $machine_name): void {
+    // Enable profile and themes in the core.extension.yml file.
+    $filename = $config_folder . '/core.extension.yml';
+    $config = $this->readConfig($filename);
+    $current_profile = $config['profile'];
+
+    $config['module']['minimal'] = 1000;
+    unset($config['module'][$current_profile]);
+    unset($config['module'][$machine_name . '_core']);
+    $config['module'] = module_config_sort($config['module']);
+
+    $config['theme']['bartik'] = 0;
+    unset($config['theme'][$machine_name . '_theme']);
+    unset($config['theme'][$machine_name . '_admin_theme']);
+
+    $config['profile'] = 'minimal';
+
+    $this->writeConfig($filename, $config);
+
+    // Set themes in the system.theme.yml file.
+    $filename = $config_folder . '/system.theme.yml';
+    $config = $this->readConfig($filename);
+
+    $config['admin'] = 'seven';
+    $config['default'] = 'bartik';
+
+    $this->writeConfig($filename, $config);
+
+    $this->getIo()->success('Configuration successfully cleaned.');
   }
 
 }
