@@ -317,7 +317,9 @@ class CleanProjectCommand extends Command {
   protected function cleanProfile(string $profiles_folder, string $machine_name): void {
     $dir = $profiles_folder . '/' . $machine_name;
     if ($this->getFs()->exists($dir)) {
+      // Remove profile directory.
       $this->getFs()->remove($dir);
+
       $this->getIo()->success(sprintf('%s profile successfully cleaned.', $machine_name));
     }
     else {
@@ -464,6 +466,17 @@ class CleanProjectCommand extends Command {
     unset($config['theme'][$machine_name . '_admin_theme']);
 
     $this->writeConfig($filename, $config);
+
+    // Reset the profile name from combawa if it's used on the project.
+    $prevDir = getcwd();
+    chdir($this->drupalFinder->getComposerRoot());
+    $combawaConfig = json_decode(exec('/usr/bin/env composer config extra.combawa'));
+    if (!empty($combawaConfig) && $combawaConfig['profile_name'] === $machine_name) {
+      $combawaConfig->profile_name = 'minimal';
+      exec('/usr/bin/env composer config extra.combawa --json \'' . json_encode($combawaConfig) . '\'');
+      exec('/usr/bin/env composer update --lock');
+    }
+    chdir($prevDir);
 
     $this->getIo()->success('Configuration successfully cleaned.');
   }

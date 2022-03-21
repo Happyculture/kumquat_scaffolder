@@ -341,6 +341,20 @@ class ProjectGenerator extends Generator {
     $config['default'] = $machine_name . '_theme';
 
     $this->writeConfig($filename, $config);
+
+    // Set the generated profile name in combawa if it's used on the project.
+    $prevDir = getcwd();
+    chdir($this->drupalFinder->getComposerRoot());
+    $combawaConfig = json_decode(exec('/usr/bin/env composer config extra.combawa'));
+    if (!empty($combawaConfig)) {
+      $combawaConfig->profile_name = $machine_name;
+      exec('/usr/bin/env composer config extra.combawa --json \'' . json_encode($combawaConfig) . '\'');
+      exec('/usr/bin/env composer update --lock');
+
+      $this->fileQueue->addFile('../composer.json');
+      $this->countCodeLines->addCountCodeLines(1);
+    }
+    chdir($prevDir);
   }
 
   /**
