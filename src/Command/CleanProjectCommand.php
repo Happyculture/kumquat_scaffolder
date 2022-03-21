@@ -163,7 +163,7 @@ class CleanProjectCommand extends Command {
     }
 
     if ($clean_admin_theme || $clean_all) {
-      $this->cleanAdminTheme($theme_folder, $machine_name);
+      $this->cleanAdminTheme($theme_folder, $config_folder, $machine_name);
     }
 
     if ($clean_config || $clean_all) {
@@ -392,15 +392,22 @@ class CleanProjectCommand extends Command {
    *
    * @param string $theme_folder
    *   The theme storage folder.
+   * @param string $config_folder
+   *   The configuration strorage folder.
    * @param string $machine_name
    *   The project machine name.
    *
    * @return void
    */
-  protected function cleanAdminTheme(string $theme_folder, string $machine_name): void {
+  protected function cleanAdminTheme(string $theme_folder, string $config_folder, string $machine_name): void {
     $dir = $theme_folder . '/' . $machine_name . '_admin_theme';
     if ($this->getFs()->exists($dir)) {
+      // Remove theme directory.
       $this->getFs()->remove($dir);
+
+      // Remove theme configuration.
+      $this->getFs()->remove($config_folder . '/' . $machine_name . '_admin_theme.settings.yml');
+
       $this->getIo()->success(sprintf('%s admin theme successfully cleaned.', $machine_name . '_admin_theme'));
     }
     else {
