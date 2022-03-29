@@ -467,15 +467,21 @@ class CleanProjectCommand extends Command {
 
     $this->writeConfig($filename, $config);
 
-    // Reset the profile name from combawa if it's used on the project.
+    // Reset the profile name from the combawa's install script if it's used on
+    // the project.
     $prevDir = getcwd();
     chdir($this->drupalFinder->getComposerRoot());
-    $combawaConfig = json_decode(exec('/usr/bin/env composer config extra.combawa'));
-    if (!empty($combawaConfig) && $combawaConfig['profile_name'] === $machine_name) {
-      $combawaConfig->profile_name = 'minimal';
-      exec('/usr/bin/env composer config extra.combawa --json \'' . json_encode($combawaConfig) . '\'');
-      exec('/usr/bin/env composer update --lock');
+
+    $install_path = 'scripts/combawa/install.sh';
+    if (file_exists($install_path)) {
+      $install_script = file_get_contents($install_path);
+      preg_match('/^\$DRUSH site-install.* (.*?)$/mi', $install_script, $matches);
+      if (trim($matches[1], '\'" ') === $machine_name) {
+        $install_script = preg_replace('/^\$DRUSH site-install(.*?) ' . preg_quote($machine_name) . '\s*$/mi', '$DRUSH site-install $1 minimal' . "\n", $install_script);
+        file_put_contents($install_path, $install_script);
+      }
     }
+
     chdir($prevDir);
 
     $this->getIo()->success('Configuration successfully cleaned.');

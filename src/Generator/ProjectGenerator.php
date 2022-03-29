@@ -353,19 +353,25 @@ class ProjectGenerator extends Generator {
 
     $this->writeConfig($filename, $config);
 
-    // Set the generated profile name in combawa if it's used on the project.
+    // Set the generated profile name in combawa's install script if it's used
+    // on the project.
     if ($parameters['generate_profile']) {
       $prevDir = getcwd();
       chdir($this->drupalFinder->getComposerRoot());
-      $combawaConfig = json_decode(exec('/usr/bin/env composer config extra.combawa'));
-      if (!empty($combawaConfig)) {
-        $combawaConfig->profile_name = $machine_name;
-        exec('/usr/bin/env composer config extra.combawa --json \'' . json_encode($combawaConfig) . '\'');
-        exec('/usr/bin/env composer update --lock');
 
-        $this->fileQueue->addFile('../composer.json');
-        $this->countCodeLines->addCountCodeLines(1);
+      $install_path = 'scripts/combawa/install.sh';
+      if (file_exists($install_path)) {
+        $install_script = file_get_contents($install_path);
+        preg_match('/^\$DRUSH site-install.* (.*?)$/mi', $install_script, $matches);
+        if (trim($matches[1], '\'" ') === 'minimal') {
+          $install_script = preg_replace('/^\$DRUSH site-install(.*?) minimal\s*$/mi', '$DRUSH site-install $1 ' . $machine_name . "\n", $install_script);
+          file_put_contents($install_path, $install_script);
+
+          $this->fileQueue->addFile('../' . $install_path);
+          $this->countCodeLines->addCountCodeLines(1);
+        }
       }
+
       chdir($prevDir);
     }
   }
