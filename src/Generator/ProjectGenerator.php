@@ -398,7 +398,9 @@ class ProjectGenerator extends Generator {
   protected function trackGeneratedDirectory($dirname) {
     $iterator = new \RecursiveDirectoryIterator($dirname);
     foreach (new \RecursiveIteratorIterator($iterator) as $file) {
-      $this->trackGeneratedFile($file->getPathname());
+      if (!in_array($file->getFilename(), ['.', '..'])) {
+        $this->trackGeneratedFile($file->getPathname());
+      }
     }
   }
 
