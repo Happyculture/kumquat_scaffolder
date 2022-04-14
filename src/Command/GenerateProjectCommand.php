@@ -337,7 +337,7 @@ class GenerateProjectCommand extends Command {
         $base_admin_theme = $input->getOption('base-admin-theme') ? $input->getOption('base-admin-theme') : NULL;
         if (empty($base_admin_theme)) {
           $base_admin_theme = $this->getIo()->choice(
-            'Which theme you want your administration theme based on? (if you want another one, use the --base-admin-theme option.',
+            'Which theme you want your administration theme based on? (if you want another one, use the --base-admin-theme option)',
             ['adminimal_theme', 'gin'],
             'gin'
           );
