@@ -412,6 +412,11 @@ class CleanProjectCommand extends Command {
       // Remove theme configuration.
       $this->getFs()->remove($config_folder . '/' . $machine_name . '_admin_theme.settings.yml');
 
+      // Remove block configuration in the config dir.
+      $files = $this->getFinder()->in($config_folder)
+        ->files()->name('block.block.' . $machine_name . '_admin_theme_*.yml');
+      $this->getFs()->remove($files);
+
       $this->getIo()->success(sprintf('%s admin theme successfully cleaned.', $machine_name . '_admin_theme'));
     }
     else {
