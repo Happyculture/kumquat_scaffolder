@@ -261,6 +261,14 @@ class ProjectGenerator extends Generator {
     $this->getFs()->copy(self::TPL_DIR . '/kumquat-theme/logo.svg', $defaultThemePath . '/logo.svg');
     $this->trackGeneratedFile($defaultThemePath . '/logo.svg');
 
+    // Copy eslint config file
+    $this->getFs()->copy(self::TPL_DIR . '/kumquat-theme/.eslintrc.json', $defaultThemePath . '/.eslintrc.json');
+    $this->trackGeneratedFile($defaultThemePath . '/.eslintrc.json');
+
+    // Copy stylelint config file
+    $this->getFs()->copy(self::TPL_DIR . '/kumquat-theme/.stylelintrc.json', $defaultThemePath . '/.stylelintrc.json');
+    $this->trackGeneratedFile($defaultThemePath . '/.stylelintrc.json');
+
     // Gitkeeps.
     $this->renderFile('kumquat-theme/gitkeep.twig', $defaultThemePath . '/assets-src/fonts/.gitkeep');
 

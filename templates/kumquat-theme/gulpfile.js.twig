@@ -1,41 +1,49 @@
-var argv = require('yargs').argv;
-var del = require('del');
-var gulp = require('gulp');
-var gulpif = require('gulp-if');
-var uglify = require('gulp-uglify');
-var plumber = require('gulp-plumber');
-var postcss = require('gulp-postcss');
-var rename = require("gulp-rename");
-var replace = require('gulp-replace');
-var sass = require('gulp-sass')(require('node-sass'));
-var sassGlob = require('gulp-sass-glob');
-var sourcemaps = require('gulp-sourcemaps');
+import yargs from 'yargs';
+import { hideBin } from 'yargs/helpers';
+const argv = yargs(hideBin(process.argv)).argv;
+
+import del from 'del';
+import gulp from 'gulp';
+import gulpif from 'gulp-if';
+import gulpStylelint from 'gulp-stylelint';
+import eslint from 'gulp-eslint';
+import uglify from 'gulp-uglify';
+import plumber from 'gulp-plumber';
+import postcss from 'gulp-postcss';
+import rename from 'gulp-rename';
+import replace from 'gulp-replace';
+import dartSass from 'sass';
+import gulpSass from 'gulp-sass';
+const sass = gulpSass(dartSass);
+import sassGlob from 'gulp-sass-glob';
+import sourcemaps from 'gulp-sourcemaps';
+import imagemin, {gifsicle, optipng, svgo} from 'gulp-imagemin';
+import jpegtran from 'imagemin-jpegtran';
 
 // PostCSS processors.
-var autoprefixer = require('autoprefixer');
-var clean = require('postcss-clean');
-var discardUnused = require('postcss-discard-unused');
-var mqpacker = require('css-mqpacker');
+import autoprefixer from 'autoprefixer';
+import cssnano from 'cssnano';
+import discardUnused from 'postcss-discard-unused';
+import mqpacker from 'css-mqpacker';
 var processors = [
   discardUnused(),
   autoprefixer(),
   mqpacker({sort: true})
 ];
 if (!argv.development) {
-  processors.push(clean());
+  processors.push(cssnano());
 }
 
 // SASS parameters.
 var sassParams = {
-  outputStyle: 'compressed'
+  outputStyle: 'compressed',
 };
 if (argv.development) {
   sassParams.outputStyle = 'expanded';
 }
 
-
 // Clean compiled files..
-gulp.task('clean', function(){
+export function cleanFolders () {
   return del([
     'dist/css/**/*',
     '!dist/css/.gitkeep',
@@ -46,81 +54,111 @@ gulp.task('clean', function(){
     'dist/js/**/*',
     '!dist/js/.gitkeep'
   ])
-});
+}
 
+// Lint styles
+function lintStyles () {
+  return gulp.src(['assets-src/sass/**/*.scss', 'templates/**/*.scss'])
+  .pipe(plumber())
+  .pipe(gulpStylelint({
+    reporters: [
+      {formatter: 'string', console: true}
+    ]
+  }))
+}
+function lintScripts () {
+  return gulp.src(['assets-src/js/*.js', 'templates/**/*.js', '!templates/**/*.min.js'])
+  .pipe(plumber())
+  .pipe(eslint())
+  .pipe(eslint.format())
+}
+export const lint = gulp.parallel(lintStyles, lintScripts);
 
-// Compile styles.
-gulp.task('styles:global', function(){
+function stylesGlobal () {
   return gulp.src('assets-src/sass/*.scss')
     .pipe(plumber())
     .pipe(gulpif(argv.development, sourcemaps.init()))
     .pipe(sassGlob())
-    .pipe(sass(sassParams))
+    .pipe(sass.sync(sassParams))
     .pipe(replace('@root', '../..'))
     .pipe(postcss(processors))
     .pipe(gulpif(argv.development, sourcemaps.write('.')))
     .pipe(gulp.dest('dist/css'))
-});
-gulp.task('styles:patterns', function(){
+}
+function stylesPatterns () {
   return gulp.src('templates/**/*.scss')
     .pipe(plumber())
     .pipe(gulpif(argv.development, sourcemaps.init()))
     .pipe(replace('@global', '../../../../assets-src/sass'))
     .pipe(sassGlob())
-    .pipe(sass(sassParams))
+    .pipe(sass.sync(sassParams))
     .pipe(replace('@root', '../../../..'))
     .pipe(postcss(processors))
     .pipe(gulpif(argv.development, sourcemaps.write('.')))
     .pipe(gulp.dest('templates'))
-});
-gulp.task('styles', gulp.parallel('styles:global', 'styles:patterns'));
-
+}
+export const styles = gulp.parallel(stylesGlobal, stylesPatterns);
 
 // Compile scripts.
-gulp.task('scripts:global', function(){
+function scriptsGlobal () {
   return gulp.src('assets-src/js/*.js')
     .pipe(plumber())
+    .pipe(eslint())
+    .pipe(eslint.format())
     .pipe(gulpif(!argv.development, uglify()))
     .pipe(rename({suffix: '.min'}))
     .pipe(gulp.dest('dist/js'))
-});
-gulp.task('scripts:patterns', function(){
+}
+function scriptsPatterns () {
   return gulp.src(['templates/**/*.js', '!templates/**/*.min.js'])
     .pipe(plumber())
+    .pipe(eslint())
+    .pipe(eslint.format())
     .pipe(gulpif(!argv.development, uglify()))
     .pipe(rename({suffix: '.min'}))
     .pipe(gulp.dest('templates'))
-});
-gulp.task('scripts', gulp.parallel('scripts:global', 'scripts:patterns'));
-
+}
+export const scripts = gulp.parallel(scriptsGlobal, scriptsPatterns);
 
 // Compile images.
-gulp.task('images:global', function(){
+function imagesGlobal () {
   return gulp.src('assets-src/images/**/*')
-    // TODO Lossless compression.
+    .pipe(imagemin([gifsicle(), jpegtran(), optipng(), svgo({
+      plugins: [
+        {
+          name: 'removeViewBox',
+          active: false
+        }
+      ]
+    })]))
     .pipe(gulp.dest('dist/images'))
-});
-gulp.task('images', gulp.parallel('images:global'));
-
+}
+export const images = gulp.parallel(imagesGlobal);
 
 // Compile fonts.
-gulp.task('fonts:global', function(){
+function fontsGlobal () {
   return gulp.src('assets-src/fonts/**/*')
     // TODO Lossless compression.
     .pipe(gulp.dest('dist/fonts'))
-});
-gulp.task('fonts', gulp.parallel('fonts:global'));
-
+}
+export const fonts = gulp.parallel(fontsGlobal);
 
 // Default actions.
-gulp.task('build', gulp.series('clean', gulp.parallel('styles', 'scripts', 'images', 'fonts')));
-gulp.task('default', gulp.task('build'));
-
+export const build = gulp.series(cleanFolders, gulp.parallel(lintStyles, styles, scripts, images, fonts));
+export default build;
 
 // Watcher.
-gulp.task('do-watch', function(){
-  gulp.watch(['templates/**/*.js', '!templates/**/*.min.js', 'assets-src/js/**/*.js', '!assets-src/js/**/*.min.js', '!gulpfile.js'], gulp.task('scripts'));
-  gulp.watch(['templates/**/*.scss', 'assets-src/sass/variables/*.scss', 'assets-src/sass/abstractions/*.scss'], gulp.task('styles:patterns'));
-  return gulp.watch('assets-src/sass/**/*.scss', gulp.task('styles:global'));
-});
-gulp.task('watch', gulp.series('build', 'do-watch'));
+function watchScripts () {
+  return gulp.watch(['templates/**/*.js', '!templates/**/*.min.js', 'assets-src/js/**/*.js', '!assets-src/js/**/*.min.js', '!gulpfile.js'], scripts);
+}
+function watchStylesPatterns () {
+  return gulp.watch(['templates/**/*.scss', 'assets-src/sass/variables/*.scss', 'assets-src/sass/abstractions/*.scss'], stylesPatterns);
+}
+function watchStylesGlobal () {
+  return gulp.watch('assets-src/sass/**/*.scss', stylesGlobal);
+}
+function watchImages () {
+  return gulp.watch('assets-src/images/**/*', images);
+}
+const doWatch = gulp.parallel(watchScripts, watchStylesPatterns, watchStylesGlobal, watchImages);
+export const watch = gulp.series(build, doWatch);
