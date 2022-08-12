@@ -1,0 +1,23 @@
+@use 'sass:list';
+@use 'sass:math';
+
+@function px-to-rem($sizes) {
+  $data: null;
+  $i: 1;
+
+  @each $size in $sizes {
+    @if type-of($size) == 'number' {
+      $data: $data + math.div($size, 16) + rem;
+    } @else {
+      $data: $data + $size;
+    }
+
+    @if $i < list.length($sizes) {
+      $data: $data + ' ';
+    }
+
+    $i: $i + 1;
+  }
+
+  @return $data;
+}
