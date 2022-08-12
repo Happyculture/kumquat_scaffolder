@@ -1,5 +1,5 @@
 .off-canvas-menu {
-  @include breakpoint(desktop) {
+  @include media('>=desktop') {
     &__button {
       display: none;
     }

@@ -17,7 +17,7 @@
 // Sets the font size and the line height for one component on all breakpoints.
 @mixin set-font-sizes($type: text) {
   @each $device in $major-breakpoints {
-    @include breakpoint($device) {
+    @include media('>=#{$device}') {
       @include set-font-size($type, $device);
     }
   }

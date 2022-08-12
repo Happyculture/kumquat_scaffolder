@@ -25,7 +25,7 @@
 
 @mixin grid-setup-grid() {
   @each $device in $major-breakpoints {
-    @include breakpoint($device) {
+    @include media('>=#{$device}') {
       @include grid-container($device);
     }
   }
@@ -39,7 +39,7 @@
   padding-left: var(--external-gutter-size);
 
   @each $device in $major-breakpoints {
-    @include breakpoint($device) {
+    @include media('>=#{$device}') {
       max-width: grid-max-width($device);
     }
   }

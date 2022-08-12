@@ -1,7 +1,7 @@
 @mixin color-bar($color) {
   background: $color;
 
-  @include breakpoint(desktop) {
+  @include media('>=desktop') {
     position: relative;
 
     &::before,

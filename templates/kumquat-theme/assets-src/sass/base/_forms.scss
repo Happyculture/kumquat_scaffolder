@@ -9,7 +9,7 @@
   margin: auto;
   padding: 0 1rem;
 
-  @include breakpoint(wide) {
+  @include media('>=wide') {
     padding: 0;
   }
 }
@@ -240,7 +240,7 @@ option {
   align-items: center;
   justify-content: center;
 
-  @include breakpoint(desktop) {
+  @include media('>=desktop') {
     justify-content: flex-start;
   }
 

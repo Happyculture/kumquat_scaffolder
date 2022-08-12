@@ -1,6 +1,6 @@
 :root {
   @each $device in $major-breakpoints {
-    @include breakpoint($device) {
+    @include media('>=#{$device}') {
       --external-gutter-size: #{grid-external-gutter-size($device)};
       --grid-gutter-size: #{grid-gutter-size($device)};
       --grid-row-gap: #{get-vertical-rythm($device, small)};

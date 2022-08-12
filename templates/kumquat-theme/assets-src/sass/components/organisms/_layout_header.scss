@@ -4,14 +4,14 @@
   padding-bottom: var(--grid-row-gap);
   background: $grey-light;
 
-  @include breakpoint(tablet) {
+  @include media('>=tablet') {
     .off-canvas-menu__button,
     .region-navigation {
       @include grid-column(6, 1);
     }
   }
 
-  @include breakpoint(desktop) {
+  @include media('>=desktop') {
     .region-navigation {
       @include grid-column(5, 8);
     }
