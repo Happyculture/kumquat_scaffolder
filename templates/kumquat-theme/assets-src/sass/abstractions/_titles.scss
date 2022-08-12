@@ -1,9 +1,9 @@
-
+/* stylelint-disable plugin/stylelint-bem-namics */
 %title-commons {
+  margin-bottom: 0.5em;
   color: $carbon-dark;
   font-family: $serif;
   font-weight: normal;
-  margin-bottom: .5em;
 
   &:first-child { margin-top: 0; }
 }

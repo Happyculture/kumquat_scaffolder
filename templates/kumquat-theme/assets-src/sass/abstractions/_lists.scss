@@ -1,16 +1,17 @@
+/* stylelint-disable plugin/stylelint-bem-namics */
 
 %list--no-bullet {
-  list-style: none;
   padding: 0;
+  list-style: none;
 }
 
 %list--default {
   @extend %list--no-bullet;
 
   li::before {
-    content: "•";
+    content: '•';
     display: inline;
-    margin-right: .5em;
+    margin-right: 0.5em;
   }
 
   // Offset nested lists.
@@ -24,6 +25,6 @@
   display: flex;
 
   li {
-    margin-right: .5rem;
+    margin-right: 0.5rem;
   }
 }

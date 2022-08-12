@@ -1,6 +1,5 @@
-
 // Specific style in ckeditor
-
+/* stylelint-disable */
 %ckeditor {
   a:not(.no-default) {
     @extend %underlined-link;
@@ -17,18 +16,14 @@
   }
 }
 
-//
 // CKEditor selectors.
-//
 
 .cke_editable {
   @extend %ckeditor;
   color: $text-color;
 }
 
-//
 // Drupal selectors.
-//
 
 .text-formatted.field--type-text-long { @extend %ckeditor; }
 .text-formatted.field--type-text-with-summary { @extend %ckeditor; }

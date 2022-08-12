@@ -1,5 +1,7 @@
-@import "font_size";
-@import "transition";
+/* stylelint-disable plugin/stylelint-bem-namics */
+
+@import 'font_size';
+@import 'transition';
 
 %link {
   @include transition(color);

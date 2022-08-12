@@ -1,5 +1,4 @@
 (function (Drupal, debounce, document, window) {
-
   /**
    * Close all open submenus by simulating a click on their button.
    *
@@ -31,8 +30,7 @@
     if (currentTargetEl.getAttribute('aria-expanded') === 'true') {
       target.setAttribute('aria-hidden', 'true');
       currentTargetEl.setAttribute('aria-expanded', 'false');
-    }
-    else {
+    } else {
       // Close other opened menus.
       closeAll();
       // Open the target menu.
@@ -57,10 +55,9 @@
 
       // Close submenus when any part of the document is clicked.
       const body = document.querySelectorAll('body');
-      Drupal.once(body, 'MainMenu').forEach((el) => {
+      Drupal.once(body, 'MainMenu').forEach(() => {
         document.addEventListener('click', closeAll);
       });
     }
   };
-
 })(Drupal, Drupal.debounce, document, window);

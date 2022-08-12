@@ -1,5 +1,4 @@
 (function (Drupal, debounce, document, window) {
-
   /**
    * Function called when the window is resized.
    *
@@ -18,10 +17,9 @@
             .forEach((el) => {
               el.setAttribute('aria-expanded', 'true');
             });
-        }
-        // If the button is visible and the canvas has not been opened by a
-        // previous click, hide the target.
-        else if (!buttonEl.getAttribute('data-off-canvas-open-by-click')) {
+        } else if (!buttonEl.getAttribute('data-off-canvas-open-by-click')) {
+          // If the button is visible and the canvas has not been opened by a
+          // previous click, hide the target.
           target.setAttribute('aria-hidden', 'true');
           buttonEl.parentNode.querySelectorAll('.off-canvas-menu__button')
             .forEach((el) => {
@@ -55,8 +53,7 @@
         });
       document.querySelector('body')
         .classList.remove('menu-displayed');
-    }
-    else {
+    } else {
       target.removeAttribute('aria-hidden');
       Drupal.parents(target, 'header')
         .forEach((parentEl) => {
@@ -80,11 +77,10 @@
       });
 
       const body = document.querySelectorAll('body');
-      Drupal.once(body, 'OffCanvasMenu').forEach((el) => {
+      Drupal.once(body, 'OffCanvasMenu').forEach(() => {
         window.addEventListener('resize', debounce(onWindowResize, 50));
         onWindowResize();
       });
     }
   };
-
 })(Drupal, Drupal.debounce, document, window);

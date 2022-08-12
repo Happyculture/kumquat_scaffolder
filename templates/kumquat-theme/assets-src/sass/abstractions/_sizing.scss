@@ -1,14 +1,11 @@
-
+/* stylelint-disable plugin/stylelint-bem-namics */
 @mixin full-size-parent() {
   position: relative;
 }
 
 @mixin full-size-child() {
-  bottom: 0;
-  left: 0;
   position: absolute;
-  right: 0;
-  top: 0;
+  top: 0; right: 0; bottom: 0; left: 0;
 }
 
 @mixin full-size-children() {

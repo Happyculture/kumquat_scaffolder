@@ -1,14 +1,13 @@
-
 $transition-speeds: (
   slow: 1s,
-  default: .5s,
-  fast: .2s,
-  faster: .1s
+  default: 0.5s,
+  fast: 0.2s,
+  faster: 0.1s
 );
 
 @mixin transition($what, $speed: 'fast') {
-  $duration: .5s;
-  @if(map-has-key($transition-speeds, $speed)) {
+  $duration: 0.5s;
+  @if map-has-key($transition-speeds, $speed) {
     $duration: map_get($transition-speeds, $speed);
   }
 

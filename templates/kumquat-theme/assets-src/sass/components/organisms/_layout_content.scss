@@ -1,9 +1,9 @@
 .layout-content {
-  @include full-page-width();
-  padding-bottom: var(--grid-row-gap);
+  @include full-page-width;
   padding-top: var(--grid-row-gap);
+  padding-bottom: var(--grid-row-gap);
 
   & > .content-wrapper {
-    @include grid-setup-width();
+    @include grid-setup-width;
   }
 }

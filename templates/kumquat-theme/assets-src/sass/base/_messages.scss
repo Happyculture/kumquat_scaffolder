@@ -1,4 +1,4 @@
-@import "../abstractions/message_box";
+@import '../abstractions/message_box';
 
 .messages {
   @extend %message-box;
@@ -14,9 +14,9 @@
   }
 
   &__list {
-    list-style: none;
-    padding: 0;
     margin: 0;
+    padding: 0;
+    list-style: none;
   }
 
   &__item {
@@ -24,5 +24,4 @@
       margin-top: 0.769em;
     }
   }
-
 }

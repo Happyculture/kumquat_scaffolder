@@ -1,5 +1,4 @@
 (function (Drupal, document) {
-
   /**
    * Filters out the list so any item has never been called with this id.
    *
@@ -26,9 +25,10 @@
    * @returns array
    */
   Drupal.parents = (el, selector) => {
-    let current = el,
-      list = [];
-    while(current.parentNode != null && current.parentNode !== document.documentElement) {
+    let current = el;
+    const list = [];
+
+    while (current.parentNode != null && current.parentNode !== document.documentElement) {
       if (selector.length === 0 || current.parentNode.matches(selector)) {
         list.push(current.parentNode);
       }
@@ -36,5 +36,4 @@
     }
     return list
   };
-
 })(Drupal, document);

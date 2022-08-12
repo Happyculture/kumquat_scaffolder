@@ -1,11 +1,12 @@
+/* stylelint-disable plugin/stylelint-bem-namics */
 
-//
-// Form types.
-//
+/*
+  Form types.
+*/
 
 %narrow-form {
-  margin: auto;
   max-width: 40rem;
+  margin: auto;
   padding: 0 1rem;
 
   @include breakpoint(wide) {
@@ -13,13 +14,13 @@
   }
 }
 
-//
-// Field types.
-//
+/*
+  Field types.
+*/
 
 %full-size-field {
-  max-width: 100%;
   width: 100%;
+  max-width: 100%;
 }
 
 %base-field,
@@ -38,13 +39,13 @@ input[type="week"],
 textarea,
 select {
   @extend %full-size-field;
-  background-color: white;
-  border-radius: 2px;
-  border: solid 1px $grey;
-  color: $carbon-light;
-  outline-color: $carbon-light;
   padding: 0.7rem 0.9rem 0.6rem;
   transition: border-left-width 50ms linear, border-color 50ms linear;
+  border: solid 1px $grey;
+  border-radius: 2px;
+  outline-color: $carbon-light;
+  background-color: white;
+  color: $carbon-light;
 
   &:disabled {
     background-color: $paper-dark;
@@ -52,14 +53,14 @@ select {
   }
 
   &.error {
-    border-color: $red;
     border-left-width: 4px;
+    border-color: $red;
   }
 
   &:focus,
   &:active {
-    border-color: $purple;
     border-left-width: 4px;
+    border-color: $purple;
     outline-color: $purple;
     color: $carbon;
   }
@@ -88,58 +89,60 @@ input[type="checkbox"] {
     // Hide the checkbox but keep it in the flow so browser validation shows at
     // the appropriate location if needed.
     @extend %visually-hidden;
+
     // Move the location a bit so the validation popup is well positioned.
-    margin: $size 0 0 ($size / 2);
+    margin: $size 0 0 calc($size / 2);
 
     + label {
+      position: relative;
+      padding-left: 2em; // ~32px
       color: $carbon;
       cursor: pointer;
-      padding-left: 2em; // ~32px
-      position: relative;
 
       &::before,
       &::after {
-        border-radius: .25em; // ~4px
-        height: $size;
-        left: 0;
-        line-height: $size;
         position: absolute;
-        text-align: center;
-        top: 0;
+        top: 0; left: 0;
         width: $size;
+        height: $size;
+        border-radius: 0.25em; // ~4px
+        line-height: $size;
+        text-align: center;
       }
 
       &::before {
+        content: '';
         @include transition(border-width, faster);
-        background: $purple;
+
         // Add 1px to prevent Safari to show a tiny dot in the checkbox.
         border: calc(#{$size / 2} + 1px) solid $white;
-        content: "";
+        background: $purple;
       }
 
       &::after {
+        content: '✔';
         @include transition(border-color, faster);
         border: 1px solid $grey;
         color: $white;
-        content: '✔';
       }
 
       &.form-required {
         &::after {
-          background-image: none;
           margin: 0;
+          background-image: none;
         }
 
         span.hidden {
+          content: '';
+          display: inline-block;
+          width: 6px;
+          height: 6px;
+          margin: 0 0.3em;
+
           // Copy from .form-required:after.
-          background-image: url(/core/misc/icons/ee0000/required.svg);
+          background-image: url('/core/misc/icons/ee0000/required.svg');
           background-repeat: no-repeat;
           background-size: 6px 6px;
-          content: "";
-          display: inline-block;
-          height: 6px;
-          margin: 0 .3em;
-          width: 6px;
 
           // Hide the text.
           text-indent: -999vw;
@@ -167,8 +170,8 @@ input[type="checkbox"] {
     &:disabled {
       + label {
         &::before {
-          background: $grey-dark;
           border-color: $grey-light;
+          background: $grey-dark;
         }
 
         &::after {
@@ -207,41 +210,42 @@ input[type="radio"] {
         border-radius: 50%;
       }
 
-      &::after { content: ""; }
+      &::after { content: ''; }
     }
   }
 
   &:checked {
     + label {
-      &::before { border-width: .25em; }
+      &::before { border-width: 0.25em; }
     }
   }
 }
 
 option {
   padding: 0.7rem 0.9rem 0.6rem;
+
   &:hover {
     background-color: $purple-light;
     color: $purple;
   }
 }
 
-//
-// Fields wrappers.
-//
+/*
+  Fields wrappers.
+*/
 
 .form-actions {
-  align-items: center;
   display: flex;
   flex-flow: row wrap;
+  align-items: center;
   justify-content: center;
-
-  > * {
-    margin-bottom: 1rem;
-  }
 
   @include breakpoint(desktop) {
     justify-content: flex-start;
+  }
+
+  > * {
+    margin-bottom: 1rem;
   }
 }
 
