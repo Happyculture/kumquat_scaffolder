@@ -2,7 +2,6 @@
 // @see variables/_fonts.scss
 @each $title in (h1 h2 h3 h4 h5 h6) {
   #{$title} { /* stylelint-disable-line */
-    @extend %title-commons;
     @include set-font-sizes($title);
   }
 }

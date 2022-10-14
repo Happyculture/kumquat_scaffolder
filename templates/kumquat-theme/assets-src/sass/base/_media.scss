@@ -6,7 +6,3 @@ video {
   max-width: 100%;
   height: auto;
 }
-
-.media--blazy.media--loading::before {
-  @extend %spinner;
-}

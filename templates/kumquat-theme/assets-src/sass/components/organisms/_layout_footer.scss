@@ -1,7 +1,5 @@
 .layout-footer {
   @include full-page-width;
-  padding-top: var(--grid-row-gap);
-  padding-bottom: var(--grid-row-gap);
   background: $grey-light;
 
   & > .content-wrapper {
