@@ -1,3 +1,5 @@
+@use "sass:map";
+
 // Gets the font size for the given text type and device.
 @function get-font-size($type: text, $device: mobile) {
   @return nth(map.get(map.get($font-sizes, $type), $device), 1);

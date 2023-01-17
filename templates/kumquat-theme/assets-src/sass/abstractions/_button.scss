@@ -1,9 +1,6 @@
-@import 'transition';
-
 @mixin button() {
   display: inline-block;
   padding: 1rem 3rem;
-  @include transition(all);
   border: 1px solid $button-secondary-color;
   border-radius: 5rem;
   background: $button-main-color;

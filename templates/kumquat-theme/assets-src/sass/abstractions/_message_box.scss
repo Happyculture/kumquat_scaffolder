@@ -1,10 +1,7 @@
 /* stylelint-disable plugin/stylelint-bem-namics */
 
-@import 'box_shadow';
-
 %message-box {
   --base-color: $carbon;
-  @extend %base-box-shadow;
   padding: 1rem 1.5rem 1rem 4.5rem;
   border-width: 8px 0 0;
   border-style: solid;

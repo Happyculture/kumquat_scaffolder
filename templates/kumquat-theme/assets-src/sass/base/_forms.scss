@@ -112,16 +112,14 @@ input[type="checkbox"] {
 
       &::before {
         content: '';
-        @include transition(border-width, faster);
 
         // Add 1px to prevent Safari to show a tiny dot in the checkbox.
-        border: calc(#{$size / 2} + 1px) solid $white;
+        border: calc(#{calc($size / 2)} + 1px) solid $white;
         background: $purple;
       }
 
       &::after {
         content: '✔';
-        @include transition(border-color, faster);
         border: 1px solid $grey;
         color: $white;
       }

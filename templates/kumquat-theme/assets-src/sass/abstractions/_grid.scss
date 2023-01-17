@@ -1,4 +1,4 @@
-@import 'vertical_rythm';
+@use "sass:map";
 
 // Functions.
 
@@ -19,7 +19,7 @@
 @mixin grid-container($device: mobile) {
   display: grid;
   grid-column-gap: map.get($gutter-size, $device);
-  grid-row-gap: get-vertical-rythm($device, small);
+  grid-row-gap: map.get($rythm-base, $device);
   grid-template-columns: repeat(map.get($nb-cols, $device), map.get($col-size, $device));
 }
 

@@ -1,6 +1,5 @@
 $breakpoints: (
-  // DO NOT include 'mobile' in this array to allow mobile first calls.
-  'mobile': 320px;
+  'mobile': 320px,
   'phablet': 425px,
   'phablet-big': 550px,
   'tablet-small': 660px,

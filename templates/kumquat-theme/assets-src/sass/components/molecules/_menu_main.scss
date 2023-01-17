@@ -79,7 +79,6 @@
         font-weight: bold;
 
         &[aria-expanded] .decorator {
-          @extend %icon-chevron-down;
           display: block;
           flex-grow: 0;
           order: 2;

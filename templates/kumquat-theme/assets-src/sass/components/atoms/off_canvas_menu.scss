@@ -52,7 +52,6 @@
 
 .off-canvas-menu--open {
   .off-canvas-menu__button__icon {
-    @extend %icon-menu;
     margin: 0.5rem auto;
   }
 }
@@ -67,10 +66,6 @@
 
   & + * {
     clear: right;
-  }
-
-  .off-canvas-menu__button__icon {
-    @extend %icon-close;
   }
 }
 
