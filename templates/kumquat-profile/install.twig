@@ -7,12 +7,13 @@
 
 /**
  * Implements hook_install().
+ *
+ * DO NOT UNCOMMENT THIS FUNCTION.
+ * This profile is using the configuration installation integrated in Drupal
+ * 8.6.0 which requires the install profile to NOT have implemented
+ * hook_install().
+ *
+ * @see https://www.drupal.org/project/drupal/issues/2982052
  */
-/*
-function {{ machine_name }}_install() {
-  // DO NOT UNCOMMENT THIS FUNCTION.
-  // This profile is using the configuration installation integrated in Drupal
-  // 8.6.0 which requires the install profile to NOT have implemented
-  // hook_install().
-}
-*/
+// phpcs:ignore
+// function {{ machine_name }}_install() {}

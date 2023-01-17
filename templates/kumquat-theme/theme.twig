@@ -22,10 +22,10 @@ function {{ machine_name }}_preprocess_block(&$variables) {
 }
 
 /**
-* Implements hook_theme_suggestions_HOOK_alter().
-*
-* Provide region based menu suggestions.
-*/
+ * Implements hook_theme_suggestions_HOOK_alter().
+ *
+ * Provide region based menu suggestions.
+ */
 function {{ machine_name }}_theme_suggestions_menu_alter(&$suggestions, array $variables) {
   if (isset($variables['attributes']['data-region'])) {
     $suggestion = 'menu__' . $variables['menu_name'] . '__' . $variables['attributes']['data-region'];
@@ -65,7 +65,7 @@ function {{ machine_name }}_page_attachments_alter(array &$attachments) {
 
   // Add various favicons to the head.
   /*
-// @codingStandardsIgnoreStart
+// phpcs:disable
   $favicons_path = '/' . $theme_path . '/YOUR/PATH/HERE';
 
   // Apple touch icon.
@@ -153,6 +153,6 @@ function {{ machine_name }}_page_attachments_alter(array &$attachments) {
     ],
     'theme-color'
   ];
-// @codingStandardsIgnoreEnd
+// phpcs:enable
    */
 }
