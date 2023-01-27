@@ -3,32 +3,91 @@
 ## Organisation
 
 * **assets-src**: source files for all global assets
-  * **fonts**: font files extracted from font squirrel
+  * **fonts**: font files
   * **images**: source images, all formats
-  * **js**: javascript files
-  * **sass**
+  * **js**: javascript files for global needs
+  * **sass**: sass files for global needs
     * **abstractions**: mixins and helpers
     * **base**: generic styles (layout, forms, links, headings, etc.)
     * **components**: specific styles following the atomic design logic
     * **variables**: global parameters
-* **dist**: compiled files from sources *[git ignored]* 
+* **dist**: compiled files from sources *[git ignored]*
 * **node_modules**: npm dependencies *[git ignored]*
 * **templates**
-  * **layout**
+  * **blocks**: Drupal blocks templates
+  * **content**: Node templates
+    * **field**: Node's fields templates
+    * **field_group**: Node's field groups templates
+  * **layout**: HTML, page and region templates
+  * **navigation**: Menus templates
   * **patterns**: patterns for UI Patterns module (see below)
+  * **views**: All views templates (global, row, results)
 
-## Compile assets
+## Where to start?
+
+### Compile assets
 
 First, you need to ensure your dependencies are properly installed by running
-`$ npm install`\
+`npm ci`\
 Then, you can compile assets different ways:
 
 * continuously, for development: `npm run watch`
 * once, for development: `npm run build-dev`
 * once, for production: `npm run build`
 
-## Patterns
+Compiled assets from `assets-src` can be found in the `dist` directory:
+* **fonts**: are only copied without any alteration for now;
+* **images**: are losslessly minified and SVGs have some HTML attributes added 
+for accessibility;
+* **js**: are linted and minified (in production environment only);
+* **sass**: are linted, processed to CSS, post-processed then minified.
 
-You can use the UI Patterns module and store your patterns in the
-templates/patterns folder. JS and SCSS files contained in these patterns are
-going to be compiled by gulp at the same time than the global assets.
+SASS and JS files in the patterns will be handle the same way but the resulting 
+files will stay in the same directory as their source.
+
+### Customize variables
+
+In `assets-src/sass/variables` you'll find some parameters used by the 
+abstractions to ease your life later. Check each file and read the comments 
+there to know more about what's expected.
+
+### Use abstractions
+
+In `assets-src/sass/abstractions` you'll find some useful mixins that are often 
+needed on our projects. Each file is a feature context that can contain one or 
+more mixins. Each of these are documented using the SASS docblock syntax.
+
+Note that it is highly recommended to use mixins and `@include` instead of 
+placeholders and `@extend` for overall performances (both gzipped file size and 
+browser perfs are better this way).
+
+## Best practices
+
+### Naming
+
+// TODO: talk about BEM, classes over ids, state classes, JS classes…
+
+### Linting
+
+SASS and JS files are analyzed by dedicated linters to help us keep a clean and 
+consistent way of writing our code.
+
+SASS rules answer to the content of the `.stylelintrc.json` file while JS rules 
+are set in the `.eslintrc.json` file.
+
+When really needed, these rules can be ignored using comments in the code. You 
+can find the exact syntax in [Stylelint documentation](https://stylelint.io/user-guide/ignore-code/)
+or in [ESLint documentation](https://eslint.org/docs/latest/use/configure/rules#disabling-rules).
+
+### Patterns
+
+You should use the [UI Patterns](https://dgo.to/ui_patterns) module and store 
+your patterns in the `templates/patterns` folder then connect them to the 
+managed content using Drupal UI or inside custom templates. Patterns can be 
+easily plugged to entity view modes, to field groups, as field formatters and to 
+views rows and results. In any other situation, you can use the `pattern` render 
+element (in PHP render arrays) or the `{{ pattern(...) }}` Twig function.
+
+JS and SCSS files contained in these patterns are going to be compiled by gulp 
+at the same time than the global assets and attached to the display according 
+to the pattern declaration.
