@@ -1,7 +1,18 @@
 /* stylelint-disable plugin/stylelint-bem-namics */
-// This is adapted from https://www.sarasoueidan.com/blog/nested-links/ and
-// https://css-tricks.com/a-complete-guide-to-links-and-buttons/ to layer links.
-@mixin clickable-element($title_selector) {
+///
+/// Make an element entirely clickable.
+///
+/// Expands the clickable area of the main link to the entire element. Ensures
+/// that other links are positioned on top of the expanded area so they are
+/// still usable.
+/// This is adapted from https://www.sarasoueidan.com/blog/nested-links/ and
+/// https://css-tricks.com/a-complete-guide-to-links-and-buttons/ to layer
+/// links.
+///
+/// @param {String} $main_link_wrapper_selector - CSS selector to target the
+///   main link selector wrapper so it's expanded on the entire element.
+///
+@mixin clickable-element($main_link_wrapper_selector) {
   position: relative;
 
   a {
@@ -9,7 +20,7 @@
     z-index: 1;
   }
 
-  #{$title_selector} a {
+  #{$main_link_wrapper_selector} a {
     position: static;
     text-decoration: none;
 
