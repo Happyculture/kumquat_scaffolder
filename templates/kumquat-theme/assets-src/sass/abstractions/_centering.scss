@@ -1,9 +1,15 @@
+///
+/// Center the *content* both vertically and horizontally.
+///
 @mixin center-both-flex() {
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
+///
+/// Center the *element* itself vertically in its positioning context.
+///
 @mixin center-vertical-absolute() {
   position: absolute;
   top: 50%;
