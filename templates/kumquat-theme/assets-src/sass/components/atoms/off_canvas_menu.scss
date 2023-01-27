@@ -41,7 +41,7 @@
     overflow-y: auto;
     transform: translateX(0);
     transition: transform 0.25s ease-in-out;
-    background-color: $white;
+    background-color: $c-default-background;
     text-align: inherit;
 
     &[aria-hidden] {

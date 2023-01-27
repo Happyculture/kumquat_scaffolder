@@ -1,7 +1,7 @@
 /* stylelint-disable plugin/stylelint-bem-namics */
 
 %message-box {
-  --base-color: $carbon;
+  --base-color: #{$c-message-base};
   padding: 1rem 1.5rem 1rem 4.5rem;
   border-width: 8px 0 0;
   border-style: solid;
@@ -13,22 +13,22 @@
   overflow-wrap: break-word;
 
   &--status {
-    --base-color: #{$green};
+    --base-color: #{$c-message-status};
     background-image: url($images-path + "/icons/message-valid.svg");
   }
 
   &--info {
-    --base-color: #{$blue};
+    --base-color: #{$c-message-info};
     background-image: url($images-path + "/icons/message-info.svg");
   }
 
   &--warning {
-    --base-color: #{$orange};
+    --base-color: #{$c-message-warning};
     background-image: url($images-path + "/icons/message-caution.svg");
   }
 
   &--error {
-    --base-color: #{$red};
+    --base-color: #{$c-message-error};
     background-image: url($images-path + "/icons/message-alert.svg");
   }
 

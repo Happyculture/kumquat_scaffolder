@@ -1,8 +1,10 @@
-// Guideline colors.
-
-$honey-dark: #FFAA00;
-$honey: #FFC113;
-$honey-light: #FFD400;
+////
+/// Guideline colors.
+///
+/// These colors should be extracted from the mock-ups or the style guide.
+/// They should *never* be directly used in the other files but only in the
+/// 'Usage' section of this file.
+////
 
 $carbon-dark: #1E1E28;
 $carbon: #3C3C46;
@@ -13,30 +15,69 @@ $grey: #C8C8CD;
 $grey-light: #E8E8EB;
 
 $paper-dark: #F5F5F5;
-$paper: #FAFAFA;
-$white: #FFFFFF;
 
 $purple-dark: #323787;
 $purple: #4146AF;
 $purple-light: #E1E6FF;
 
+////
+/// Other colors.
+///
+/// These colors might exist only for some technical usage.
+/// They should *never* be directly used in the other files but only in the
+/// 'Usage' section of this file.
+////
+
 $blue: #3C4696;
 $green: #0F8246;
 $orange: #D25800;
 $red: #D3001B;
+$white: #FFFFFF;
 $black: #000000;
 
-// Usage.
+////
+/// Usage.
+///
+/// Define the variables used in the other SASS files to ensure colors are
+/// abstracted and can be reused and replaced easily.
+/// These variables should always start with `c-` for a better discoverability
+/// using IDE's autocomplete features.
+////
 
-$headings-color: $carbon-dark;
-$text-color: $carbon;
+$c-default-background: $white;
 
-$link-color: $text-color;
-$link-decoration-color: $honey;
-$link-hover-color: $purple;
-$link-hover-decoration-color: $purple-light;
+$c-headings: $carbon-dark;
+$c-text: $carbon;
 
-$button-main-color: $white;
-$button-secondary-color: $purple-dark;
-$button-disabled-color: $carbon;
-$button-disabled-bg-color: $carbon-light;
+$c-link: $c-text;
+$c-link-decoration: $c-text;
+$c-link-hover: $purple;
+$c-link-hover-decoration: $purple-light;
+
+$c-button-main: $white;
+$c-button-secondary: $purple-dark;
+$c-button-disabled: $carbon;
+$c-button-disabled-bg: $carbon-light;
+
+$c-message-base: $carbon;
+$c-message-status: $green;
+$c-message-info: $blue;
+$c-message-warning: $orange;
+$c-message-error: $red;
+
+$c-form-default-text: $carbon-light;
+$c-form-focus-text: $carbon;
+$c-form-focus-accent: $purple;
+$c-form-focus-background: $purple-light;
+$c-form-label: $carbon;
+$c-form-disabled-background: $paper-dark;
+$c-form-disabled-text: $carbon;
+$c-form-checkbox-background: $white;
+$c-form-checkbox-checkmark: $white;
+
+$c-form-default-border: $grey;
+$c-form-hover-border: $grey-dark;
+$c-form-focus-border: $grey-dark;
+$c-form-disabled-border: $grey-light;
+
+$c-layout-highlight-background: $grey-light;

@@ -3,11 +3,11 @@
 @import 'font_size';
 
 %link {
-  color: $link-color;
+  color: $c-link;
 
   &:hover,
   &:focus {
-    color: $link-hover-color;
+    color: $c-link-hover;
   }
 }
 

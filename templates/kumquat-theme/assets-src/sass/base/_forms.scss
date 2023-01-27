@@ -41,32 +41,32 @@ select {
   @extend %full-size-field;
   padding: 0.7rem 0.9rem 0.6rem;
   transition: border-left-width 50ms linear, border-color 50ms linear;
-  border: solid 1px $grey;
+  border: solid 1px $c-form-default-border;
   border-radius: 2px;
-  outline-color: $carbon-light;
+  outline-color: $c-form-label;
   background-color: white;
-  color: $carbon-light;
+  color: $c-form-default-text;
 
   &:disabled {
-    background-color: $paper-dark;
-    color: $carbon;
+    background-color: $c-form-disabled-background;
+    color: $c-form-disabled-text;
   }
 
   &.error {
     border-left-width: 4px;
-    border-color: $red;
+    border-color: $c-message-error;
   }
 
   &:focus,
   &:active {
     border-left-width: 4px;
-    border-color: $purple;
-    outline-color: $purple;
-    color: $carbon;
+    border-color: $c-form-focus-accent;
+    outline-color: $c-form-focus-accent;
+    color: $c-form-focus-text;
   }
 
   &:hover:not(:focus) {
-    border-color: $grey-dark;
+    border-color: $c-form-hover-border;
   }
 
   &:hover:not(:focus):not(:active):not(.error) {
@@ -96,7 +96,7 @@ input[type="checkbox"] {
     + label {
       position: relative;
       padding-left: 2em; // ~32px
-      color: $carbon;
+      color: $c-form-label;
       cursor: pointer;
 
       &::before,
@@ -114,14 +114,14 @@ input[type="checkbox"] {
         content: '';
 
         // Add 1px to prevent Safari to show a tiny dot in the checkbox.
-        border: calc(#{calc($size / 2)} + 1px) solid $white;
-        background: $purple;
+        border: calc(#{calc($size / 2)} + 1px) solid $c-form-checkbox-background;
+        background: $c-form-focus-accent;
       }
 
       &::after {
         content: '✔';
-        border: 1px solid $grey;
-        color: $white;
+        border: 1px solid $c-form-default-border;
+        color: $c-form-checkbox-checkmark;
       }
 
       &.form-required {
@@ -152,7 +152,7 @@ input[type="checkbox"] {
     &:active {
       & + label {
         &::after {
-          border-color: $purple;
+          border-color: $c-form-focus-accent;
         }
       }
     }
@@ -160,7 +160,7 @@ input[type="checkbox"] {
     &:hover:not(:focus) {
       & + label {
         &::after {
-          border-color: $grey-dark;
+          border-color: $c-form-hover-border;
         }
       }
     }
@@ -168,12 +168,12 @@ input[type="checkbox"] {
     &:disabled {
       + label {
         &::before {
-          border-color: $grey-light;
-          background: $grey-dark;
+          border-color: $c-form-disabled-border;
+          background: $c-form-hover-border;
         }
 
         &::after {
-          color: $grey-light;
+          color: $c-form-disabled-border;
         }
       }
     }
@@ -182,14 +182,14 @@ input[type="checkbox"] {
   &:checked {
     + label {
       &::before { border-width: 0; }
-      &::after { border-color: $purple; }
+      &::after { border-color: $c-form-focus-accent; }
     }
 
     &:disabled {
       + label {
         &::after {
-          border-color: $grey-dark;
-          color: $white;
+          border-color: $c-form-disabled-border;
+          color: $c-form-checkbox-checkmark;
         }
       }
     }
@@ -223,8 +223,8 @@ option {
   padding: 0.7rem 0.9rem 0.6rem;
 
   &:hover {
-    background-color: $purple-light;
-    color: $purple;
+    background-color: $c-form-focus-background;
+    color: $c-form-focus-accent;
   }
 }
 
@@ -249,7 +249,7 @@ option {
 
 .form-item {
   &--error-message {
-    color: $red;
+    color: $c-message-error;
 
     &::before {
       background-image: url($images-path + "/icons/message-alert.svg");

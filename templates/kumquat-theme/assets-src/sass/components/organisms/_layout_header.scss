@@ -1,6 +1,6 @@
 .layout-header {
   @include full-page-width;
-  background: $grey-light;
+  background: $c-layout-highlight-background;
 
   @include media('>=tablet') {
     .off-canvas-menu__button,
