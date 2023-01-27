@@ -1,3 +1,11 @@
+///
+/// Creates a list of global breakpoints.
+///
+/// This is used by the `media` mixin.
+///
+/// @example scss - Creates a single breakpoint with the label `phone`
+///  $breakpoints: ('phone': 320px);
+///
 $breakpoints: (
   'mobile': 320px,
   'phablet': 425px,
@@ -10,6 +18,7 @@ $breakpoints: (
   'wider': 1400px
 );
 
+///
+/// List used in some mixins to iterate over a subset of breakpoints.
+///
 $major-breakpoints: (mobile tablet desktop wide);
-
-@import 'node_modules/include-media/dist/include-media';
