@@ -1,16 +1,27 @@
-// Path to fonts directories.
-
-// @root is replaced by gulp during compilation to manage common stylesheets
-// and pattern ones that does not have the same starting point.
+///
+/// Path to fonts directories.
+///
+/// @root is replaced by gulp during compilation to manage common stylesheets
+/// and pattern ones that does not have the same starting point.
+///
 $fonts-dir: '@root/dist/fonts';
 
-// Default families.
+////
+/// Font families.
+///
+/// Create as much as you need then use them anywhere for consistency.
+////
 
 $serif: Times, serif;
 $sans-serif: helvetica, sans-serif;
 
-// Sizes per breakpoint.
-// value = (font-size, line-height)
+///
+/// Font sizes per type and per major breakpoint.
+///
+/// This is used by the `set-font-size` and the `set-font-sizes` mixins.
+///
+/// value = (font-size, line-height)
+///
 $font-sizes: (
   h1: (
     mobile: (2rem, 2rem), // 32px 32px
@@ -55,8 +66,3 @@ $font-sizes: (
     wide: (1.0625rem, 2rem) // 17px 32px
   )
 );
-
-// Misc.
-
-$link-underline-size: 0.125rem; // 2px
-$link-padding-size: 0.125em; // 2px if font-size is 1em
