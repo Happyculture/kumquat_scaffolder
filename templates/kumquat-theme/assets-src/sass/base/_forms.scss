@@ -9,26 +9,6 @@
 /// Field types.
 ////
 
-%narrow-form {
-  max-width: 40rem;
-  margin: auto;
-  padding: 0 1rem;
-
-  @include media('>=wide') {
-    padding: 0;
-  }
-}
-
-/*
-  Field types.
-*/
-
-%full-size-field {
-  width: 100%;
-  max-width: 100%;
-}
-
-%base-field,
 input[type="date"],
 input[type="datetime-local"],
 input[type="email"],
@@ -43,7 +23,8 @@ input[type="url"],
 input[type="week"],
 textarea,
 select {
-  @extend %full-size-field;
+  width: 100%;
+  max-width: 100%;
   padding: 0.7rem 0.9rem 0.6rem;
   transition: border-left-width 50ms linear, border-color 50ms linear;
   border: solid 1px $c-form-default-border;
@@ -79,13 +60,12 @@ select {
   }
 }
 
-%button,
 input[type="submit"] {
   @include button;
   display: inline-block;
 }
 
-%checkbox,
+input[type="radio"],
 input[type="checkbox"] {
   &:not(:checked),
   &:checked {
@@ -201,10 +181,7 @@ input[type="checkbox"] {
   }
 }
 
-%radio,
 input[type="radio"] {
-  @extend %checkbox;
-
   &:not(:checked),
   &:checked {
     + label {
@@ -262,10 +239,5 @@ option {
     }
 
     strong { font-weight: normal; }
-  }
-
-  // Avoid some Classy styles to override ours.
-  textarea {
-    @extend %base-field;
   }
 }
