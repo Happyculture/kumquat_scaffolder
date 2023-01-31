@@ -1,12 +1,16 @@
-/* stylelint-disable plugin/stylelint-bem-namics */
-
-%list--no-bullet {
+///
+/// Removes the default style of the list.
+///
+@mixin list--no-bullet() {
   padding: 0;
   list-style: none;
 }
 
-%list--default {
-  @extend %list--no-bullet;
+///
+/// Default unordered list.
+///
+@mixin list--default() {
+  @include list--no-bullet;
 
   li::before {
     content: '•';
@@ -20,8 +24,11 @@
   }
 }
 
-%list--horizontal {
-  @extend %list--no-bullet;
+///
+/// Simple horizontal list.
+///
+@mixin list--horizontal() {
+  @include list--no-bullet;
   display: flex;
 
   li {

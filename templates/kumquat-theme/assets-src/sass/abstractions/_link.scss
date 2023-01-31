@@ -1,17 +1,26 @@
-/* stylelint-disable plugin/stylelint-bem-namics */
-
-@import 'font_size';
-
-%link {
+///
+/// Displays the *element* as a link.
+///
+@mixin link() {
   color: $c-link;
+  text-decoration: none;
 
   &:hover,
   &:focus {
     color: $c-link-hover;
+    text-decoration: underline;
   }
 }
 
-%underlined-link {
-  @extend %link;
+///
+/// Displays the *element* as an underlined link.
+///
+@mixin link--underlined() {
+  @include link;
   text-decoration: underline;
+
+  &:hover,
+  &:focus {
+    text-decoration: none;
+  }
 }

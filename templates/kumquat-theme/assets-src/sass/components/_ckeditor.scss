@@ -2,16 +2,16 @@
 /* stylelint-disable */
 %ckeditor {
   a:not(.no-default) {
-    @extend %underlined-link;
+    @include link--underlined;
   }
 
   ul {
     &:not(.horizontal-list) {
-      @extend %list--default;
+      @include list--default;
     }
 
     &.horizontal-list {
-      @extend %list--horizontal;
+      @include list--horizontal;
     }
   }
 }
