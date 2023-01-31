@@ -42,7 +42,7 @@
       {
         "type": "at-rule",
         "name": "include",
-        "hasBlock": true
+        "parameter": "^(?!media)$"
       },
       {
         "type": "at-rule",
@@ -56,9 +56,15 @@
         "type": "rule",
         "selector": "/^&/"
       },
-      "rules"
+      "rules",
+      {
+        "type": "at-rule",
+        "name": "include",
+        "parameter": "media",
+        "hasBlock": true
+      }
     ],
-		"order/properties-order": [
+    "order/properties-order": [
       {
         "groupName": "heading",
         "emptyLineBefore": "never",
