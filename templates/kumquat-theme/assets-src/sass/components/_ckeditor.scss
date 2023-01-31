@@ -6,8 +6,7 @@
 ///
 /// Specific styles in CKEditor.
 ///
-/* stylelint-disable */
-%ckeditor {
+@mixin ckeditor {
   a:not(.no-default) {
     @include link--underlined;
   }
@@ -29,7 +28,7 @@
 
 // stylelint-disable-next-line plugin/stylelint-bem-namics
 .cke_editable {
-  @extend %ckeditor;
+  @include ckeditor;
   color: $c-text;
 }
 
@@ -37,5 +36,5 @@
 /// Drupal selectors.
 ////
 
-.text-formatted.field--type-text-long { @extend %ckeditor; }
-.text-formatted.field--type-text-with-summary { @extend %ckeditor; }
+.text-formatted.field--type-text-long { @include ckeditor; }
+.text-formatted.field--type-text-with-summary { @include ckeditor; }
