@@ -88,7 +88,7 @@ input[type="checkbox"] {
 
     // Hide the checkbox but keep it in the flow so browser validation shows at
     // the appropriate location if needed.
-    @extend %visually-hidden;
+    @include visually-hidden;
 
     // Move the location a bit so the validation popup is well positioned.
     margin: $size 0 0 calc($size / 2);

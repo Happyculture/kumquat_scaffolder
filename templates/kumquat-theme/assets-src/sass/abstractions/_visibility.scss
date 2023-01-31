@@ -1,3 +1,6 @@
+///
+/// Hides the *element* but keep it readable for Assistive Technologies.
+///
 @mixin visually-hidden {
   position: absolute !important;
   width: 1px;
@@ -7,11 +10,10 @@
   word-wrap: normal;
 }
 
-%visually-hidden {
-  @include visually-hidden;
-}
-
-@mixin visually-hidden-revert {
+///
+/// Reverts back the *element* to its default state.
+///
+@mixin visually-hidden--revert {
   position: static !important;
   width: auto;
   height: auto;
