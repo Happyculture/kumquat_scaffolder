@@ -1,4 +1,8 @@
-/* stylelint-disable plugin/stylelint-bem-namics */
+////
+/// @file
+/// Clickable blocks related mixins.
+////
+
 ///
 /// Make an element entirely clickable.
 ///
@@ -20,6 +24,7 @@
     z-index: 1;
   }
 
+  // stylelint-disable plugin/stylelint-bem-namics
   #{$main_link_wrapper_selector} a {
     position: static;
     text-decoration: none;

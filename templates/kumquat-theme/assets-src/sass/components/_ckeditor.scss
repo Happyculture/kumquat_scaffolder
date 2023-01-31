@@ -1,4 +1,11 @@
-// Specific style in ckeditor
+////
+/// @file
+/// Styles for rich text edition.
+////
+
+///
+/// Specific styles in CKEditor.
+///
 /* stylelint-disable */
 %ckeditor {
   a:not(.no-default) {
@@ -16,14 +23,19 @@
   }
 }
 
-// CKEditor selectors.
+////
+/// CKEditor selectors.
+////
 
+// stylelint-disable-next-line plugin/stylelint-bem-namics
 .cke_editable {
   @extend %ckeditor;
   color: $c-text;
 }
 
-// Drupal selectors.
+////
+/// Drupal selectors.
+////
 
 .text-formatted.field--type-text-long { @extend %ckeditor; }
 .text-formatted.field--type-text-with-summary { @extend %ckeditor; }

@@ -1,8 +1,13 @@
+////
+/// @file
+/// Forms related global styles.
+////
+
 /* stylelint-disable plugin/stylelint-bem-namics */
 
-/*
-  Form types.
-*/
+////
+/// Field types.
+////
 
 %narrow-form {
   max-width: 40rem;
@@ -228,9 +233,9 @@ option {
   }
 }
 
-/*
-  Fields wrappers.
-*/
+////
+/// Field wrappers.
+////
 
 .form-actions {
   display: flex;

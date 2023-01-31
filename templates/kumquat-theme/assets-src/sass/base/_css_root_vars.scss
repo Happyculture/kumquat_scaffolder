@@ -1,3 +1,8 @@
+////
+/// @file
+/// CSS variables defined at the root of the cascade.
+////
+
 :root {
   @each $device in $major-breakpoints {
     @include media('>=#{$device}') {
