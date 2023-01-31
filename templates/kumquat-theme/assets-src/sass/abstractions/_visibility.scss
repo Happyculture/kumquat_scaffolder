@@ -21,3 +21,15 @@
   clip: auto;
   word-wrap: normal;
 }
+
+///
+/// Hides the *element* but keep it readable for AT and show it when focused.
+///
+@mixin visually-hidden--focusable {
+  @include visually-hidden;
+
+  &:focus-visible,
+  &:focus-within {
+    @include visually-hidden--revert;
+  }
+}
