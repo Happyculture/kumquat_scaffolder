@@ -1,6 +1,19 @@
 @use 'sass:list';
 @use 'sass:math';
 
+///
+/// Converts numeric values to rem.
+///
+/// @param {String} $sizes - the sizes ton convert
+///
+/// @return {String} The converted sizes
+///
+/// @example scss - Converts a single value
+///   margin-top: px-to-rem(38);
+///
+/// @example scss - Converts a multiple value
+///   margin: px-to-rem(38 auto 24);
+///
 @function px-to-rem($sizes) {
   $data: null;
   $i: 1;

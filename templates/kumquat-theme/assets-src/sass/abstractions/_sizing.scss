@@ -1,17 +1,27 @@
-/* stylelint-disable plugin/stylelint-bem-namics */
+///
+/// Defines the *element* as the parent of a full sized child.
+///
 @mixin full-size-parent() {
   position: relative;
 }
 
+///
+/// Sets the *element* size to 100% of its first positioned parent.
+///
 @mixin full-size-child() {
   position: absolute;
-  top: 0; right: 0; bottom: 0; left: 0;
+  inset: 0;
 }
 
-@mixin full-size-children() {
-  @include full-size-parent;
-
-  & > * {
-    @include full-size-child;
-  }
+///
+/// Extends the *element* width to cover the entire screen.
+///
+/// Warning: it only work if the natural position of the element is already
+/// centered in the page.
+///
+@mixin full-page-width() {
+  position: relative;
+  left: 50%;
+  width: 100vw;
+  margin-left: -50vw;
 }
