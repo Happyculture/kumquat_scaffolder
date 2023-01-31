@@ -1,30 +1,61 @@
+@use '../abstractions/units';
+
+///
+/// Number of columns per major breakpoint.
+///
 $nb-cols: (
   mobile: 4,
   tablet: 6,
   desktop: 12,
   wide: 12
 );
+
+///
+/// Size of each column.
+///
 $col-size: (
   mobile: 1fr,
   tablet: 1fr,
   desktop: 1fr,
   wide: 1fr
 );
-$gutter-size: (
-  mobile: 1.6875rem, // 27px
-  tablet: 2rem, // 32px
-  desktop: 2.125rem, // 34px
-  wide: 2.5rem // 40px
+
+///
+/// Gutter size (between columns) for each major breakpoint.
+///
+$columns-gutter-size: (
+  mobile: units.px-to-rem(27),
+  tablet: units.px-to-rem(32),
+  desktop: units.px-to-rem(34),
+  wide: units.px-to-rem(40)
 );
+
+///
+/// Gutter size (between rows) for each major breakpoint.
+///
+$rows-gutter-size: (
+  mobile: units.px-to-rem(18),
+  tablet: units.px-to-rem(30),
+  desktop: units.px-to-rem(36),
+  wide: units.px-to-rem(40)
+);
+
+///
+/// Minimal gutter around (left and right) the grid per major breakpoint.
+///
 $external-gutter-size: (
-  mobile: 1.5rem, // 24px
-  tablet: 4rem, // 64px
-  desktop: 0.3125rem, // 5px
-  wide: 0.875rem // 14px
+  mobile: units.px-to-rem(24),
+  tablet: units.px-to-rem(64),
+  desktop: units.px-to-rem(5),
+  wide: units.px-to-rem(14)
 );
+
+///
+/// Grid maximum width per major breakpoint.
+///
 $grid-max-size: (
   mobile: none,
   tablet: none,
-  desktop: 60rem, // 960px
-  wide: 71.25rem // 1140px
+  desktop: units.px-to-rem(960),
+  wide: units.px-to-rem(1140)
 );

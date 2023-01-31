@@ -1,28 +1,63 @@
-@use "sass:map";
+@use 'sass:map';
 
-// Functions.
+////
+/// Internal helpers.
+/// @access private
+////
 
+///
+/// Gets the columns gutter size for the given device.
+///
+/// @param {String} $device - The device
+///
+/// @return {String} - The column gutter size
+///
 @function grid-gutter-size($device: mobile) {
-  @return map.get($gutter-size, $device);
+  @return map.get($columns-gutter-size, $device);
 }
 
+///
+/// Gets the external gutter size for the given device.
+///
+/// @param {String} $device - The device
+///
+/// @return {String} - The external gutter size
+///
 @function grid-external-gutter-size($device: mobile) {
   @return map.get($external-gutter-size, $device);
 }
 
+///
+/// Gets the grid maximum width for the given device.
+///
+/// @param {String} $device - The device
+///
+/// @return {String} - The grid maximum width
+///
 @function grid-max-width($device: mobile) {
   @return map.get($grid-max-size, $device);
 }
 
-// Mixins.
+////
+/// Exposed API.
+/// @access public
+////
 
+///
+/// Sets the *element* as a grid container for a given device.
+///
+/// @param {String} $device - The device
+///
 @mixin grid-container($device: mobile) {
   display: grid;
-  grid-column-gap: map.get($gutter-size, $device);
-  grid-row-gap: map.get($rythm-base, $device);
+  grid-column-gap: map.get($columns-gutter-size, $device);
+  grid-row-gap: map.get($rows-gutter-size, $device);
   grid-template-columns: repeat(map.get($nb-cols, $device), map.get($col-size, $device));
 }
 
+///
+/// Sets the *element* as a grid container for all major devices.
+///
 @mixin grid-setup-grid() {
   @each $device in $major-breakpoints {
     @include media('>=#{$device}') {
@@ -31,6 +66,9 @@
   }
 }
 
+///
+/// Sets the *element* max width for all devices.
+///
 @mixin grid-setup-width() {
   width: 100%;
   margin-right: auto;
@@ -45,6 +83,13 @@
   }
 }
 
+///
+/// Sets the *element* as a grid for all devices.
+///
+/// If the element isn't a subgrid, also sets the max width and margins.
+///
+/// @param {Boolean} $subgrid - Is it a subgrid
+///
 @mixin grid-setup($subgrid: false) {
   @if $subgrid == false {
     @include grid-setup-width;
@@ -52,14 +97,22 @@
   @include grid-setup-grid;
 }
 
-@mixin subgrid-setup() {
-  @include grid-setup(true);
-}
-
+///
+/// Sets the *element*'s columns in the grid.
+///
+/// @param {String} $start - The starting point
+/// @param {Integer} $span - The number of columns to cover
+///
 @mixin grid-column($start: auto, $span: 1) {
   grid-column: #{$start} / #{$start + $span};
 }
 
+///
+/// Sets the *element*'s rows in the grid.
+///
+/// @param {String} $start - The starting point
+/// @param {Integer} $span - The number of rows to cover
+///
 @mixin grid-row($start: auto, $span: 1) {
   grid-row: #{$start} / #{$start + $span};
 }
