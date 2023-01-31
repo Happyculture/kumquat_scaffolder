@@ -18,7 +18,7 @@
 ///
 /// Reverts back the *element* to its default state.
 ///
-@mixin visually-hidden--revert {
+@mixin visually-hidden-revert {
   position: static !important;
   width: auto;
   height: auto;
@@ -30,11 +30,11 @@
 ///
 /// Hides the *element* but keep it readable for AT and show it when focused.
 ///
-@mixin visually-hidden--focusable {
+@mixin visually-hidden-focusable {
   @include visually-hidden;
 
   &:focus-visible,
   &:focus-within {
-    @include visually-hidden--revert;
+    @include visually-hidden-revert;
   }
 }

@@ -6,7 +6,7 @@
 ///
 /// Removes the default style of the list.
 ///
-@mixin list--no-bullet() {
+@mixin list-no-bullet() {
   padding: 0;
   list-style: none;
 }
@@ -14,8 +14,8 @@
 ///
 /// Default unordered list.
 ///
-@mixin list--default() {
-  @include list--no-bullet;
+@mixin list-default() {
+  @include list-no-bullet;
 
   li::before {
     content: '•';
@@ -32,8 +32,8 @@
 ///
 /// Simple horizontal list.
 ///
-@mixin list--horizontal() {
-  @include list--no-bullet;
+@mixin list-horizontal() {
+  @include list-no-bullet;
   display: flex;
 
   li {

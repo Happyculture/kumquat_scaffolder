@@ -20,7 +20,7 @@
 ///
 /// Displays the *element* as an underlined link.
 ///
-@mixin link--underlined() {
+@mixin link-underlined() {
   @include link;
   text-decoration: underline;
 

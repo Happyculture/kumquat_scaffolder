@@ -1,41 +1,6 @@
 .menu--main {
   position: static;
 
-  @include media('>=desktop') {
-    .menu__root {
-      display: flex;
-      align-items: center;
-      justify-content: flex-start;
-      margin: 0;
-
-      a,
-      button {
-        padding: 1rem;
-        line-height: 1;
-        text-transform: none;
-      }
-
-      > .menu-item {
-        display: block;
-      }
-    }
-
-    .menu__child__panel {
-      position: absolute;
-      z-index: 10;
-    }
-
-    .menu__child__wrapper {
-      border: 1px solid $c-headings;
-      background: $c-default-background;
-    }
-
-    .menu__child {
-      display: block;
-      margin: 0;
-    }
-  }
-
   .menu__root {
     margin: 0;
     padding: 1rem;
@@ -124,6 +89,41 @@
       &--active-trail {
 
       } */
+    }
+  }
+
+  @include media('>=desktop') {
+    .menu__root {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      margin: 0;
+
+      a,
+      button {
+        padding: 1rem;
+        line-height: 1;
+        text-transform: none;
+      }
+
+      > .menu-item {
+        display: block;
+      }
+    }
+
+    .menu__child__panel {
+      position: absolute;
+      z-index: 10;
+    }
+
+    .menu__child__wrapper {
+      border: 1px solid $c-headings;
+      background: $c-default-background;
+    }
+
+    .menu__child {
+      display: block;
+      margin: 0;
     }
   }
 }

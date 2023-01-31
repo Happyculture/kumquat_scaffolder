@@ -3,24 +3,22 @@
 /// Forms related global styles.
 ////
 
-/* stylelint-disable plugin/stylelint-bem-namics */
-
 ////
 /// Field types.
 ////
 
-input[type="date"],
-input[type="datetime-local"],
-input[type="email"],
-input[type="month"],
-input[type="number"],
-input[type="password"],
-input[type="search"],
-input[type="tel"],
-input[type="text"],
-input[type="time"],
-input[type="url"],
-input[type="week"],
+input[type='date'],
+input[type='datetime-local'],
+input[type='email'],
+input[type='month'],
+input[type='number'],
+input[type='password'],
+input[type='search'],
+input[type='tel'],
+input[type='text'],
+input[type='time'],
+input[type='url'],
+input[type='week'],
 textarea,
 select {
   width: 100%;
@@ -60,13 +58,13 @@ select {
   }
 }
 
-input[type="submit"] {
+input[type='submit'] {
   @include button;
   display: inline-block;
 }
 
-input[type="radio"],
-input[type="checkbox"] {
+input[type='radio'],
+input[type='checkbox'] {
   &:not(:checked),
   &:checked {
     $size: 1.25em; // ~20px
@@ -181,7 +179,7 @@ input[type="checkbox"] {
   }
 }
 
-input[type="radio"] {
+input[type='radio'] {
   &:not(:checked),
   &:checked {
     + label {
@@ -220,12 +218,12 @@ option {
   align-items: center;
   justify-content: center;
 
-  @include media('>=desktop') {
-    justify-content: flex-start;
-  }
-
   > * {
     margin-bottom: 1rem;
+  }
+
+  @include media('>=desktop') {
+    justify-content: flex-start;
   }
 }
 
@@ -234,7 +232,7 @@ option {
     color: $c-message-error;
 
     &::before {
-      background-image: url($images-path + "/icons/message-alert.svg");
+      background-image: url($images-path + '/icons/message-alert.svg');
       vertical-align: initial;
     }
 

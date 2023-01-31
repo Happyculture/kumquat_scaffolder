@@ -1,23 +1,4 @@
 .off-canvas-menu {
-  @include media('>=desktop') {
-    &__button {
-      display: none;
-    }
-
-    &__content {
-      position: relative;
-      width: 100%;
-      height: auto;
-      padding: 0;
-      overflow: initial;
-      background: none;
-
-      &[aria-hidden] {
-        transform: none;
-      }
-    }
-  }
-
   &__button {
     border: none;
     background: none;
@@ -46,6 +27,25 @@
 
     &[aria-hidden] {
       transform: translateX(100%);
+    }
+  }
+
+  @include media('>=desktop') {
+    &__button {
+      display: none;
+    }
+
+    &__content {
+      position: relative;
+      width: 100%;
+      height: auto;
+      padding: 0;
+      overflow: initial;
+      background: none;
+
+      &[aria-hidden] {
+        transform: none;
+      }
     }
   }
 }

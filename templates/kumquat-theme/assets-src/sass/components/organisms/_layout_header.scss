@@ -2,19 +2,6 @@
   @include full-page-width;
   background: $c-layout-highlight-background;
 
-  @include media('>=tablet') {
-    .off-canvas-menu__button,
-    .region-navigation {
-      @include grid-column(6, 1);
-    }
-  }
-
-  @include media('>=desktop') {
-    .region-navigation {
-      @include grid-column(5, 8);
-    }
-  }
-
   & > .content-wrapper {
     @include grid-setup;
     align-items: center;
@@ -29,5 +16,18 @@
   .region-navigation {
     @include grid-column(4, 1);
     @include grid-row(1, 1);
+  }
+
+  @include media('>=tablet') {
+    .off-canvas-menu__button,
+    .region-navigation {
+      @include grid-column(6, 1);
+    }
+  }
+
+  @include media('>=desktop') {
+    .region-navigation {
+      @include grid-column(5, 8);
+    }
   }
 }

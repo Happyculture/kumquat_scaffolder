@@ -8,16 +8,16 @@
 ///
 @mixin ckeditor {
   a:not(.no-default) {
-    @include link--underlined;
+    @include link-underlined;
   }
 
   ul {
     &:not(.horizontal-list) {
-      @include list--default;
+      @include list-default;
     }
 
     &.horizontal-list {
-      @include list--horizontal;
+      @include list-horizontal;
     }
   }
 }

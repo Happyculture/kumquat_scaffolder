@@ -7,10 +7,10 @@
 
 .messages {
   @include message-box;
-  &--status { @include message-box--status; }
-  &--info { @include message-box--info; }
-  &--warning { @include message-box--warning; }
-  &--error { @include message-box--error; }
+  &--status { @include message-box-status; }
+  &--info { @include message-box-info; }
+  &--warning { @include message-box-warning; }
+  &--error { @include message-box-error; }
 
   // Messages lists.
 

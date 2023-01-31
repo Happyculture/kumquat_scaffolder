@@ -24,13 +24,12 @@
     z-index: 1;
   }
 
-  // stylelint-disable plugin/stylelint-bem-namics
-  #{$main_link_wrapper_selector} a {
+  #{$main_link_wrapper_selector} a { // stylelint-disable-line plugin/stylelint-bem-namics
     position: static;
     text-decoration: none;
 
     // Use ::after because a lot of links use ::before for decoration.
-    &::after {
+    &::after { // stylelint-disable-line plugin/stylelint-bem-namics
       content: '';
       position: absolute;
       z-index: 0;
