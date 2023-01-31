@@ -1,6 +1,7 @@
-/* stylelint-disable plugin/stylelint-bem-namics */
-
-%message-box {
+///
+/// Displays the *element* as a default message box.
+///
+@mixin message-box() {
   --base-color: #{$c-message-base};
   padding: 1rem 1.5rem 1rem 4.5rem;
   border-width: 8px 0 0;
@@ -11,26 +12,6 @@
   background-size: 1.5rem;
   word-wrap: break-word;
   overflow-wrap: break-word;
-
-  &--status {
-    --base-color: #{$c-message-status};
-    background-image: url($images-path + "/icons/message-valid.svg");
-  }
-
-  &--info {
-    --base-color: #{$c-message-info};
-    background-image: url($images-path + "/icons/message-info.svg");
-  }
-
-  &--warning {
-    --base-color: #{$c-message-warning};
-    background-image: url($images-path + "/icons/message-caution.svg");
-  }
-
-  &--error {
-    --base-color: #{$c-message-error};
-    background-image: url($images-path + "/icons/message-alert.svg");
-  }
 
   // RTL support.
 
@@ -52,4 +33,36 @@
     color: var(--base-color);
     font-family: $sans-serif;
   }
+}
+
+///
+/// Overrides default message box style with status ones.
+///
+@mixin message-box--status {
+  --base-color: #{$c-message-status};
+  background-image: url($images-path + '/icons/message-valid.svg');
+}
+
+///
+/// Overrides default message box style with info ones.
+///
+@mixin message-box--info {
+  --base-color: #{$c-message-info};
+  background-image: url($images-path + '/icons/message-info.svg');
+}
+
+///
+/// Overrides default message box style with warning ones.
+///
+@mixin message-box--warning {
+  --base-color: #{$c-message-warning};
+  background-image: url($images-path + '/icons/message-caution.svg');
+}
+
+///
+/// Overrides default message box style with error ones.
+///
+@mixin message-box--error {
+  --base-color: #{$c-message-error};
+  background-image: url($images-path + '/icons/message-alert.svg');
 }
