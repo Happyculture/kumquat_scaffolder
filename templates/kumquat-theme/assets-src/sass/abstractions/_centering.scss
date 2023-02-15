@@ -4,19 +4,38 @@
 ////
 
 ///
-/// Center the *content* both vertically and horizontally.
+/// Center the *content* vertically or/and horizontally.
 ///
-@mixin center-both-flex() {
+/// 
+@mixin center-content-flex($type: null) {
   display: flex;
-  align-items: center;
-  justify-content: center;
+
+  @if $type == 'x' {
+    justify-content: center;
+  } @else if $type == 'y' {
+    align-items: center;
+  } @else {
+    align-items: center;
+    justify-content: center;
+  }
 }
 
 ///
-/// Center the *element* itself vertically in its positioning context.
+/// Center the *element* itself vertically or/and horizontally.
 ///
-@mixin center-vertical-absolute() {
+/// 
+@mixin center-absolute($type: null) {
   position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
+
+  @if $type == 'x' {
+    left: 50%;
+    transform: translateX(-50%);
+  } @else if $type == 'y' {
+    top: 50%;
+    transform: translateY(-50%);
+  } @else {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
 }
