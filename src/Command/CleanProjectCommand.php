@@ -87,6 +87,12 @@ class CleanProjectCommand extends Command {
         'Clean the core module.'
       )
       ->addOption(
+        'clean-content-modules',
+        NULL,
+        InputOption::VALUE_NONE,
+        'Clean the content modules.'
+      )
+      ->addOption(
         'clean-theme',
         NULL,
         InputOption::VALUE_NONE,
@@ -115,6 +121,7 @@ class CleanProjectCommand extends Command {
     $clean_all = (bool) $input->getOption('clean-all');
     $clean_profile = (bool) $input->getOption('clean-profile');
     $clean_core_module = (bool) $input->getOption('clean-core-module');
+    $clean_content_modules = (bool) $input->getOption('clean-content-modules');
     $clean_theme = (bool) $input->getOption('clean-theme');
     $clean_admin_theme = (bool) $input->getOption('clean-admin-theme');
     $clean_config = (bool) $input->getOption('clean-config');
@@ -125,6 +132,7 @@ class CleanProjectCommand extends Command {
     // Improve attributes readibility.
     $recap_gen_profile = $clean_profile || $clean_all ? 'Yes' : 'No';
     $recap_gen_core_module = $clean_core_module || $clean_all ? 'Yes' : 'No';
+    $recap_gen_content_modules = $clean_content_modules || $clean_all ? 'Yes' : 'No';
     $recap_gen_theme = $clean_theme || $clean_all ? 'Yes' : 'No';
     $recap_gen_admin_theme = $clean_admin_theme || $clean_all ? 'Yes' : 'No';
     $recap_gen_config = $clean_config || $clean_all ? 'Yes' : 'No';
@@ -134,6 +142,7 @@ class CleanProjectCommand extends Command {
     ];
     $recap_params[] = ['Clean profile', $recap_gen_profile];
     $recap_params[] = ['Clean core module', $recap_gen_core_module];
+    $recap_params[] = ['Clean content modules', $recap_gen_content_modules];
     $recap_params[] = ['Clean front theme', $recap_gen_theme];
     $recap_params[] = ['Clean admin theme', $recap_gen_admin_theme];
     $recap_params[] = ['Clean config', $recap_gen_config];
@@ -158,6 +167,10 @@ class CleanProjectCommand extends Command {
       $this->cleanCoreModule($module_folder, $machine_name);
     }
 
+    if ($clean_content_modules || $clean_all) {
+      $this->cleanContentModules($module_folder, $machine_name);
+    }
+
     if ($clean_theme || $clean_all) {
       $this->cleanTheme($theme_folder, $config_folder, $machine_name);
     }
@@ -180,6 +193,7 @@ class CleanProjectCommand extends Command {
         'all',
         'profile',
         'core-module',
+        'content-modules',
         'theme',
         'admin-theme',
         'config',
@@ -343,6 +357,27 @@ class CleanProjectCommand extends Command {
     }
     else {
       $this->getIo()->info(sprintf('No %s core module to clean.', $machine_name . '_core'));
+    }
+  }
+
+  /**
+   * Clean content modules.
+   *
+   * @param string $module_folder
+   *   The module storage folder.
+   * @param string $machine_name
+   *   The project machine name.
+   */
+  protected function cleanContentModules(string $module_folder, string $machine_name): void {
+    foreach (['deploy', 'test'] as $mode) {
+      $dir = $module_folder . '/' . $machine_name . '_content_' . $mode;
+      if ($this->getFs()->exists($dir)) {
+        $this->getFs()->remove($dir);
+        $this->getIo()->success(sprintf('%s content module successfully cleaned.', $machine_name . '_content_' . $mode));
+      }
+      else {
+        $this->getIo()->info(sprintf('No %s content module to clean.', $machine_name . '_content_' . $mode));
+      }
     }
   }
 

@@ -64,7 +64,7 @@ class ProjectGenerator extends Generator {
   }
 
   /**
-   * Generates an installation profile.
+   * Generates the core module.
    *
    * @param array $parameters
    *   The generation parameters.
@@ -108,6 +108,39 @@ class ProjectGenerator extends Generator {
 
     $this->getFs()->mirror(self::TPL_DIR . '/kumquat-core-module/layouts', dirname($modulePath) . '/layouts');
     $this->trackGeneratedDirectory(dirname($modulePath) . '/layouts');
+  }
+
+  /**
+   * Generates content modules.
+   *
+   * @param array $parameters
+   *   The generation parameters.
+   */
+  public function generateContentModules(array $parameters) {
+    $modules = $parameters['modules_dir'];
+    foreach (['deploy', 'test'] as $mode) {
+      $machine_name = $parameters['machine_name'] . '_content_' . $mode;
+
+      $this->checkDir(($modules == '/' ? '' : $modules) . '/' . $machine_name, 'content modules');
+
+      $modulePath = ($modules == '/' ? '' : $modules) . '/' . $machine_name . '/' . $machine_name;
+
+      $moduleParameters = [
+        'profile' => $parameters['name'],
+        'module' => $parameters['name'] . ' Content ' . ucfirst($mode),
+        'machine_name' => $machine_name,
+        'mode' => $mode,
+      ];
+
+      $this->renderFile(
+        'kumquat-content-modules/info.yml.twig',
+        $modulePath . '.info.yml',
+        $moduleParameters
+      );
+
+      $this->getFs()->touch($modulePath . '/content/.gitkeep');
+      $this->trackGeneratedFile($modulePath . '/content/.gitkeep');
+    }
   }
 
   /**

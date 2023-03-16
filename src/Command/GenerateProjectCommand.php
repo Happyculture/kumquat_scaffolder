@@ -61,7 +61,7 @@ class GenerateProjectCommand extends Command {
     $this
       ->setName('kumquat:generate-project')
       ->setAliases(['kgp'])
-      ->setDescription('Generate an install profile, a core module, a default theme and/or an admin theme.')
+      ->setDescription('Generate an install profile, a core module, content modules, a default theme and/or an admin theme.')
       ->addOption(
         'name',
         NULL,
@@ -99,6 +99,12 @@ class GenerateProjectCommand extends Command {
         'Generate a new core module.'
       )
       ->addOption(
+        'generate-content-modules',
+        NULL,
+        InputOption::VALUE_NONE,
+        'Generate new content modules.'
+      )
+      ->addOption(
         'generate-theme',
         NULL,
         InputOption::VALUE_NONE,
@@ -134,6 +140,7 @@ class GenerateProjectCommand extends Command {
     $generate_all = (bool) $input->getOption('generate-all');
     $generate_profile = (bool) $input->getOption('generate-profile');
     $generate_core_module = (bool) $input->getOption('generate-core-module');
+    $generate_content_modules = (bool) $input->getOption('generate-content-modules');
     $generate_theme = (bool) $input->getOption('generate-theme');
     $generate_admin_theme = (bool) $input->getOption('generate-admin-theme');
     $generate_config = (bool) $input->getOption('generate-config');
@@ -145,6 +152,7 @@ class GenerateProjectCommand extends Command {
     // Improve attributes readibility.
     $recap_gen_profile = $generate_profile || $generate_all ? 'Yes' : 'No';
     $recap_gen_core_module = $generate_core_module || $generate_all ? 'Yes' : 'No';
+    $recap_gen_content_modules = $generate_content_modules || $generate_all ? 'Yes' : 'No';
     $recap_gen_theme = $generate_theme || $generate_all ? 'Yes' : 'No';
     $recap_gen_admin_theme = $generate_admin_theme || $generate_all ? 'Yes' : 'No';
     $recap_gen_config = $generate_config || $generate_all ? 'Yes' : 'No';
@@ -158,7 +166,8 @@ class GenerateProjectCommand extends Command {
       $recap_params[] = ['Profiles folder', $profiles_folder];
     }
     $recap_params[] = ['Generate core module', $recap_gen_core_module];
-    if ($generate_core_module || $generate_all) {
+    $recap_params[] = ['Generate content modules', $recap_gen_content_modules];
+    if ($generate_core_module || $generate_content_modules || $generate_all) {
       $recap_params[] = ['Modules folder', $module_folder];
     }
     $recap_params[] = ['Generate front theme', $recap_gen_theme];
@@ -197,6 +206,13 @@ class GenerateProjectCommand extends Command {
         'modules_dir' => $module_folder,
       ]);
     }
+    if ($generate_content_modules || $generate_all) {
+      $this->generator->generateContentModules([
+        'name' => $name,
+        'machine_name' => $machine_name,
+        'modules_dir' => $module_folder,
+      ]);
+    }
     if ($generate_theme || $generate_all) {
       $this->generator->generateDefaultTheme([
         'name' => $name,
@@ -221,6 +237,7 @@ class GenerateProjectCommand extends Command {
         'config_folder' => $config_folder,
         'generate_profile' => $generate_profile || $generate_all,
         'generate_core_module' => $generate_core_module || $generate_all,
+        'generate_content_modules' => $generate_content_modules || $generate_all,
         'generate_theme' => $generate_theme || $generate_all,
         'generate_admin_theme' => $generate_admin_theme || $generate_all,
       ]);
@@ -236,6 +253,7 @@ class GenerateProjectCommand extends Command {
         'all',
         'profile',
         'core-module',
+        'content-modules',
         'theme',
         'admin-theme',
         'config',
