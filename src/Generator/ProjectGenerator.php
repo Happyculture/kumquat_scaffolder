@@ -95,6 +95,12 @@ class ProjectGenerator extends Generator {
     );
 
     $this->renderFile(
+      'kumquat-core-module/src/Helpers/PatternsHelper.php.twig',
+      dirname($modulePath) . '/src/Helpers/PatternsHelper.php',
+      $profileParameters
+    );
+
+    $this->renderFile(
       'kumquat-core-module/src/Helpers/StaticBlockBase.php.twig',
       dirname($modulePath) . '/src/Helpers/StaticBlockBase.php',
       $profileParameters

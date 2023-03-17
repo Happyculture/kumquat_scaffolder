@@ -6,6 +6,27 @@
  */
 
 use Drupal\media\IFrameMarkup;
+use Drupal\{{ machine_name }}\Helpers\PatternsHelper;
+
+/**
+ * Implements hook_element_info_alter().
+ */
+function {{ machine_name }}_element_info_alter(array &$info) {
+  if (!empty($info['pattern'])) {
+    $info['pattern']['#pre_render'][] = [
+      PatternsHelper::class,
+      'handleOptionalFields',
+    ];
+    $info['pattern']['#pre_render'][] = [
+      PatternsHelper::class,
+      'handleMultipleFields',
+    ];
+    $info['pattern']['#pre_render'][] = [
+      PatternsHelper::class,
+      'handleBooleanFields',
+    ];
+  }
+}
 
 /**
  * Implements hook_preprocess_HOOK().
