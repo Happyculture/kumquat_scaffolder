@@ -298,7 +298,7 @@ class GenerateProjectCommand extends Command {
         $composer_data = json_decode(file_get_contents($this->drupalFinder->getComposerRoot() . '/composer.json'));
         [, $default_name] = explode('/', $composer_data->name);
         $name = $this->getIo()->ask(
-          'What is the human readable name of the project?',
+          'What is the human readable name of the project? (modules and theme names are derived from it)',
           ucwords($default_name),
           function ($name) {
             return $this->validateName($name);
@@ -316,7 +316,7 @@ class GenerateProjectCommand extends Command {
       $machine_name = $input->getOption('machine-name') ? $this->validateMachineName($input->getOption('machine-name')) : NULL;
       if (!$machine_name) {
         $machine_name = $this->getIo()->ask(
-          'What is the machine name of the project?',
+          'What is the machine name of the project? (modules and theme machine names are derived from it)',
           $this->stringConverter->createMachineName($name),
           function ($machine_name) {
             return $this->validateMachineName($machine_name);
