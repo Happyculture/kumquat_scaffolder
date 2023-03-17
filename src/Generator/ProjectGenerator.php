@@ -218,6 +218,12 @@ class ProjectGenerator extends Generator {
         $adminThemeParameters
       );
     }
+
+    $this->renderFile(
+      'kumquat-admin-theme/config/settings.yml.twig',
+      $config_folder . '/' . $adminThemeParameters['machine_name'] . '.settings.yml',
+      $adminThemeParameters
+    );
   }
 
   /**
