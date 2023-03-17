@@ -138,8 +138,9 @@ class ProjectGenerator extends Generator {
         $moduleParameters
       );
 
-      $this->getFs()->touch($modulePath . '/content/.gitkeep');
-      $this->trackGeneratedFile($modulePath . '/content/.gitkeep');
+      $this->getFs()->mkdir(dirname($modulePath) . '/content', 0750);
+      $this->getFs()->touch(dirname($modulePath) . '/content/.gitkeep');
+      $this->trackGeneratedFile(dirname($modulePath) . '/content/.gitkeep');
     }
   }
 
