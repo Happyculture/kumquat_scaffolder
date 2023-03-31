@@ -93,27 +93,6 @@ class ProjectGenerator extends Generator {
       $modulePath . '.module',
       $profileParameters
     );
-
-    $this->renderFile(
-      'kumquat-core-module/src/Helpers/PatternsHelper.php.twig',
-      dirname($modulePath) . '/src/Helpers/PatternsHelper.php',
-      $profileParameters
-    );
-
-    $this->renderFile(
-      'kumquat-core-module/src/Helpers/StaticBlockBase.php.twig',
-      dirname($modulePath) . '/src/Helpers/StaticBlockBase.php',
-      $profileParameters
-    );
-
-    $this->renderFile(
-      'kumquat-core-module/layouts.yml.twig',
-      $modulePath . '.layouts.yml',
-      $profileParameters
-    );
-
-    $this->getFs()->mirror(self::TPL_DIR . '/kumquat-core-module/layouts', dirname($modulePath) . '/layouts');
-    $this->trackGeneratedDirectory(dirname($modulePath) . '/layouts');
   }
 
   /**
