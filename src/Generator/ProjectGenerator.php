@@ -368,6 +368,15 @@ class ProjectGenerator extends Generator {
       unset($config['theme']['bartik']);
     }
     if ($parameters['generate_admin_theme']) {
+      /** @var \Drupal\Core\Extension\ThemeExtensionList $themeList */
+      $themeList = \Drupal::service('extension.list.theme');
+      if ($themeList->exists($parameters['base_admin_theme'])) {
+        foreach ($themeList->getBaseThemes($themeList->getList(), $parameters['base_admin_theme']) as $baseTheme) {
+          if (!isset($config['theme'][$baseTheme])) {
+            $config['theme'][$baseTheme] = 0;
+          }
+        }
+      }
       $config['theme'][$machine_name . '_admin_theme'] = 0;
     }
 
