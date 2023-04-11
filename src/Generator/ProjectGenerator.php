@@ -175,7 +175,7 @@ class ProjectGenerator extends Generator {
       $adminThemeParameters
     );
 
-    if ($parameters['base_admin_theme'] === 'gin') {
+    if (in_array($parameters['base_admin_theme'], ['gin', 'kumquat_gin'])) {
       $this->renderFile(
         'kumquat-admin-theme/admin_theme.settings.yml.twig',
         $config_folder . '/' . $machine_name . '_admin_theme.settings.yml',
