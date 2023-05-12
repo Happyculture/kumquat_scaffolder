@@ -371,11 +371,13 @@ class ProjectGenerator extends Generator {
       /** @var \Drupal\Core\Extension\ThemeExtensionList $themeList */
       $themeList = \Drupal::service('extension.list.theme');
       if ($themeList->exists($parameters['base_admin_theme'])) {
-        foreach ($themeList->getBaseThemes($themeList->getList(), $parameters['base_admin_theme']) as $baseTheme) {
-          if (!isset($config['theme'][$baseTheme])) {
-            $config['theme'][$baseTheme] = 0;
+        $baseThemes = $themeList->getBaseThemes($themeList->getList(), $parameters['base_admin_theme']);
+        foreach (array_keys($baseThemes) as $baseThemeKey) {
+          if (!isset($config['theme'][$baseThemeKey])) {
+            $config['theme'][$baseThemeKey] = 0;
           }
         }
+        $config['theme'][$parameters['base_admin_theme']] = 0;
       }
       $config['theme'][$machine_name . '_admin_theme'] = 0;
     }

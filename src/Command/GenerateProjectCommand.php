@@ -234,6 +234,7 @@ class GenerateProjectCommand extends Command {
       $this->generator->generateConfig([
         'name' => $name,
         'machine_name' => $machine_name,
+        'base_admin_theme' => $base_admin_theme,
         'config_folder' => $config_folder,
         'generate_profile' => $generate_profile || $generate_all,
         'generate_core_module' => $generate_core_module || $generate_all,
