@@ -6,6 +6,7 @@ use Drupal\Console\Core\Generator\Generator;
 use Drupal\Console\Core\Utils\TwigRenderer;
 use Drupal\Console\KumquatScaffolder\ConfigManipulationTrait;
 use Drupal\Console\KumquatScaffolder\FileManipulationTrait;
+use Drupal\Core\Serialization\Yaml;
 
 /**
  * Generate project parts for some templates.
@@ -336,6 +337,21 @@ class ProjectGenerator extends Generator {
     chdir($prevDir);
     $this->fileQueue->addFile('../composer.json');
     $this->countCodeLines->addCountCodeLines(1);
+
+    if (count($enabledThemes) === 1 && $this->getFs()->exists('.lando.yml')) {
+      $yaml = Yaml::decode(file_get_contents('.lando.yml'));
+      $changed = 0;
+      foreach ($yaml['tooling'] as &$settings) {
+        if (isset($settings['dir']) && $settings['dir'] === '/app/web/themes/custom/kumquat_theme') {
+          $settings['dir'] = '/app/web/themes/custom/' . $machine_name . '_theme';
+          $changed++;
+        }
+      }
+      file_put_contents('.lando.yml', Yaml::encode($yaml));
+
+      $this->fileQueue->addFile('../.lando.yml');
+      $this->countCodeLines->addCountCodeLines($changed);
+    }
   }
 
   /**

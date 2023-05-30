@@ -7,6 +7,7 @@ use Drupal\Console\Core\Command\Command;
 use Drupal\Console\Core\Utils\StringConverter;
 use Drupal\Console\KumquatScaffolder\ConfigManipulationTrait;
 use Drupal\Console\KumquatScaffolder\FileManipulationTrait;
+use Drupal\Core\Serialization\Yaml;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -418,6 +419,16 @@ class CleanProjectCommand extends Command {
 
       exec('/usr/bin/env composer config extra.kumquat-themes --json \'' . json_encode(array_unique($enabledThemes)) . '\'');
       exec('/usr/bin/env composer update --lock');
+
+      if (count($enabledThemes) === 0 && $this->getFs()->exists('.lando.yml')) {
+        $yaml = Yaml::decode(file_get_contents('.lando.yml'));
+        foreach ($yaml['tooling'] as &$settings) {
+          if (isset($settings['dir']) && $settings['dir'] === '/app/web/themes/custom/' . $machine_name . '_theme') {
+            $settings['dir'] = '/app/web/themes/custom/kumquat_theme';
+          }
+        }
+        file_put_contents('.lando.yml', Yaml::encode($yaml));
+      }
 
       chdir($prevDir);
 
