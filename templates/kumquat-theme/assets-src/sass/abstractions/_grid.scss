@@ -1,20 +1,18 @@
 ////
-/// @file
 /// Grids related mixins.
 ////
 
 @use 'sass:map';
 
-////
-/// Internal helpers.
-/// @access private
-////
+// -----------------
+// Internal helpers.
+// -----------------
 
 ///
 /// Gets the columns gutter size for the given device.
 ///
+/// @access private
 /// @param {String} $device - The device
-///
 /// @return {String} - The column gutter size
 ///
 @function grid-gutter-size($device: mobile) {
@@ -24,8 +22,8 @@
 ///
 /// Gets the external gutter size for the given device.
 ///
+/// @access private
 /// @param {String} $device - The device
-///
 /// @return {String} - The external gutter size
 ///
 @function grid-external-gutter-size($device: mobile) {
@@ -35,18 +33,17 @@
 ///
 /// Gets the grid maximum width for the given device.
 ///
+/// @access private
 /// @param {String} $device - The device
-///
 /// @return {String} - The grid maximum width
 ///
 @function grid-max-width($device: mobile) {
   @return map.get($grid-max-size, $device);
 }
 
-////
-/// Exposed API.
-/// @access public
-////
+// ------------
+// Exposed API.
+// ------------
 
 ///
 /// Sets the *element* as a grid container for a given device.

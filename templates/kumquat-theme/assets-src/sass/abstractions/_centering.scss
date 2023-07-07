@@ -1,12 +1,10 @@
 ////
-/// @file
 /// Centering related mixins.
 ////
 
 ///
 /// Center the *content* vertically or/and horizontally.
 ///
-/// 
 @mixin center-content-flex($type: null) {
   display: flex;
 
@@ -23,7 +21,6 @@
 ///
 /// Center the *element* itself vertically or/and horizontally.
 ///
-/// 
 @mixin center-absolute($type: null) {
   position: absolute;
 

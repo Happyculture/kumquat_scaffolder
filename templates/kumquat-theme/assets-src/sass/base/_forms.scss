@@ -1,11 +1,10 @@
 ////
-/// @file
 /// Forms related global styles.
 ////
 
-////
-/// Field types.
-////
+// ------------
+// Field types.
+// ------------
 
 input[type='date'],
 input[type='datetime-local'],
@@ -208,9 +207,9 @@ option {
   }
 }
 
-////
-/// Field wrappers.
-////
+// ---------------
+// Field wrappers.
+// ---------------
 
 .form-actions {
   display: flex;

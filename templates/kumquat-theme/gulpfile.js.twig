@@ -16,6 +16,7 @@ import dartSass from 'sass';
 import gulpSass from 'gulp-sass';
 const sass = gulpSass(dartSass);
 import sassGlob from 'gulp-sass-glob';
+import sassdoc from 'sassdoc';
 import sourcemaps from 'gulp-sourcemaps';
 import imagemin, {gifsicle, optipng, svgo} from 'gulp-imagemin';
 import jpegtran from 'imagemin-jpegtran';
@@ -52,7 +53,9 @@ export function cleanFolders () {
     'dist/images/**/*',
     '!dist/images/.gitkeep',
     'dist/js/**/*',
-    '!dist/js/.gitkeep'
+    '!dist/js/.gitkeep',
+    'docs',
+    '!docs/.gitkeep'
   ])
 }
 
@@ -98,6 +101,18 @@ function stylesPatterns () {
     .pipe(gulp.dest('templates'))
 }
 export const styles = gulp.parallel(stylesGlobal, stylesPatterns);
+
+function docStyles () {
+  const stream = gulp.src(['assets-src/sass/**/*.scss', 'templates/**/*.scss']);
+  if (argv.development) {
+    stream.pipe(sassdoc({
+      dest: 'docs/sass'
+    }));
+  }
+  return stream;
+}
+
+export const doc = docStyles;
 
 // Compile scripts.
 function scriptsGlobal () {
@@ -153,7 +168,7 @@ function fontsGlobal () {
 export const fonts = gulp.parallel(fontsGlobal);
 
 // Default actions.
-export const build = gulp.series(cleanFolders, gulp.parallel(lintStyles, styles, scripts, images, fonts));
+export const build = gulp.series(cleanFolders, gulp.parallel(lint, styles, scripts, images, fonts, doc));
 export default build;
 
 // Watcher.
@@ -166,8 +181,11 @@ function watchStylesPatterns () {
 function watchStylesGlobal () {
   return gulp.watch('assets-src/sass/**/*.scss', stylesGlobal);
 }
+function watchStylesDoc () {
+  return gulp.watch(['assets-src/sass/**/*.scss', 'templates/**/*.scss'], docStyles);
+}
 function watchImages () {
   return gulp.watch('assets-src/images/**/*', images);
 }
-const doWatch = gulp.parallel(watchScripts, watchStylesPatterns, watchStylesGlobal, watchImages);
+const doWatch = gulp.parallel(watchScripts, watchStylesPatterns, watchStylesGlobal, watchImages, watchStylesDoc);
 export const watch = gulp.series(build, doWatch);

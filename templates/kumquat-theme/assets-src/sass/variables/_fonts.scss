@@ -1,21 +1,19 @@
 ////
-/// @file
 /// Fonts related variables.
 ////
 
 ///
 /// Path to fonts directories.
 ///
-/// @root is replaced by gulp during compilation to manage common stylesheets
+/// "@root" is replaced by gulp during compilation to manage common stylesheets
 /// and pattern ones that does not have the same starting point.
 ///
 $fonts-dir: '@root/dist/fonts';
 
-////
-/// Font families.
-///
-/// Create as much as you need then use them anywhere for consistency.
-////
+// --------------
+// Font families.
+// --------------
+// Create as much as you need then use them anywhere for consistency.
 
 $serif: Times, serif;
 $sans-serif: helvetica, sans-serif;

@@ -1,5 +1,4 @@
 ////
-/// @file
 /// Styles for rich text edition.
 ////
 
@@ -22,9 +21,9 @@
   }
 }
 
-////
-/// CKEditor selectors.
-////
+// -------------------
+// CKEditor selectors.
+// -------------------
 
 // stylelint-disable-next-line plugin/stylelint-bem-namics
 .cke_editable {
@@ -32,9 +31,9 @@
   color: $c-text;
 }
 
-////
-/// Drupal selectors.
-////
+// -----------------
+// Drupal selectors.
+// -----------------
 
 .text-formatted.field--type-text-long { @include ckeditor; }
 .text-formatted.field--type-text-with-summary { @include ckeditor; }

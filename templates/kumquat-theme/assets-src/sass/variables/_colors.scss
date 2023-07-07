@@ -1,15 +1,14 @@
 ////
-/// @file
 /// Colors related variables.
 ////
 
-////
+///
 /// Guideline colors.
 ///
 /// These colors should be extracted from the mock-ups or the style guide.
 /// They should *never* be directly used in the other files but only in the
 /// 'Usage' section of this file.
-////
+///
 
 $carbon-dark: #1E1E28;
 $carbon: #3C3C46;
@@ -25,13 +24,12 @@ $purple-dark: #323787;
 $purple: #4146AF;
 $purple-light: #E1E6FF;
 
-////
-/// Other colors.
-///
-/// These colors might exist only for some technical usage.
-/// They should *never* be directly used in the other files but only in the
-/// 'Usage' section of this file.
-////
+// -------------
+// Other colors.
+// -------------
+// These colors might exist only for some technical usage.
+// They should *never* be directly used in the other files but only in the
+// 'Usage' section of this file.
 
 $blue: #3C4696;
 $green: #0F8246;
@@ -40,14 +38,13 @@ $red: #D3001B;
 $white: #FFFFFF;
 $black: #000000;
 
-////
-/// Usage.
-///
-/// Define the variables used in the other SASS files to ensure colors are
-/// abstracted and can be reused and replaced easily.
-/// These variables should always start with `c-` for a better discoverability
-/// using IDE's autocomplete features.
-////
+// ------
+// Usage.
+// ------
+// Define the variables used in the other SASS files to ensure colors are
+// abstracted and can be reused and replaced easily.
+// These variables should always start with `c-` for a better discoverability
+// using IDE's autocomplete features.
 
 $c-default-background: $white;
 
