@@ -4,7 +4,6 @@ const argv = yargs(hideBin(process.argv)).argv;
 
 import del from 'del';
 import gulp from 'gulp';
-import gulpif from 'gulp-if';
 import gulpStylelint from '@ronilaukkarinen/gulp-stylelint';
 import eslint from 'gulp-eslint';
 import uglify from 'gulp-uglify';
@@ -12,14 +11,15 @@ import plumber from 'gulp-plumber';
 import postcss from 'gulp-postcss';
 import rename from 'gulp-rename';
 import replace from 'gulp-replace';
-import dartSass from 'sass';
+import * as dartSass from 'sass';
 import gulpSass from 'gulp-sass';
-const sass = gulpSass(dartSass);
 import sassGlob from 'gulp-sass-glob';
 import sassdoc from 'sassdoc';
 import sourcemaps from 'gulp-sourcemaps';
 import imagemin, {gifsicle, optipng, svgo} from 'gulp-imagemin';
 import jpegtran from 'imagemin-jpegtran';
+
+const sass = gulpSass(dartSass);
 
 // PostCSS processors.
 import autoprefixer from 'autoprefixer';
@@ -78,27 +78,37 @@ function lintScripts () {
 export const lint = gulp.parallel(lintStyles, lintScripts);
 
 function stylesGlobal () {
-  return gulp.src('assets-src/sass/*.scss')
-    .pipe(plumber())
-    .pipe(gulpif(argv.development, sourcemaps.init()))
+  const stream = gulp.src('assets-src/sass/*.scss');
+  stream.pipe(plumber());
+  if (argv.development) {
+    stream.pipe(sourcemaps.init());
+  }
+  stream
     .pipe(sassGlob())
     .pipe(sass.sync(sassParams))
     .pipe(replace('@root', '../..'))
-    .pipe(postcss(processors))
-    .pipe(gulpif(argv.development, sourcemaps.write('.')))
-    .pipe(gulp.dest('dist/css'))
+    .pipe(postcss(processors));
+  if (argv.development) {
+    stream.pipe(sourcemaps.write('.'));
+  }
+  return stream.pipe(gulp.dest('dist/css'));
 }
 function stylesPatterns () {
-  return gulp.src('templates/**/*.scss')
-    .pipe(plumber())
-    .pipe(gulpif(argv.development, sourcemaps.init()))
+  const stream = gulp.src('templates/**/*.scss');
+  stream.pipe(plumber());
+  if (argv.development) {
+    stream.pipe(sourcemaps.init());
+  }
+  stream
     .pipe(replace('@global', '../../../../assets-src/sass'))
     .pipe(sassGlob())
     .pipe(sass.sync(sassParams))
     .pipe(replace('@root', '../../../..'))
-    .pipe(postcss(processors))
-    .pipe(gulpif(argv.development, sourcemaps.write('.')))
-    .pipe(gulp.dest('templates'))
+    .pipe(postcss(processors));
+  if (argv.development) {
+    stream.pipe(sourcemaps.write('.'));
+  }
+  return stream.pipe(gulp.dest('templates'));
 }
 export const styles = gulp.parallel(stylesGlobal, stylesPatterns);
 
@@ -116,22 +126,30 @@ export const doc = docStyles;
 
 // Compile scripts.
 function scriptsGlobal () {
-  return gulp.src('assets-src/js/*.js')
+  const stream = gulp.src('assets-src/js/*.js');
+  stream
     .pipe(plumber())
     .pipe(eslint())
-    .pipe(eslint.format())
-    .pipe(gulpif(!argv.development, uglify()))
-    .pipe(rename({suffix: '.min'}))
-    .pipe(gulp.dest('dist/js'))
+    .pipe(eslint.format());
+  if (!argv.development) {
+    stream.pipe(uglify());
+  }
+  stream
+    .pipe(rename({suffix: '.min'}));
+  return stream.pipe(gulp.dest('dist/js'));
 }
 function scriptsPatterns () {
-  return gulp.src(['templates/**/*.js', '!templates/**/*.min.js'])
+  const stream = gulp.src(['templates/**/*.js', '!templates/**/*.min.js']);
+  stream
     .pipe(plumber())
     .pipe(eslint())
-    .pipe(eslint.format())
-    .pipe(gulpif(!argv.development, uglify()))
-    .pipe(rename({suffix: '.min'}))
-    .pipe(gulp.dest('templates'))
+    .pipe(eslint.format());
+  if (!argv.development) {
+    stream.pipe(uglify());
+  }
+  stream
+    .pipe(rename({suffix: '.min'}));
+  return stream.pipe(gulp.dest('templates'));
 }
 export const scripts = gulp.parallel(scriptsGlobal, scriptsPatterns);
 
