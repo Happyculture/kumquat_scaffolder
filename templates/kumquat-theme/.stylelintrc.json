@@ -42,11 +42,17 @@
       {
         "type": "at-rule",
         "name": "include",
-        "parameter": "^(?!media)$"
+        "hasBlock": false
       },
       {
         "type": "at-rule",
         "name": "extend"
+      },
+      {
+        "type": "at-rule",
+        "name": "include",
+        "parameter": "^(?!media)$",
+        "hasBlock": true
       },
       {
         "type": "rule",
@@ -56,13 +62,7 @@
         "type": "rule",
         "selector": "/^&/"
       },
-      "rules",
-      {
-        "type": "at-rule",
-        "name": "include",
-        "parameter": "media",
-        "hasBlock": true
-      }
+      "rules"
     ],
     "order/properties-order": [
       {
