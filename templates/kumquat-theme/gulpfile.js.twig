@@ -43,8 +43,10 @@ if (argv.development) {
   sassParams.outputStyle = 'expanded';
 }
 
-// Clean compiled files..
-export function cleanFolders () {
+/**
+ * Clean compiled files.
+ */
+const runCleanFolders = () => {
   return del([
     'dist/css/**/*',
     '!dist/css/.gitkeep',
@@ -59,9 +61,11 @@ export function cleanFolders () {
   ])
 }
 
-// Lint styles
-function lintStyles () {
-  return gulp.src(['assets-src/sass/**/*.scss', 'templates/**/*.scss'], {since: gulp.lastRun(lintStyles)})
+/**
+ * Lint styles.
+ */
+const runLintStyles = () => {
+  return gulp.src(['assets-src/sass/**/*.scss', 'templates/**/*.scss'], {since: gulp.lastRun(runLintStyles)})
   .pipe(plumber())
   .pipe(gulpStylelint({
     reporters: [
@@ -69,15 +73,21 @@ function lintStyles () {
     ]
   }))
 }
-function lintScripts () {
-  return gulp.src(['assets-src/js/*.js', 'templates/**/*.js', '!templates/**/*.min.js'], {since: gulp.lastRun(lintScripts)})
+
+/**
+ * Lint scripts.
+ */
+const runLintScripts = () => {
+  return gulp.src(['assets-src/js/*.js', 'templates/**/*.js', '!templates/**/*.min.js'], {since: gulp.lastRun(runLintScripts)})
   .pipe(plumber())
   .pipe(eslint())
   .pipe(eslint.format())
 }
-export const lint = gulp.parallel(lintStyles, lintScripts);
 
-function stylesGlobal () {
+/**
+ * Compile global styles.
+ */
+const runStylesGlobal = () => {
   const stream = gulp.src('assets-src/sass/*.scss');
   stream.pipe(plumber());
   if (argv.development) {
@@ -93,13 +103,46 @@ function stylesGlobal () {
   }
   return stream.pipe(gulp.dest('dist/css'));
 }
-function stylesPatterns () {
-  return doStylesPatterns(gulp.lastRun(stylesPatterns));
+
+/**
+ * Watch global styles.
+ */
+const watchStylesGlobal = () => {
+  return gulp.watch('assets-src/sass/**/*.scss', runStylesGlobal);
 }
-function stylesPatternsForce () {
+
+/**
+ * Compile pattern styles.
+ */
+const runStylesPatterns = () => {
+  return doStylesPatterns(gulp.lastRun(runStylesPatterns));
+}
+
+/**
+ * Watch patterns styles.
+ */
+const watchStylesPatterns = () => {
+  return gulp.watch(['templates/**/*.scss'], runStylesPatterns);
+}
+
+/**
+ * Force all pattern styles compilation.
+ */
+const runStylesPatternsForce = () => {
   return doStylesPatterns();
 }
-function doStylesPatterns (since = 0) {
+
+/**
+ * Watch patterns styles dependencies.
+ */
+const watchStylesPatternsDependencies = () => {
+  return gulp.watch(['assets-src/sass/variables/*.scss', 'assets-src/sass/abstractions/*.scss'], runStylesPatternsForce);
+}
+
+/**
+ * Helper to run pattern styles compilation.
+ */
+const doStylesPatterns = (since = 0) => {
   const stream = gulp.src('templates/**/*.scss', {since: since});
   stream.pipe(plumber());
   if (argv.development) {
@@ -116,9 +159,11 @@ function doStylesPatterns (since = 0) {
   }
   return stream.pipe(gulp.dest('templates'));
 }
-export const styles = gulp.parallel(stylesGlobal, stylesPatterns);
 
-function docStyles () {
+/**
+ * Compile styles documentation.
+ */
+const runDocStyles = () => {
   const stream = gulp.src(['assets-src/sass/**/*.scss', 'templates/**/*.scss']);
   if (argv.development) {
     stream.pipe(sassdoc({
@@ -128,11 +173,18 @@ function docStyles () {
   return stream;
 }
 
-export const doc = docStyles;
+/**
+ * Watch styles for documentation.
+ */
+const watchDocStyles = () => {
+  return gulp.watch(['assets-src/sass/**/*.scss', 'templates/**/*.scss'], runDocStyles);
+}
 
-// Compile scripts.
-function scriptsGlobal () {
-  const stream = gulp.src('assets-src/js/*.js', {since: gulp.lastRun(scriptsGlobal)});
+/**
+ * Compile global scripts.
+ */
+const runScriptsGlobal = () => {
+  const stream = gulp.src(['assets-src/js/**/*.js', '!assets-src/js/**/*.min.js'], {since: gulp.lastRun(runScriptsGlobal)});
   stream
     .pipe(plumber())
     .pipe(eslint())
@@ -144,8 +196,19 @@ function scriptsGlobal () {
     .pipe(rename({suffix: '.min'}));
   return stream.pipe(gulp.dest('dist/js'));
 }
-function scriptsPatterns () {
-  const stream = gulp.src(['templates/**/*.js', '!templates/**/*.min.js'], {since: gulp.lastRun(scriptsPatterns)});
+
+/**
+ * Watch global scripts.
+ */
+const watchScriptsGlobal = () => {
+  return gulp.watch(['assets-src/js/**/*.js', '!assets-src/js/**/*.min.js'], runScriptsGlobal);
+}
+
+/**
+ * Compile patterns scripts.
+ */
+const runScriptsPatterns = () => {
+  const stream = gulp.src(['templates/**/*.js', '!templates/**/*.min.js'], {since: gulp.lastRun(runScriptsPatterns)});
   stream
     .pipe(plumber())
     .pipe(eslint())
@@ -157,11 +220,19 @@ function scriptsPatterns () {
     .pipe(rename({suffix: '.min'}));
   return stream.pipe(gulp.dest('templates'));
 }
-export const scripts = gulp.parallel(scriptsGlobal, scriptsPatterns);
 
-// Compile images.
-function imagesGlobal () {
-  return gulp.src('assets-src/images/**/*', {since: gulp.lastRun(imagesGlobal)})
+/**
+ * Watch patterns scripts.
+ */
+const watchScriptsPatterns = () => {
+  return gulp.watch(['templates/**/*.js', '!templates/**/*.min.js'], runScriptsPatterns);
+}
+
+/**
+ * Compile global images.
+ */
+const runImagesGlobal = () => {
+  return gulp.src('assets-src/images/**/*', {since: gulp.lastRun(runImagesGlobal)})
     .pipe(imagemin([gifsicle(), jpegtran(), optipng(), svgo({
       plugins: [
         {
@@ -181,38 +252,46 @@ function imagesGlobal () {
     })]))
     .pipe(gulp.dest('dist/images'))
 }
-export const images = gulp.parallel(imagesGlobal);
 
-// Compile fonts.
-function fontsGlobal () {
-  return gulp.src('assets-src/fonts/**/*', {since: gulp.lastRun(fontsGlobal)})
+/**
+ * Watch images.
+ */
+const watchImages = () => {
+  return gulp.watch('assets-src/images/**/*', runImagesGlobal);
+}
+
+/**
+ * Compile global fonts.
+ */
+const runFontsGlobal = () => {
+  return gulp.src('assets-src/fonts/**/*', {since: gulp.lastRun(runFontsGlobal)})
     // TODO Lossless compression.
     .pipe(gulp.dest('dist/fonts'))
 }
-export const fonts = gulp.parallel(fontsGlobal);
 
-// Default actions.
-export const build = gulp.series(cleanFolders, gulp.parallel(lint, styles, scripts, images, fonts, doc));
-export default build;
+/**
+ * Watch fonts.
+ */
+const watchFonts = () => {
+  return gulp.watch('assets-src/fonts/**/*', runFontsGlobal);
+}
 
-// Watcher.
-function watchScripts () {
-  return gulp.watch(['templates/**/*.js', '!templates/**/*.min.js', 'assets-src/js/**/*.js', '!assets-src/js/**/*.min.js', '!gulpfile.js'], scripts);
-}
-function watchStylesPatterns () {
-  return gulp.watch(['templates/**/*.scss'], stylesPatterns);
-}
-function watchStylesPatternsDependencies () {
-  return gulp.watch(['assets-src/sass/variables/*.scss', 'assets-src/sass/abstractions/*.scss'], stylesPatternsForce);
-}
-function watchStylesGlobal () {
-  return gulp.watch('assets-src/sass/**/*.scss', stylesGlobal);
-}
-function watchStylesDoc () {
-  return gulp.watch(['assets-src/sass/**/*.scss', 'templates/**/*.scss'], docStyles);
-}
-function watchImages () {
-  return gulp.watch('assets-src/images/**/*', images);
-}
-const doWatch = gulp.parallel(watchScripts, watchStylesPatterns, watchStylesPatternsDependencies, watchStylesGlobal, watchStylesDoc, watchImages);
-export const watch = gulp.series(build, doWatch);
+const runLint = gulp.parallel(runLintStyles, runLintScripts);
+const runStyles = gulp.parallel(runStylesGlobal, runStylesPatterns);
+const runScripts = gulp.parallel(runScriptsGlobal, runScriptsPatterns);
+const runDoc = gulp.parallel(runDocStyles);
+const runBuild = gulp.series(runCleanFolders, gulp.parallel(runLint, runStyles, runScripts, runDoc, runImagesGlobal, runFontsGlobal));
+const doWatch = gulp.parallel(watchScriptsGlobal, watchScriptsPatterns, watchStylesPatterns, watchStylesPatternsDependencies, watchStylesGlobal, watchDocStyles, watchImages);
+const runWatch = gulp.series(runBuild, doWatch);
+export {
+  runCleanFolders as clean,
+  runLint as lint,
+  runStyles as styles,
+  runScripts as scripts,
+  runDoc as doc,
+  runImagesGlobal as images,
+  runFontsGlobal as fonts,
+  runBuild as build,
+  runWatch as watch
+};
+export default runBuild;
