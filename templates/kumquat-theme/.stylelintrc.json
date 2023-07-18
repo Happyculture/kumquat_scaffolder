@@ -38,16 +38,12 @@
         "type": "at-rule",
         "name": "extend"
       },
-      "declarations",
       {
         "type": "at-rule",
         "name": "include",
         "hasBlock": false
       },
-      {
-        "type": "at-rule",
-        "name": "extend"
-      },
+      "declarations",
       {
         "type": "at-rule",
         "name": "include",
