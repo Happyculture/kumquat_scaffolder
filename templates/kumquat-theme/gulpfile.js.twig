@@ -136,7 +136,7 @@ const runStylesPatternsForce = () => {
  * Watch patterns styles dependencies.
  */
 const watchStylesPatternsDependencies = () => {
-  return gulp.watch(['assets-src/sass/variables/*.scss', 'assets-src/sass/abstractions/*.scss'], runStylesPatternsForce);
+  return gulp.watch(['assets-src/sass/variables/**/*.scss', 'assets-src/sass/abstractions/**/*.scss'], runStylesPatternsForce);
 }
 
 /**
