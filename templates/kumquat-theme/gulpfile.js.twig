@@ -95,7 +95,7 @@ const runStylesGlobal = () => {
   }
   stream
     .pipe(sassGlob())
-    .pipe(sass.sync(sassParams))
+    .pipe(sass.sync(sassParams).on('error', sass.logError))
     .pipe(replace('@root', '../..'))
     .pipe(postcss(processors));
   if (argv.development) {
@@ -151,7 +151,7 @@ const doStylesPatterns = (since = 0) => {
   stream
     .pipe(replace('@global', '../../../../assets-src/sass'))
     .pipe(sassGlob())
-    .pipe(sass.sync(sassParams))
+    .pipe(sass.sync(sassParams).on('error', sass.logError))
     .pipe(replace('@root', '../../../..'))
     .pipe(postcss(processors));
   if (argv.development) {
