@@ -327,7 +327,7 @@ class GenerateProjectDrushCommands extends DrushCommandsGeneratorBase {
 
       if ($generate_theme || $generate_all) {
         $config['theme'][$machine_name . '_theme'] = 0;
-        unset($config['theme']['bartik']);
+        unset($config['theme']['olivero']);
       }
       if ($generate_admin_theme || $generate_all) {
         /** @var \Drupal\Core\Extension\ThemeExtensionList $themeList */

@@ -424,7 +424,7 @@ class CleanProjectDrushCommands extends DrushCommandsGeneratorBase {
       $resetAdminTheme = TRUE;
     }
     if ($config['default'] === $vars['machine_name'] . '_theme') {
-      $config['default'] = 'bartik';
+      $config['default'] = 'olivero';
       $resetFrontTheme = TRUE;
     }
 
@@ -444,7 +444,7 @@ class CleanProjectDrushCommands extends DrushCommandsGeneratorBase {
     $config['module'] = module_config_sort($config['module']);
 
     if (isset($resetFrontTheme)) {
-      $config['theme']['bartik'] = 0;
+      $config['theme']['olivero'] = 0;
     }
     unset($config['theme'][$vars['machine_name'] . '_theme']);
     if (isset($resetAdminTheme)) {

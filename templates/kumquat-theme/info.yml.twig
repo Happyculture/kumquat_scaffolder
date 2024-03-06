@@ -2,8 +2,8 @@ name: {{ theme }}
 type: theme
 description: '{{ theme }} theme'
 package: {{ profile }}
-core_version_requirement: ^8 || ^9 || ^10
-base theme: classy
+core_version_requirement: ^10
+base theme: stable9
 
 regions:
   branding: Branding
@@ -19,6 +19,7 @@ regions:
 libraries:
   - {{ machine_name }}/global
   - {{ machine_name }}/off_canvas_menu
+  - core/normalize
 
 ckeditor_stylesheets:
   - dist/css/ckeditor.css
