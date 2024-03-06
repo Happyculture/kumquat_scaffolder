@@ -288,4 +288,33 @@ abstract class DrushCommandsGeneratorBase extends DrushCommands {
     }
   }
 
+  /**
+   * Validates a path relative to the document root.
+   *
+   * @param string $path
+   *   The path to validate.
+   * @param string $app_root
+   *   The application root path.
+   *
+   * @return string
+   *   The path.
+   */
+  public static function validatePath(string $path, string $app_root = ''): string {
+    $full_path = $path;
+    if (!empty($app_root)) {
+      $full_path = rtrim($app_root, '/') . '/' . $path;
+    }
+    if (is_dir($full_path)) {
+      return $path;
+    }
+    else {
+      throw new \UnexpectedValueException(
+        sprintf(
+          '"%s" is not an existing path.',
+          $path
+        )
+      );
+    }
+  }
+
 }

@@ -165,13 +165,13 @@ class CleanProjectDrushCommands extends DrushCommandsGeneratorBase {
 
     if ($enabled_parts['config'] || $enabled_parts['admin-theme'] || $enabled_parts['theme'] || $enabled_parts['all']) {
       if (!isset($vars['config_folder'])) {
-        $appRoot = $this->drupalFinder()->getDrupalRoot();
+        $app_root = $this->drupalFinder()->getDrupalRoot();
         $vars['config_folder'] = $this->io()->ask(
           'Where are the configuration files stored (relative to the document root)?',
           '../config/sync',
           new Chained(
             new Required(),
-            static fn (string $value): string => static::validatePath($appRoot . '/' . $value),
+            static fn (string $value): string => static::validatePath($value, $app_root),
           ),
         );
       }
@@ -188,7 +188,7 @@ class CleanProjectDrushCommands extends DrushCommandsGeneratorBase {
 
     if (isset($vars['config_folder'])) {
       $app_root = $this->drupalFinder()->getDrupalRoot();
-      static::validatePath($app_root . '/' . $vars['config_folder']);
+      static::validatePath($vars['config_folder'], $app_root);
     }
   }
 
@@ -496,29 +496,6 @@ class CleanProjectDrushCommands extends DrushCommandsGeneratorBase {
         sprintf(
           'Machine name "%s" is invalid, it must contain only lowercase letters, numbers and underscores.',
           $machine_name
-        )
-      );
-    }
-  }
-
-  /**
-   * Validates a path relative to the document root.
-   *
-   * @param string $path
-   *   The path to validate.
-   *
-   * @return string
-   *   The path.
-   */
-  public static function validatePath($path) {
-    if (is_dir($path)) {
-      return $path;
-    }
-    else {
-      throw new \UnexpectedValueException(
-        sprintf(
-          '"%s" is not an existing path.',
-          $path
         )
       );
     }
