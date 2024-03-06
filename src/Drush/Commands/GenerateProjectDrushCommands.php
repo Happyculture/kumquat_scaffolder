@@ -337,7 +337,7 @@ class GenerateProjectDrushCommands extends DrushCommandsGeneratorBase {
       $this->io()->note('core.extension.yml file has been updated to enable the generated modules, themes and profile.');
 
       // Set themes in the system.theme.yml file.
-      $config_path = $this->drupalFinder()->getDrupalRoot() . '/' . $vars['config_folder'] . '/core.extension.yml';
+      $config_path = $this->drupalFinder()->getDrupalRoot() . '/' . $vars['config_folder'] . '/system.theme.yml';
       $config = Yaml::decode(file_get_contents($config_path));
 
       if ($generate_admin_theme || $generate_all) {
