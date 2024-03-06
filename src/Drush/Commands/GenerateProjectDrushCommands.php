@@ -158,7 +158,7 @@ class GenerateProjectDrushCommands extends DrushCommandsGeneratorBase {
       );
     }
 
-    if ($enabled_parts['config'] || $enabled_parts['admin-theme'] || $enabled_parts['theme'] || $enabled_parts['all']) {
+    if ($enabled_parts['config'] || $enabled_parts['all']) {
       if (!isset($vars['config_folder'])) {
         $appRoot = $this->drupalFinder()->getDrupalRoot();
         $vars['config_folder'] = $this->io()->ask(
