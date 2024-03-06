@@ -29,6 +29,12 @@ abstract class DrushCommandsGeneratorBase extends DrushCommands {
 
   const TEMPLATES_PATH = __DIR__ . '/../../../templates';
 
+  const THEMES_FOLDER = 'themes/custom';
+  const MODULES_FOLDER = 'modules/custom';
+  const PROFILES_FOLDER = 'profiles';
+
+  const REGEX_MACHINE_NAME = '/^[a-z0-9_]+$/';
+
   /**
    * The DrupalFinder utility.
    *
