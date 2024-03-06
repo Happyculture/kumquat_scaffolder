@@ -3,14 +3,13 @@
 * **[Kumquat Scaffolder](#intro)**
 * **[Installation](#installation)**
 * **[Usage](#usage)**
-* **[Troubleshooting](#troubleshooting)**
 * **[Credits](#credits)**
 
 # <a name="intro"></a>Kumquat Scaffolder
 
 Kumquat scaffolder is a package that helps you start your Drupal projects faster by scaffolding an install profile, a core module, a front theme and an admin theme for you.
 
-It's compatible with Drupal 8 and 9 and is meant to be used by developers at the very beginning of a new project.
+It's compatible with Drupal 8 to 10 and is meant to be used by developers at the very beginning of a new project.
 
 ## <a name="installation"></a>Installation
 
@@ -18,21 +17,8 @@ It's compatible with Drupal 8 and 9 and is meant to be used by developers at the
 
 ## <a name="usage"></a>Usage
 
-- Use `drupal kumquat:generate-project` to initiate your project files.
-- Use `drupal kumquat:clean-project` to remove wrongly created project files.
-
-## <a name="troubleshooting"></a>Troubleshooting
-
-If you encounter the following error:
-
-```
-  [InvalidArgumentException]                              
-  Package type "drupal-console-library" is not supported 
-```
-
-Add this line to the `composer.json` file to specify the package location in the `extra` > `installer-paths` section.
-
-`"vendor/{$vendor}/{$name}": ["type:drupal-console-library"]`
+- Use `drush kumquat:generate-project` to initiate your project files.
+- Use `drush kumquat:clean-project` to remove wrongly created project files.
 
 # <a name="credits"></a>Credits
 

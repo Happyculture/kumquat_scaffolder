@@ -1,15 +1,12 @@
 {
     "name": "happyculture/kumquat_scaffolder",
     "description": "Kumquat - Drupal project scaffolder",
-    "type": "drupal-console-library",
+    "type": "library",
     "licence": "GPL-3.0-or-later",
     "autoload": {
-        "psr-4": {"Drupal\\Console\\KumquatScaffolder\\": "src"}
+        "psr-4": {"KumquatScaffolder\\": "src"}
     },
     "require": {
-        "drupal/console-extend-plugin": "^0.9.2"
-    },
-    "require-dev": {
-        "drupal/console": "~1.0"
+        "drush/drush": "^12"
     }
 }
