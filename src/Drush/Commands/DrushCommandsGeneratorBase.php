@@ -264,31 +264,6 @@ abstract class DrushCommandsGeneratorBase extends DrushCommands {
   }
 
   /**
-   * Validates the build mode input.
-   *
-   * @param string $build_mode
-   *   The build mode.
-   *
-   * @return string
-   *   The build mode.
-   *
-   * @throws \InvalidArgumentException
-   */
-  public static function validateBuildMode($build_mode): string {
-    if (in_array($build_mode, ['install', 'update'])) {
-      return $build_mode;
-    }
-    else {
-      throw new \InvalidArgumentException(
-        sprintf(
-          'Build mode "%s" is invalid, it must either be install or update.',
-          $build_mode
-        )
-      );
-    }
-  }
-
-  /**
    * Validates a path relative to the document root.
    *
    * @param string $path
