@@ -264,6 +264,31 @@ abstract class DrushCommandsGeneratorBase extends DrushCommands {
   }
 
   /**
+   * Validates a machine name.
+   *
+   * @param string $machine_name
+   *   The machine name.
+   *
+   * @return string
+   *   The machine name.
+   *
+   * @throws \InvalidArgumentException
+   */
+  public static function validateMachineName(string $machine_name): string {
+    if (empty($machine_name) || preg_match(self::REGEX_MACHINE_NAME, $machine_name)) {
+      return $machine_name;
+    }
+    else {
+      throw new \UnexpectedValueException(
+        sprintf(
+          'Machine name "%s" is invalid, it must contain only lowercase letters, numbers and underscores.',
+          $machine_name
+        )
+      );
+    }
+  }
+
+  /**
    * Validates a path relative to the document root.
    *
    * @param string $path

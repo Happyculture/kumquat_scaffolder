@@ -476,29 +476,4 @@ class CleanProjectDrushCommands extends DrushCommandsGeneratorBase {
    */
   protected function collectAssets(AssetCollection $assets, array $vars): void {}
 
-  /**
-   * Validates a machine name.
-   *
-   * @param string $machine_name
-   *   The machine name.
-   *
-   * @return string
-   *   The machine name.
-   *
-   * @throws \InvalidArgumentException
-   */
-  public static function validateMachineName($machine_name) {
-    if (empty($machine_name) || preg_match(self::REGEX_MACHINE_NAME, $machine_name)) {
-      return $machine_name;
-    }
-    else {
-      throw new \UnexpectedValueException(
-        sprintf(
-          'Machine name "%s" is invalid, it must contain only lowercase letters, numbers and underscores.',
-          $machine_name
-        )
-      );
-    }
-  }
-
 }
