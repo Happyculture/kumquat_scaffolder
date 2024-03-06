@@ -2,6 +2,7 @@
 
 namespace KumquatScaffolder\Drush\Commands;
 
+use Drupal\Component\Serialization\Json;
 use Drupal\Core\Serialization\Yaml;
 use DrupalCodeGenerator\Asset\AssetCollection;
 use DrupalCodeGenerator\Helper\Renderer\TwigRenderer;
@@ -150,8 +151,8 @@ class CleanProjectDrushCommands extends DrushCommandsGeneratorBase {
     }
 
     if (!isset($vars['machine_name'])) {
-      $composer_data = json_decode(file_get_contents($this->drupalFinder()->getComposerRoot() . '/composer.json'))->name;
-      [, $default_name] = explode('/', $composer_data);
+      $composerData = Json::decode(file_get_contents($this->drupalFinder()->getComposerRoot() . '/composer.json'));
+      [, $default_name] = explode('/', $composerData['name']);
       $vars['machine_name'] = $this->io()->ask(
         'What is the machine name of the project? (modules and theme machine names are derived from it)',
         $default_name,

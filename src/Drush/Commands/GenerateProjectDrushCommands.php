@@ -139,7 +139,7 @@ class GenerateProjectDrushCommands extends DrushCommandsGeneratorBase {
 
     if (!isset($vars['name'])) {
       $composerData = Json::decode(file_get_contents($this->drupalFinder()->getComposerRoot() . '/composer.json'));
-      [, $default_name] = explode('/', $composerData->name);
+      [, $default_name] = explode('/', $composerData['name']);
       $vars['name'] = $this->io()->ask(
         'What is the human readable name of the project? (modules and theme names are derived from it)',
         ucwords($default_name),
