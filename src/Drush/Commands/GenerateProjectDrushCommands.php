@@ -259,6 +259,7 @@ class GenerateProjectDrushCommands extends DrushCommandsGeneratorBase {
     $generate_config = (bool) $this->input()->getOption('generate-config');
 
     $root_folder = $this->drupalFinder()->getComposerRoot();
+    $drupal_root = $this->drupalFinder()->getDrupalRoot();
     $machine_name = $vars['machine_name'];
 
     if ($generate_theme || $generate_all) {
@@ -266,7 +267,7 @@ class GenerateProjectDrushCommands extends DrushCommandsGeneratorBase {
       // replacement.
       $this->fileSystem->mirror(
         static::TEMPLATES_PATH . '/kumquat-theme/assets-src',
-        static::THEMES_FOLDER . '/' . $machine_name . '_theme/assets-src'
+        $drupal_root . '/' . static::THEMES_FOLDER . '/' . $machine_name . '_theme/assets-src'
       );
       $this->io()->note('Source assets have been copied to the generated theme.');
 
@@ -274,7 +275,7 @@ class GenerateProjectDrushCommands extends DrushCommandsGeneratorBase {
       // replacement.
       $this->fileSystem->mirror(
         static::TEMPLATES_PATH . '/kumquat-theme/templates',
-        static::THEMES_FOLDER . '/' . $machine_name . '_theme/templates'
+        $drupal_root . '/' . static::THEMES_FOLDER . '/' . $machine_name . '_theme/templates'
       );
       $this->io()->note('Default templates have been copied to the generated theme.');
 
@@ -562,11 +563,11 @@ class GenerateProjectDrushCommands extends DrushCommandsGeneratorBase {
     );
 
     // Gitkeeps.
-    $assets->addFile($baseDir . '/assets-src/fonts/.gitkeep');
-    $assets->addFile($baseDir . '/dist/css/.gitkeep');
-    $assets->addFile($baseDir . '/dist/fonts/.gitkeep');
-    $assets->addFile($baseDir . '/dist/images/.gitkeep');
-    $assets->addFile($baseDir . '/dist/js/.gitkeep');
+    $assets->addFile($baseDir . 'assets-src/fonts/.gitkeep');
+    $assets->addFile($baseDir . 'dist/css/.gitkeep');
+    $assets->addFile($baseDir . 'dist/fonts/.gitkeep');
+    $assets->addFile($baseDir . 'dist/images/.gitkeep');
+    $assets->addFile($baseDir . 'dist/js/.gitkeep');
 
     // Safety.
     $assets->addFile(
@@ -607,14 +608,14 @@ class GenerateProjectDrushCommands extends DrushCommandsGeneratorBase {
 
         $block_id = substr($file, 0, -1 * strlen('.yml.twig'));
         $assets->addFile(
-          $vars['config_folder'] . 'block.block.' . $vars['machine_name'] . '_admin_theme__' . $block_id . '.yml',
+          $vars['config_folder'] . '/block.block.' . $vars['machine_name'] . '_admin_theme__' . $block_id . '.yml',
           'kumquat-admin-theme/config/blocks/' . $file,
         );
       }
 
       // Admin Theme settings.
       $assets->addFile(
-        $vars['config_folder'] . 'block.block.' . $vars['machine_name'] . '_admin_theme.settings.yml',
+        $vars['config_folder'] . '/block.block.' . $vars['machine_name'] . '_admin_theme.settings.yml',
         'kumquat-admin-theme/admin_theme.settings.yml.twig',
       );
     }
@@ -629,7 +630,7 @@ class GenerateProjectDrushCommands extends DrushCommandsGeneratorBase {
 
         $block_id = substr($file, 0, -1 * strlen('.yml.twig'));
         $assets->addFile(
-          $vars['config_folder'] . 'block.block.' . $vars['machine_name'] . '_theme__' . $block_id . '.yml',
+          $vars['config_folder'] . '/block.block.' . $vars['machine_name'] . '_theme__' . $block_id . '.yml',
           'kumquat-theme/config/blocks/' . $file,
         );
       }
