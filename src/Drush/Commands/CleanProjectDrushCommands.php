@@ -130,27 +130,23 @@ class CleanProjectDrushCommands extends DrushCommandsGeneratorBase {
 
     $enabled_parts = [];
     foreach ($cleaner_parts as $part) {
-      $enabled_parts[$part] = !empty($this->input()->getOption('generate-' . $part));
+      $enabled_parts[$part] = !empty($this->input()->getOption('clean-' . $part));
     }
     $enabled_parts = array_filter($enabled_parts);
 
     if (empty($enabled_parts)) {
       /** @var array $enabled_parts */
-      $enabled_parts = $this->io()->choice(
+      $choices = $this->io()->choice(
         'What do you want to remove? Use comma separated values for multiple selection.',
         $cleaner_parts,
-        implode(',', array_keys($enabled_parts)),
+        0,
         TRUE
       );
 
-      if (empty($enabled_parts)) {
-        throw new \Exception('You must at least choose one thing to remove.');
+      foreach ($cleaner_parts as $index => $part) {
+        $enabled_parts[$part] = in_array($index, $choices);
+        $this->input()->setOption('clean-' . $part, $enabled_parts[$part]);
       }
-
-      foreach ($cleaner_parts as $part) {
-        $this->input()->setOption('clean-' . $part, in_array($part, $enabled_parts));
-      }
-      $enabled_parts = array_fill_keys(array_values($enabled_parts), TRUE);
     }
 
     if (!isset($vars['machine_name'])) {

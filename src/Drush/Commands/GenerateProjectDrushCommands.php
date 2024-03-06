@@ -124,21 +124,17 @@ class GenerateProjectDrushCommands extends DrushCommandsGeneratorBase {
 
     if (empty($enabled_parts)) {
       /** @var array $enabled_parts */
-      $enabled_parts = $this->io()->choice(
+      $choices = $this->io()->choice(
         'What do you want to generate? Use comma separated values for multiple selection.',
         $generator_parts,
-        implode(',', array_keys($enabled_parts)),
+        0,
         TRUE
       );
 
-      if (empty($enabled_parts)) {
-        throw new \Exception('You must at least choose one thing to generate.');
+      foreach ($generator_parts as $index => $part) {
+        $enabled_parts[$part] = in_array($index, $choices);
+        $this->input()->setOption('generate-' . $part, $enabled_parts[$part]);
       }
-
-      foreach ($generator_parts as $part) {
-        $this->input()->setOption('generate-' . $part, in_array($part, $enabled_parts));
-      }
-      $enabled_parts = array_fill_keys(array_values($enabled_parts), TRUE);
     }
 
     if (!isset($vars['name'])) {
@@ -178,11 +174,13 @@ class GenerateProjectDrushCommands extends DrushCommandsGeneratorBase {
 
     if ($enabled_parts['admin-theme'] || $enabled_parts['all']) {
       if (!isset($vars['base_admin_theme'])) {
-        $vars['base_admin_theme'] = $this->io()->choice(
+        $choices = ['adminimal_theme', 'gin', 'kumquat_gin'];
+        $choice = $this->io()->choice(
           'Which theme you want your administration theme based on? (if you want another one, use the --base-admin-theme option)',
-          ['adminimal_theme', 'gin', 'kumquat_gin'],
+          $choices,
           'kumquat_gin'
         );
+        $vars['base_admin_theme'] = $choices[$choice];
       }
     }
   }
