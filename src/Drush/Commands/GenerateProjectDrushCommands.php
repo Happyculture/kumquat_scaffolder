@@ -322,6 +322,9 @@ class GenerateProjectDrushCommands extends DrushCommandsGeneratorBase {
         unset($config['module'][$current_profile]);
         $config['profile'] = $machine_name;
       }
+      // Drupal migh not be bootstrapped so we need to include this for the
+      // module_config_sort() function to work.
+      require_once $this->drupalFinder()->getDrupalRoot() . '/core/includes/module.inc';
       $config['module'] = module_config_sort($config['module']);
 
       if ($generate_theme || $generate_all) {
