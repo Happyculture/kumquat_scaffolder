@@ -324,17 +324,12 @@ class GenerateProjectDrushCommands extends DrushCommandsGeneratorBase {
         unset($config['theme']['olivero']);
       }
       if ($generate_admin_theme || $generate_all) {
-        /** @var \Drupal\Core\Extension\ThemeExtensionList $themeList */
-        $themeList = \Drupal::service('extension.list.theme');
-        if ($themeList->exists($vars['base_admin_theme'])) {
-          $baseThemes = $themeList->getBaseThemes($themeList->getList(), $vars['base_admin_theme']);
-          foreach (array_keys($baseThemes) as $baseThemeKey) {
-            if (!isset($config['theme'][$baseThemeKey])) {
-              $config['theme'][$baseThemeKey] = 0;
-            }
+        foreach ($this->getBaseThemes($vars['base_admin_theme']) as $baseThemeKey) {
+          if (!isset($config['theme'][$baseThemeKey])) {
+            $config['theme'][$baseThemeKey] = 0;
           }
-          $config['theme'][$vars['base_admin_theme']] = 0;
         }
+        $config['theme'][$vars['base_admin_theme']] = 0;
         $config['theme'][$machine_name . '_admin_theme'] = 0;
       }
 
@@ -630,6 +625,61 @@ class GenerateProjectDrushCommands extends DrushCommandsGeneratorBase {
         );
       }
     }
+  }
+
+  /**
+   * Get all given theme's ancestors.
+   *
+   * @param string $theme_name
+   *   The theme machine name.
+   *
+   * @return array
+   *   The array of all theme's ancestors.
+   */
+  protected function getBaseThemes(string $theme_name): array {
+    $base_themes = [];
+
+    try {
+      $theme_path = $this->getThemePath($theme_name);
+    }
+    catch (\Exception $e) {
+      return $base_themes;
+    }
+
+    $theme_info = Yaml::decode(file_get_contents($theme_path . '/' . $theme_name . '.info.yml'));
+    if (!empty($theme_info['base theme'])) {
+      $base_themes = $this->getBaseThemes($theme_info['base theme']);
+      $base_themes[] = $theme_info['base theme'];
+    }
+    return $base_themes;
+  }
+
+  /**
+   * Find the directory where a theme is located.
+   *
+   * @param string $theme_name
+   *   The theme machine name.
+   *
+   * @return string
+   *   The theme directory full path.
+   *
+   * @throws \Exception
+   *   The theme does not exists.
+   */
+  protected function getThemePath(string $theme_name) {
+    $app_root = $this->drupalFinder->getDrupalRoot();
+    $locations = [
+      'themes/custom',
+      'themes/contrib',
+      'themes',
+      'core/themes',
+    ];
+    foreach ($locations as $location) {
+      if (is_dir($app_root . '/' . $location . '/' . $theme_name)) {
+        return $app_root . '/' . $location . '/' . $theme_name;
+      }
+    }
+    throw new \Exception("Theme $theme_name not found.");
   }
 
 }
