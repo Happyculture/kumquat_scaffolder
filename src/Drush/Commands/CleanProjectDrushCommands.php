@@ -410,7 +410,7 @@ class CleanProjectDrushCommands extends DrushCommandsGeneratorBase {
     $config = Yaml::decode(file_get_contents($filename));
 
     if ($config['admin'] === $vars['machine_name'] . '_admin_theme') {
-      $config['admin'] = 'seven';
+      $config['admin'] = 'claro';
       $resetAdminTheme = TRUE;
     }
     if ($config['default'] === $vars['machine_name'] . '_theme') {
@@ -441,7 +441,7 @@ class CleanProjectDrushCommands extends DrushCommandsGeneratorBase {
     }
     unset($config['theme'][$vars['machine_name'] . '_theme']);
     if (isset($resetAdminTheme)) {
-      $config['theme']['seven'] = 0;
+      $config['theme']['claro'] = 0;
     }
     unset($config['theme'][$vars['machine_name'] . '_admin_theme']);
 
