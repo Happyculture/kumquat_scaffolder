@@ -116,15 +116,14 @@ class GenerateProjectDrushCommands extends DrushCommandsGeneratorBase {
 
     if (empty($enabled_parts)) {
       /** @var array $enabled_parts */
-      $choices = $this->io()->choice(
+      $choices = $this->io()->multiselect(
         'What do you want to generate? Use comma separated values for multiple selection.',
         $generator_parts,
-        0,
-        TRUE
+        ['all'],
       );
 
-      foreach ($generator_parts as $index => $part) {
-        $enabled_parts[$part] = in_array($index, $choices);
+      foreach ($generator_parts as $part) {
+        $enabled_parts[$part] = in_array($part, $choices);
         $this->input()->setOption('generate-' . $part, $enabled_parts[$part]);
       }
     }
@@ -135,7 +134,7 @@ class GenerateProjectDrushCommands extends DrushCommandsGeneratorBase {
       $vars['name'] = $this->io()->ask(
         'What is the human readable name of the project? (modules and theme names are derived from it)',
         ucwords($default_name),
-        new Required()
+        required: TRUE,
       );
     }
 
@@ -143,36 +142,29 @@ class GenerateProjectDrushCommands extends DrushCommandsGeneratorBase {
       $vars['machine_name'] = $this->io()->ask(
         'What is the machine name of the project? (modules and theme machine names are derived from it)',
         Utils::human2machine($vars['name']),
-        new Chained(
-          new Required(),
-          static fn (string $value): string => static::validateMachineName($value),
-        ),
+        required: TRUE,
+        validate:  $this->validateMachineName(...),
       );
     }
 
     if ($enabled_parts['config'] || $enabled_parts['all']) {
       if (!isset($vars['config_folder'])) {
-        $app_root = $this->drupalFinder()->getDrupalRoot();
         $vars['config_folder'] = $this->io()->ask(
           'Where are the configuration files stored (relative to the document root)?',
           '../config/sync',
-          new Chained(
-            new Required(),
-            static fn (string $value): string => static::validatePath($value, $app_root),
-          ),
+          required: TRUE,
+          validate:  $this->validatePath(...),
         );
       }
     }
 
     if ($enabled_parts['admin-theme'] || $enabled_parts['all']) {
       if (!isset($vars['base_admin_theme'])) {
-        $choices = ['adminimal_theme', 'gin', 'kumquat_gin'];
-        $choice = $this->io()->choice(
+        $vars['base_admin_theme'] = $this->io()->select(
           'Which theme you want your administration theme based on? (if you want another one, use the --base-admin-theme option)',
-          $choices,
+          ['adminimal_theme', 'gin', 'kumquat_gin'],
           'kumquat_gin'
         );
-        $vars['base_admin_theme'] = $choices[$choice];
       }
     }
   }
@@ -181,13 +173,18 @@ class GenerateProjectDrushCommands extends DrushCommandsGeneratorBase {
    * {@inheritdoc}
    */
   protected function validateVars(array $vars): void {
+    $errors = [];
     if (isset($vars['machine_name'])) {
-      static::validateMachineName($vars['machine_name']);
+      $errors[] = $this->validateMachineName($vars['machine_name']);
     }
 
     if (isset($vars['config_folder'])) {
-      $app_root = $this->drupalFinder()->getDrupalRoot();
-      static::validatePath($vars['config_folder'], $app_root);
+      $errors[] = $this->validatePath($vars['config_folder']);
+    }
+
+    $errors = array_filter($errors);
+    if (!empty($errors)) {
+      throw new \InvalidArgumentException(implode("\n", $errors));
     }
   }
 

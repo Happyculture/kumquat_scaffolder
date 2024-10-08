@@ -131,15 +131,14 @@ class CleanProjectDrushCommands extends DrushCommandsGeneratorBase {
 
     if (empty($enabled_parts)) {
       /** @var array $enabled_parts */
-      $choices = $this->io()->choice(
+      $choices = $this->io()->multiselect(
         'What do you want to remove? Use comma separated values for multiple selection.',
         $cleaner_parts,
-        0,
-        TRUE
+        ['all'],
       );
 
-      foreach ($cleaner_parts as $index => $part) {
-        $enabled_parts[$part] = in_array($index, $choices);
+      foreach ($cleaner_parts as $part) {
+        $enabled_parts[$part] = in_array($part, $choices);
         $this->input()->setOption('clean-' . $part, $enabled_parts[$part]);
       }
     }
@@ -150,23 +149,18 @@ class CleanProjectDrushCommands extends DrushCommandsGeneratorBase {
       $vars['machine_name'] = $this->io()->ask(
         'What is the machine name of the project? (modules and theme machine names are derived from it)',
         $default_name,
-        new Chained(
-          new Required(),
-          static fn (string $value): string => static::validateMachineName($value),
-        ),
+        required: TRUE,
+        validate: $this->validateMachineName(...),
       );
     }
 
     if ($enabled_parts['config'] || $enabled_parts['admin-theme'] || $enabled_parts['theme'] || $enabled_parts['all']) {
       if (!isset($vars['config_folder'])) {
-        $app_root = $this->drupalFinder()->getDrupalRoot();
         $vars['config_folder'] = $this->io()->ask(
           'Where are the configuration files stored (relative to the document root)?',
           '../config/sync',
-          new Chained(
-            new Required(),
-            static fn (string $value): string => static::validatePath($value, $app_root),
-          ),
+          required: TRUE,
+          validate: $this->validatePath(...),
         );
       }
     }
@@ -176,13 +170,18 @@ class CleanProjectDrushCommands extends DrushCommandsGeneratorBase {
    * {@inheritdoc}
    */
   protected function validateVars(array $vars): void {
+    $errors = [];
     if (isset($vars['machine_name'])) {
-      static::validateMachineName($vars['machine_name']);
+      $errors[] = $this->validateMachineName($vars['machine_name']);
     }
 
     if (isset($vars['config_folder'])) {
-      $app_root = $this->drupalFinder()->getDrupalRoot();
-      static::validatePath($vars['config_folder'], $app_root);
+      $errors[] = $this->validatePath($vars['config_folder']);
+    }
+
+    $errors = array_filter($errors);
+    if (!empty($errors)) {
+      throw new \InvalidArgumentException(implode("\n", $errors));
     }
   }
 
@@ -263,7 +262,7 @@ class CleanProjectDrushCommands extends DrushCommandsGeneratorBase {
    */
   protected function cleanProfile(array $vars): void {
     $machine_name = $vars['machine_name'];
-    $dir = static::PROFILES_FOLDER . '/' . $machine_name;
+    $dir = $this->drupalFinder()->getDrupalRoot() . '/' . static::PROFILES_FOLDER . '/' . $machine_name;
     if ($this->fileSystem->exists($dir)) {
       // Remove profile directory.
       $this->fileSystem->remove($dir);
@@ -286,7 +285,7 @@ class CleanProjectDrushCommands extends DrushCommandsGeneratorBase {
    */
   protected function cleanCoreModule(array $vars): void {
     $machine_name = $vars['machine_name'] . '_core';
-    $dir = static::MODULES_FOLDER . '/' . $machine_name;
+    $dir = $this->drupalFinder()->getDrupalRoot() . '/' . static::MODULES_FOLDER . '/' . $machine_name;
     if ($this->fileSystem->exists($dir)) {
       $this->fileSystem->remove($dir);
       $this->io()->success(sprintf(
@@ -308,7 +307,7 @@ class CleanProjectDrushCommands extends DrushCommandsGeneratorBase {
   protected function cleanContentModules(array $vars): void {
     foreach (['deploy', 'test'] as $mode) {
       $machine_name = $vars['machine_name'] . '_content_' . $mode;
-      $dir = static::MODULES_FOLDER . '/' . $machine_name;
+      $dir = $this->drupalFinder()->getDrupalRoot() . '/' . static::MODULES_FOLDER . '/' . $machine_name;
       if ($this->fileSystem->exists($dir)) {
         $this->fileSystem->remove($dir);
         $this->io()->success(sprintf(
@@ -330,15 +329,15 @@ class CleanProjectDrushCommands extends DrushCommandsGeneratorBase {
    */
   protected function cleanTheme(array $vars): void {
     $machine_name = $vars['machine_name'] . '_theme';
-    $dir = static::THEMES_FOLDER . '/' . $machine_name;
+    $dir = $this->drupalFinder()->getDrupalRoot() . '/' . static::THEMES_FOLDER . '/' . $machine_name;
     if ($this->fileSystem->exists($dir)) {
       $this->fileSystem->remove($dir);
 
       // Remove theme configuration.
-      $this->fileSystem->remove($vars['config_folder'] . '/' . $machine_name . '.settings.yml');
+      $this->fileSystem->remove($this->drupalFinder()->getDrupalRoot() . '/' . $vars['config_folder'] . '/' . $machine_name . '.settings.yml');
 
       // Remove block configuration in the config dir.
-      $files = $this->finder->in($vars['config_folder'])
+      $files = $this->finder->in($this->drupalFinder()->getDrupalRoot() . '/' . $vars['config_folder'])
         ->files()->name('block.block.' . $machine_name . '__*.yml');
       $this->fileSystem->remove($files);
 
@@ -358,14 +357,15 @@ class CleanProjectDrushCommands extends DrushCommandsGeneratorBase {
       exec('/usr/bin/env composer update --lock');
 
       // Reset the theme path in the .lando.yml file.
-      if (count($enabledThemes) === 0 && $this->fileSystem->exists('.lando.yml')) {
-        $yaml = Yaml::decode(file_get_contents('.lando.yml'));
+      $filePath = $this->drupalFinder()->getComposerRoot() . '/.lando.yml';
+      if (count($enabledThemes) === 0 && $this->fileSystem->exists($filePath)) {
+        $yaml = Yaml::decode(file_get_contents($filePath));
         foreach ($yaml['tooling'] as &$settings) {
           if (isset($settings['dir']) && $settings['dir'] === '/app/web/themes/custom/' . $machine_name) {
             $settings['dir'] = '/app/web/themes/custom/kumquat_theme';
           }
         }
-        file_put_contents('.lando.yml', Yaml::encode($yaml));
+        file_put_contents($filePath, Yaml::encode($yaml));
       }
 
       chdir($prevDir);
@@ -382,16 +382,16 @@ class CleanProjectDrushCommands extends DrushCommandsGeneratorBase {
    */
   protected function cleanAdminTheme(array $vars): void {
     $machine_name = $vars['machine_name'] . '_admin_theme';
-    $dir = static::THEMES_FOLDER . '/' . $machine_name;
+    $dir = $this->drupalFinder()->getDrupalRoot() . '/' . static::THEMES_FOLDER . '/' . $machine_name;
     if ($this->fileSystem->exists($dir)) {
       // Remove theme directory.
       $this->fileSystem->remove($dir);
 
       // Remove theme configuration.
-      $this->fileSystem->remove($vars['config_folder'] . '/' . $machine_name . '.settings.yml');
+      $this->fileSystem->remove($this->drupalFinder()->getDrupalRoot() . '/' . $vars['config_folder'] . '/' . $machine_name . '.settings.yml');
 
       // Remove block configuration in the config dir.
-      $files = $this->finder->in($vars['config_folder'])
+      $files = $this->finder->in($this->drupalFinder()->getDrupalRoot() . '/' . $vars['config_folder'])
         ->files()->name('block.block.' . $machine_name . '__*.yml');
       $this->fileSystem->remove($files);
 
@@ -407,7 +407,7 @@ class CleanProjectDrushCommands extends DrushCommandsGeneratorBase {
    */
   protected function cleanConfig(array $vars): void {
     // Set themes in the system.theme.yml file.
-    $filename = $vars['config_folder'] . '/system.theme.yml';
+    $filename = $this->drupalFinder()->getDrupalRoot() . '/' .$vars['config_folder'] . '/system.theme.yml';
     $config = Yaml::decode(file_get_contents($filename));
 
     if ($config['admin'] === $vars['machine_name'] . '_admin_theme') {
@@ -422,7 +422,7 @@ class CleanProjectDrushCommands extends DrushCommandsGeneratorBase {
     $this->fileSystem->dumpFile($filename, Yaml::encode($config));
 
     // Update profile and themes in the core.extension.yml file.
-    $filename = $vars['config_folder'] . '/core.extension.yml';
+    $filename = $this->drupalFinder()->getDrupalRoot() . '/' .$vars['config_folder'] . '/core.extension.yml';
     $config = Yaml::decode(file_get_contents($filename));
     $current_profile = $config['profile'];
 
@@ -432,6 +432,9 @@ class CleanProjectDrushCommands extends DrushCommandsGeneratorBase {
     }
     unset($config['module'][$vars['machine_name']]);
     unset($config['module'][$vars['machine_name'] . '_core']);
+    // Drupal migh not be bootstrapped so we need to include this for the
+    // module_config_sort() function to work.
+    require_once $this->drupalFinder()->getDrupalRoot() . '/core/includes/module.inc';
     $config['module'] = module_config_sort($config['module']);
 
     if (isset($resetFrontTheme)) {
@@ -450,7 +453,7 @@ class CleanProjectDrushCommands extends DrushCommandsGeneratorBase {
     $prevDir = getcwd();
     chdir($this->drupalFinder->getComposerRoot());
 
-    $install_path = 'scripts/combawa/install.sh';
+    $install_path = $this->drupalFinder()->getComposerRoot() . '/' .'scripts/combawa/install.sh';
     if (file_exists($install_path)) {
       $install_script = file_get_contents($install_path);
       preg_match('/^\$DRUSH site-install.* (.*?)$/mi', $install_script, $matches);

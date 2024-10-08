@@ -7,6 +7,6 @@
         "psr-4": {"KumquatScaffolder\\": "src"}
     },
     "require": {
-        "drush/drush": "^12 || ^13"
+        "drush/drush": "^13"
     }
 }

@@ -275,23 +275,17 @@ abstract class DrushCommandsGeneratorBase extends DrushCommands {
    * @param string $machine_name
    *   The machine name.
    *
-   * @return string
-   *   The machine name.
-   *
-   * @throws \InvalidArgumentException
+   * @return ?string
+   *   The error if there is one.
    */
-  public static function validateMachineName(string $machine_name): string {
-    if (empty($machine_name) || preg_match(self::REGEX_MACHINE_NAME, $machine_name)) {
-      return $machine_name;
-    }
-    else {
-      throw new \UnexpectedValueException(
-        sprintf(
-          'Machine name "%s" is invalid, it must contain only lowercase letters, numbers and underscores.',
-          $machine_name
-        )
+  public function validateMachineName(string $machine_name): ?string {
+    if (!empty($machine_name) && !preg_match(self::REGEX_MACHINE_NAME, $machine_name)) {
+      return sprintf(
+        'Machine name "%s" is invalid, it must contain only lowercase letters, numbers and underscores.',
+        $machine_name
       );
     }
+    return NULL;
   }
 
   /**
@@ -299,28 +293,23 @@ abstract class DrushCommandsGeneratorBase extends DrushCommands {
    *
    * @param string $path
    *   The path to validate.
-   * @param string $app_root
-   *   The application root path.
    *
-   * @return string
-   *   The path.
+   * @return ?string
+   *   The error if there is one.
    */
-  public static function validatePath(string $path, string $app_root = ''): string {
+  public function validatePath(string $path): ?string {
     $full_path = $path;
+    $app_root = $this->drupalFinder()->getDrupalRoot();
     if (!empty($app_root)) {
       $full_path = rtrim($app_root, '/') . '/' . $path;
     }
-    if (is_dir($full_path)) {
-      return $path;
-    }
-    else {
-      throw new \UnexpectedValueException(
-        sprintf(
-          '"%s" is not an existing path.',
-          $path
-        )
+    if (!is_dir($full_path)) {
+      return sprintf(
+        '"%s" is not an existing path.',
+        $path
       );
     }
+    return NULL;
   }
 
 }
