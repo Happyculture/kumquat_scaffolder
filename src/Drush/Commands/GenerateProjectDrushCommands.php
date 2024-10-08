@@ -242,6 +242,7 @@ class GenerateProjectDrushCommands extends DrushCommandsGeneratorBase {
     $generate_all = (bool) $this->input()->getOption('generate-all');
     $generate_profile = (bool) $this->input()->getOption('generate-profile');
     $generate_core_module = (bool) $this->input()->getOption('generate-core-module');
+    $generate_content_modules = (bool) $this->input()->getOption('generate-content-modules');
     $generate_theme = (bool) $this->input()->getOption('generate-theme');
     $generate_admin_theme = (bool) $this->input()->getOption('generate-admin-theme');
     $generate_config = (bool) $this->input()->getOption('generate-config');
@@ -359,6 +360,18 @@ class GenerateProjectDrushCommands extends DrushCommandsGeneratorBase {
           $this->fileSystem->dumpFile($script_path, $install_script);
         }
         $this->io()->note('scripts/combawa/install.sh file has been updated to use the generated profile.');
+      }
+    }
+
+    if ($generate_content_modules || $generate_all) {
+      // Rewrite content modules info file to add the mode we couldn't generate.
+      foreach (['deploy', 'test'] as $mode) {
+        $module_name = $machine_name . '_content_' . $mode;
+        $module_file_path = $this->drupalFinder()->getDrupalRoot() . '/' . static::MODULES_FOLDER . '/' . $module_name . '/' . $module_name . '.info.yml';
+
+        $info = file_get_contents($module_file_path);
+        $info = str_replace('#mode#', $mode, $info);
+        $this->fileSystem->dumpFile($module_file_path, $info);
       }
     }
   }
