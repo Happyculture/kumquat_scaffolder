@@ -112,9 +112,8 @@ class GenerateProjectDrushCommands extends DrushCommandsGeneratorBase {
     foreach ($generator_parts as $part) {
       $enabled_parts[$part] = !empty($this->input()->getOption('generate-' . $part));
     }
-    $enabled_parts = array_filter($enabled_parts);
 
-    if (empty($enabled_parts)) {
+    if (empty(array_filter($enabled_parts))) {
       /** @var array $enabled_parts */
       $choices = $this->io()->multiselect(
         'What do you want to generate? Use comma separated values for multiple selection.',
