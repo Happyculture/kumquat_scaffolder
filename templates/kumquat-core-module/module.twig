@@ -13,7 +13,7 @@ use Drupal\media\IFrameMarkup;
  * Force Youtube videos to be played from the nocookie domain and Vimeo videos
  * to use the DNT attribute.
  */
-function {{ machine_name }}_preprocess_media_oembed_iframe(&$variables) {
+function {{ machine_name }}_core_preprocess_media_oembed_iframe(&$variables) {
   if (strpos((string) $variables['media'], 'youtube.com') !== FALSE) {
     $variables['media'] = IFrameMarkup::create(str_replace('youtube.com/', 'youtube-nocookie.com/', $variables['media']));
   }
