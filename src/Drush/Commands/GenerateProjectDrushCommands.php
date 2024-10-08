@@ -601,10 +601,12 @@ class GenerateProjectDrushCommands extends DrushCommandsGeneratorBase {
       }
 
       // Admin Theme settings.
-      $assets->addFile(
-        $vars['config_folder'] . '/block.block.' . $vars['machine_name'] . '_admin_theme.settings.yml',
-        'kumquat-admin-theme/admin_theme.settings.yml.twig',
-      );
+      if (in_array($vars['base_admin_theme'], ['gin', 'kumquat_gin'])) {
+        $assets->addFile(
+          $vars['config_folder'] . '/' . $vars['machine_name'] . '_admin_theme.settings.yml',
+          'kumquat-admin-theme/admin_theme.settings.yml.twig',
+        );
+      }
     }
 
     if ($generate_theme || $generate_all) {
