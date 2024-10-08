@@ -10,7 +10,7 @@ use Drupal\block\Entity\Block;
 /**
  * Implements hook_preprocess_block().
  */
-function {{ machine_name }}_preprocess_block(&$variables) {
+function {{ machine_name }}_theme_preprocess_block(&$variables) {
   // Add config ID to the blocks CSS classes for better targetting.
   if (isset($variables['elements']['#id'])) {
     $variables['attributes']['class'][] = 'block-' . strtr($variables['elements']['#id'], '_', '-');
@@ -55,8 +55,8 @@ function {{ machine_name }}_theme_suggestions_views_view_alter(array &$suggestio
 /**
  * Implements hook_page_attachments_alter().
  */
-function {{ machine_name }}_page_attachments_alter(array &$attachments) {
-  $theme_path = drupal_get_path('theme', '{{ machine_name }}');
+function {{ machine_name }}_theme_page_attachments_alter(array &$attachments) {
+  $theme_path = drupal_get_path('theme', '{{ machine_name }}_theme');
 
   // Put the theme path in the settings to be used by JS.
   $attachments['#attached']['drupalSettings']['theme'] = [
