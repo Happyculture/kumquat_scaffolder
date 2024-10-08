@@ -56,7 +56,7 @@ function {{ machine_name }}_theme_suggestions_views_view_alter(array &$suggestio
  * Implements hook_page_attachments_alter().
  */
 function {{ machine_name }}_theme_page_attachments_alter(array &$attachments) {
-  $theme_path = drupal_get_path('theme', '{{ machine_name }}_theme');
+  $theme_path = \Drupal::service('extension.list.theme')->getPath('{{ machine_name }}_theme');
 
   // Put the theme path in the settings to be used by JS.
   $attachments['#attached']['drupalSettings']['theme'] = [
