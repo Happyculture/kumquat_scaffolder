@@ -6,8 +6,6 @@ use Drupal\Component\Serialization\Json;
 use Drupal\Core\Serialization\Yaml;
 use DrupalCodeGenerator\Asset\AssetCollection;
 use DrupalCodeGenerator\Utils;
-use DrupalCodeGenerator\Validator\Chained;
-use DrupalCodeGenerator\Validator\Required;
 use Drush\Attributes as CLI;
 
 /**
@@ -64,20 +62,22 @@ class GenerateProjectDrushCommands extends DrushCommandsGeneratorBase {
     description: 'The base theme of the administration theme.',
     suggestedValues: ['claro', 'gin'])]
   #[CLI\Usage(name: 'drush kumquat:generate-project', description: 'Run with wizard')]
-  public function generateEnvironment(array $options = [
-    'name' => self::REQ,
-    'machine-name' => self::REQ,
-    'config-folder' => self::REQ,
-    'generate-all' => self::OPT,
-    'generate-profile' => self::OPT,
-    'generate-core-module' => self::OPT,
-    'generate-content-modules' => self::OPT,
-    'generate-theme' => self::OPT,
-    'generate-admin-theme' => self::OPT,
-    'generate-config' => self::OPT,
-    'base-admin-theme' => self::REQ,
-    'dry-run' => FALSE,
-  ]): int {
+  public function generateEnvironment(
+    array $options = [
+      'name' => self::REQ,
+      'machine-name' => self::REQ,
+      'config-folder' => self::REQ,
+      'generate-all' => self::OPT,
+      'generate-profile' => self::OPT,
+      'generate-core-module' => self::OPT,
+      'generate-content-modules' => self::OPT,
+      'generate-theme' => self::OPT,
+      'generate-admin-theme' => self::OPT,
+      'generate-config' => self::OPT,
+      'base-admin-theme' => self::REQ,
+      'dry-run' => FALSE,
+    ],
+  ): int {
     return $this->generate($options);
   }
 

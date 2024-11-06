@@ -7,8 +7,6 @@ use Drupal\Core\Serialization\Yaml;
 use DrupalCodeGenerator\Asset\AssetCollection;
 use DrupalCodeGenerator\Helper\Renderer\TwigRenderer;
 use DrupalCodeGenerator\Twig\TwigEnvironment;
-use DrupalCodeGenerator\Validator\Chained;
-use DrupalCodeGenerator\Validator\Required;
 use Drush\Attributes as CLI;
 use Psr\Container\ContainerInterface as DrushContainer;
 use Symfony\Component\Filesystem\Filesystem;
@@ -83,18 +81,20 @@ class CleanProjectDrushCommands extends DrushCommandsGeneratorBase {
     description: 'Change the config to use the default profile and themes by default. (Accepted: <info>boolean</info>)',
     suggestedValues: [TRUE, FALSE])]
   #[CLI\Usage(name: 'drush kumquat:clean-project', description: 'Run with wizard')]
-  public function generateEnvironment(array $options = [
-    'machine-name' => self::REQ,
-    'config-folder' => self::REQ,
-    'clean-all' => self::OPT,
-    'clean-profile' => self::OPT,
-    'clean-core-module' => self::OPT,
-    'clean-content-modules' => self::OPT,
-    'clean-theme' => self::OPT,
-    'clean-admin-theme' => self::OPT,
-    'clean-config' => self::OPT,
-    'dry-run' => FALSE,
-  ]): int {
+  public function generateEnvironment(
+    array $options = [
+      'machine-name' => self::REQ,
+      'config-folder' => self::REQ,
+      'clean-all' => self::OPT,
+      'clean-profile' => self::OPT,
+      'clean-core-module' => self::OPT,
+      'clean-content-modules' => self::OPT,
+      'clean-theme' => self::OPT,
+      'clean-admin-theme' => self::OPT,
+      'clean-config' => self::OPT,
+      'dry-run' => FALSE,
+    ],
+  ): int {
     return $this->generate($options);
   }
 
@@ -406,7 +406,7 @@ class CleanProjectDrushCommands extends DrushCommandsGeneratorBase {
    */
   protected function cleanConfig(array $vars): void {
     // Set themes in the system.theme.yml file.
-    $filename = $this->drupalFinder()->getDrupalRoot() . '/' .$vars['config_folder'] . '/system.theme.yml';
+    $filename = $this->drupalFinder()->getDrupalRoot() . '/' . $vars['config_folder'] . '/system.theme.yml';
     $config = Yaml::decode(file_get_contents($filename));
 
     if ($config['admin'] === $vars['machine_name'] . '_admin_theme') {
@@ -421,7 +421,7 @@ class CleanProjectDrushCommands extends DrushCommandsGeneratorBase {
     $this->fileSystem->dumpFile($filename, Yaml::encode($config));
 
     // Update profile and themes in the core.extension.yml file.
-    $filename = $this->drupalFinder()->getDrupalRoot() . '/' .$vars['config_folder'] . '/core.extension.yml';
+    $filename = $this->drupalFinder()->getDrupalRoot() . '/' . $vars['config_folder'] . '/core.extension.yml';
     $config = Yaml::decode(file_get_contents($filename));
     $current_profile = $config['profile'];
 
@@ -452,7 +452,7 @@ class CleanProjectDrushCommands extends DrushCommandsGeneratorBase {
     $prevDir = getcwd();
     chdir($this->drupalFinder->getComposerRoot());
 
-    $install_path = $this->drupalFinder()->getComposerRoot() . '/' .'scripts/combawa/install.sh';
+    $install_path = $this->drupalFinder()->getComposerRoot() . '/' . 'scripts/combawa/install.sh';
     if (file_exists($install_path)) {
       $install_script = file_get_contents($install_path);
       preg_match('/^\$DRUSH site-install.* (.*?)$/mi', $install_script, $matches);
