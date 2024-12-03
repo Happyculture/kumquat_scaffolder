@@ -67,12 +67,12 @@ const runCleanFolders = () => {
  */
 const runLintStyles = () => {
   return gulp.src(['assets-src/sass/**/*.scss', 'templates/**/*.scss'], {since: gulp.lastRun(runLintStyles)})
-  .pipe(plumber())
-  .pipe(gulpStylelint({
-    reporters: [
-      {formatter: 'string', console: true}
-    ]
-  }))
+    .pipe(plumber())
+    .pipe(gulpStylelint({
+      reporters: [
+        {formatter: 'string', console: true}
+      ]
+    }))
 }
 
 /**
@@ -80,9 +80,9 @@ const runLintStyles = () => {
  */
 const runLintScripts = () => {
   return gulp.src(['assets-src/js/*.js', 'templates/**/*.js', '!templates/**/*.min.js'], {since: gulp.lastRun(runLintScripts)})
-  .pipe(plumber())
-  .pipe(eslint())
-  .pipe(eslint.format())
+    .pipe(plumber())
+    .pipe(eslint())
+    .pipe(eslint.format())
 }
 
 /**
