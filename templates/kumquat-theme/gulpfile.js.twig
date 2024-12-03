@@ -4,6 +4,7 @@ const argv = yargs(hideBin(process.argv)).argv;
 
 import del from 'del';
 import gulp from 'gulp';
+import gulpif from 'gulp-if';
 import gulpStylelint from '@ronilaukkarinen/gulp-stylelint';
 import eslint from 'gulp-eslint';
 import uglify from 'gulp-uglify';
@@ -184,17 +185,13 @@ const watchDocStyles = () => {
  * Compile global scripts.
  */
 const runScriptsGlobal = () => {
-  const stream = gulp.src(['assets-src/js/**/*.js', '!assets-src/js/**/*.min.js'], {since: gulp.lastRun(runScriptsGlobal)});
-  stream
+  return gulp.src(['assets-src/js/**/*.js', '!assets-src/js/**/*.min.js'], {since: gulp.lastRun(runScriptsGlobal)})
     .pipe(plumber())
     .pipe(eslint())
-    .pipe(eslint.format());
-  if (!argv.development) {
-    stream.pipe(uglify());
-  }
-  stream
-    .pipe(rename({suffix: '.min'}));
-  return stream.pipe(gulp.dest('dist/js'));
+    .pipe(eslint.format())
+    .pipe(gulpif(!argv.development, uglify()))
+    .pipe(rename({extname: '.min.js'}))
+    .pipe(gulp.dest('dist/js'));
 }
 
 /**
@@ -208,17 +205,13 @@ const watchScriptsGlobal = () => {
  * Compile patterns scripts.
  */
 const runScriptsPatterns = () => {
-  const stream = gulp.src(['templates/**/*.js', '!templates/**/*.min.js'], {since: gulp.lastRun(runScriptsPatterns)});
-  stream
+  return gulp.src(['templates/**/*.js', '!templates/**/*.min.js'], {since: gulp.lastRun(runScriptsPatterns)})
     .pipe(plumber())
     .pipe(eslint())
-    .pipe(eslint.format());
-  if (!argv.development) {
-    stream.pipe(uglify());
-  }
-  stream
-    .pipe(rename({suffix: '.min'}));
-  return stream.pipe(gulp.dest('templates'));
+    .pipe(eslint.format())
+    .pipe(gulpif(!argv.development, uglify()))
+    .pipe(rename({extname: '.min.js'}))
+    .pipe(gulp.dest('templates'));
 }
 
 /**
