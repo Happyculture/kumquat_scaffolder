@@ -1,4 +1,4 @@
-(function (Drupal, debounce, document, window) {
+(function (Drupal, debounce, once, document, window) {
   /**
    * Close all open submenus by simulating a click on their button.
    *
@@ -43,8 +43,7 @@
   Drupal.behaviors.MainMenu = {
     attach: function (context, settings) {
       // Toggle submenus on click on the trigger button.
-      const buttons = document.querySelectorAll('.menu__child__trigger');
-      Drupal.once(buttons, 'MainMenu').forEach((el) => {
+      once('MainMenu', '.menu__child__trigger').forEach((el) => {
         el.addEventListener('click', onButtonClick);
 
         // Prevent closing a submenu by clicking on a link inside.
@@ -54,10 +53,9 @@
       });
 
       // Close submenus when any part of the document is clicked.
-      const body = document.querySelectorAll('body');
-      Drupal.once(body, 'MainMenu').forEach(() => {
+      once('MainMenu', document.body).forEach(() => {
         document.addEventListener('click', closeAll);
       });
     }
   };
-})(Drupal, Drupal.debounce, document, window);
+})(Drupal, Drupal.debounce, once, document, window);

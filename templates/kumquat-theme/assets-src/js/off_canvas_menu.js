@@ -1,4 +1,4 @@
-(function (Drupal, debounce, document, window) {
+(function (Drupal, debounce, once, document, window) {
   /**
    * Function called when the window is resized.
    *
@@ -42,28 +42,30 @@
 
     if (currentTargetEl.getAttribute('aria-expanded') === 'true') {
       target.setAttribute('aria-hidden', 'true');
-      Drupal.parents(target, 'header')
-        .forEach((parentEl) => {
-          parentEl.querySelectorAll('.off-canvas-menu__button')
-            .forEach((buttonEl) => {
-              buttonEl.setAttribute('aria-expanded', 'false');
-              buttonEl.removeAttribute('data-off-canvas-open-by-click');
-            });
-          parentEl.classList.remove('with-menu');
-        });
+      let parentEl = target;
+      while (parentEl.closest('header') && parentEl !== parentEl.closest('header')) {
+        parentEl = parentEl.closest('header');
+        parentEl.querySelectorAll('.off-canvas-menu__button')
+          .forEach((buttonEl) => {
+            buttonEl.setAttribute('aria-expanded', 'false');
+            buttonEl.removeAttribute('data-off-canvas-open-by-click');
+          });
+        parentEl.classList.remove('with-menu');
+      }
       document.querySelector('body')
         .classList.remove('menu-displayed');
     } else {
       target.removeAttribute('aria-hidden');
-      Drupal.parents(target, 'header')
-        .forEach((parentEl) => {
-          parentEl.querySelectorAll('.off-canvas-menu__button')
-            .forEach((buttonEl) => {
-              buttonEl.setAttribute('aria-expanded', 'true');
-              buttonEl.setAttribute('data-off-canvas-open-by-click', 'true');
-            });
-          parentEl.classList.add('with-menu');
-        });
+      let parentEl = target;
+      while (parentEl.closest('header') && parentEl !== parentEl.closest('header')) {
+        parentEl = parentEl.closest('header');
+        parentEl.querySelectorAll('.off-canvas-menu__button')
+          .forEach((buttonEl) => {
+            buttonEl.setAttribute('aria-expanded', 'true');
+            buttonEl.setAttribute('data-off-canvas-open-by-click', 'true');
+          });
+        parentEl.classList.add('with-menu');
+      }
       document.querySelector('body')
         .classList.add('menu-displayed');
     }
@@ -71,16 +73,14 @@
 
   Drupal.behaviors.OffCanvasMenu = {
     attach: function () {
-      const buttons = document.querySelectorAll('.off-canvas-menu__button');
-      Drupal.once(buttons, 'OffCanvasMenu').forEach((el) => {
+      once('OffCanvasMenu', '.off-canvas-menu__button').forEach((el) => {
         el.addEventListener('click', onButtonClick);
       });
 
-      const body = document.querySelectorAll('body');
-      Drupal.once(body, 'OffCanvasMenu').forEach(() => {
+      once('OffCanvasMenu', document.body).forEach(() => {
         window.addEventListener('resize', debounce(onWindowResize, 50));
         onWindowResize();
       });
     }
   };
-})(Drupal, Drupal.debounce, document, window);
+})(Drupal, Drupal.debounce, once, document, window);
