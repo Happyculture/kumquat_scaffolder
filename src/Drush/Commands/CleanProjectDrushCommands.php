@@ -405,6 +405,14 @@ class CleanProjectDrushCommands extends DrushCommandsGeneratorBase {
    * Clean configuration.
    */
   protected function cleanConfig(array $vars): void {
+    // Reset frontpage path.
+    $filename = $this->drupalFinder()->getDrupalRoot() . '/' . $vars['config_folder'] . '/system.site.yml';
+    $config = Yaml::decode(file_get_contents($filename));
+
+    $config['page']['front'] = '/user/login';
+
+    $this->fileSystem->dumpFile($filename, Yaml::encode($config));
+
     // Set themes in the system.theme.yml file.
     $filename = $this->drupalFinder()->getDrupalRoot() . '/' . $vars['config_folder'] . '/system.theme.yml';
     $config = Yaml::decode(file_get_contents($filename));

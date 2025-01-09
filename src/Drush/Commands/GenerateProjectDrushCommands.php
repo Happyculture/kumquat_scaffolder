@@ -346,6 +346,17 @@ class GenerateProjectDrushCommands extends DrushCommandsGeneratorBase {
 
       $this->fileSystem->dumpFile($config_path, Yaml::encode($config));
       $this->io()->note('system.theme.yml file has been updated to use the generated themes.');
+
+      // Set frontpage path.
+      if ($generate_core_module || $generate_all) {
+        $config_path = $this->drupalFinder()->getDrupalRoot() . '/' . $vars['config_folder'] . '/system.site.yml';
+        $config = Yaml::decode(file_get_contents($config_path));
+
+        $config['page']['front'] = '/frontpage';
+
+        $this->fileSystem->dumpFile($config_path, Yaml::encode($config));
+        $this->io()->note('system.site.yml file has been updated to use the default front page.');
+      }
     }
 
     if ($generate_profile || $generate_all) {
@@ -439,8 +450,16 @@ class GenerateProjectDrushCommands extends DrushCommandsGeneratorBase {
       'kumquat-core-module/info.yml.twig',
     );
     $assets->addFile(
+      $baseDir . $machine_name . '.routing.yml',
+      'kumquat-core-module/routing.yml.twig',
+    );
+    $assets->addFile(
       $baseDir . $machine_name . '.module',
       'kumquat-core-module/module.twig',
+    );
+    $assets->addFile(
+      $baseDir . 'src/Controller/FrontpageController.php',
+      'kumquat-core-module/src/Controller/FrontpageController.php.twig',
     );
   }
 

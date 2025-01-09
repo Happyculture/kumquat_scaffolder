@@ -1,0 +1,7 @@
+{{ machine_name }}.frontpage:
+  path: '/frontpage'
+  defaults:
+    _title: 'Accueil'
+    _controller: '\Drupal\{{ machine_name }}\Controller\FrontpageController:frontpage'
+  requirements:
+    _permission: 'access content'
