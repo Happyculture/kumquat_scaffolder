@@ -439,7 +439,7 @@ class CleanProjectDrushCommands extends DrushCommandsGeneratorBase {
     }
     unset($config['module'][$vars['machine_name']]);
     unset($config['module'][$vars['machine_name'] . '_core']);
-    // Drupal migh not be bootstrapped so we need to include this for the
+    // Drupal might not be bootstrapped so we need to include this for the
     // module_config_sort() function to work.
     require_once $this->drupalFinder()->getDrupalRoot() . '/core/includes/module.inc';
     $config['module'] = module_config_sort($config['module']);
